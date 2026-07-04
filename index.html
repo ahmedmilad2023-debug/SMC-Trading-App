@@ -117,7 +117,7 @@ SMC/ICT · Candle Close Confirmation · Persistent signals · SL 0.5% / TP 1.0% 
 <script>
 (function() {
 'use strict';
-// --- DOM ---
+// --- DOM references ---
 var priceDisplay = document.getElementById('priceDisplay');
 var priceChange = document.getElementById('priceChange');
 var statusDot = document.getElementById('statusDot');
@@ -136,7 +136,7 @@ var fvgCount = document.getElementById('fvgCount');
 var obCount = document.getElementById('obCount');
 var liqCount = document.getElementById('liqCount');
 var structureStatus = document.getElementById('structureStatus');
-// --- State ---
+// --- State variables ---
 var symbol = 'BTCUSDT';
 var candles5 = [];
 var candles15 = [];
@@ -151,33 +151,13 @@ var ws = null;
 var chart = null;
 var series = null;
 var volumeSeries = null;
-// --- Chart ---
-function initChart() {
-if (chart) { chart.remove(); chart = null; series = null; volumeSeries = null; }
-chart = LightweightCharts.createChart(chartContainer, {
-layout: { background: { color: '#0a0e17' }, textColor: '#8a9bb5' },
-grid: { vertLines: { color: '#161f2e' }, horzLines: { color: '#161f2e' } },
-crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-rightPriceScale: { borderColor: '#1e2a3a' },
-timeScale: { borderColor: '#1e2a3a', timeVisible: true, secondsVisible: false },
-width: chartContainer.clientWidth,
-height: chartContainer.clientHeight
-});
-series = chart.addCandlestickSeries({
-upColor: '#00e676', downColor: '#ff5252',
-borderUpColor: '#00e676', borderDownColor: '#ff5252',
-wickUpColor: '#00e676', wickDownColor: '#ff5252'
-});
-volumeSeries = chart.addHistogramSeries({
-color: '#2a3a5a', priceFormat: { type: 'volume' }, priceScaleId: 'volume',
-scaleMargins: { top: 0.85, bottom: 0 }
-});
-chart.applyOptions({ timeScale: { fixLeftEdge: true, fixRightEdge: true } });
-window.addEventListener('resize', function() {
-if (chart) chart.applyOptions({ width: chartContainer.clientWidth, height: chartContainer.clientHeight });
-});
-}
-// --- SMC helpers (pure) ---
+// --- Signal Stability Logic state ---
+var activeSignalLocked = false; // whether we are in the lock period
+var activeSignalEntryTime = 0; // timestamp (ms) of the candle close that triggered entry
+var oppositeCount = 0; // number of consecutive 5m closes with opposite signal
+var lastOppositeResetTime = 0; // last time we reset oppositeCount (to avoid double counting within same candle)
+var lastEvaluationCandleTime = 0; // to ensure we only evaluate once per candle close
+// --- Helper functions (pure SMC) ---
 function detectFVG(candles) {
 var list = [];
 if (candles.length < 3) return list;
@@ -214,7 +194,6 @@ if (isLow) levels.push({ type: 'support', price: candles[i].low, idx: i });
 }
 return levels;
 }
-// --- Market Structure detection on 1H (using only closed candles) ---
 function detectSwingPoints(candles, lookback) {
 lookback = lookback || 8;
 var highs = [];
@@ -281,10 +260,8 @@ else trend = 'bearish';
 }
 return trend;
 }
-// --- Generate SMC signal based ONLY on closed candles (last candle is fully closed) ---
 function generateSMCSignal(candles) {
 if (candles.length < 30) return null;
-// Use all candles, but we consider the last candle as closed.
 var fvg = detectFVG(candles);
 var ob = detectOrderBlocks(candles);
 var liq = detectLiquidity(candles);
@@ -367,7 +344,6 @@ liqHit: liqHit
 }
 return null;
 }
-// --- Confluence check using closed candles only (called on candle close) ---
 function evaluateConfluence() {
 if (candles5.length < 30 || candles15.length < 30 || candles30.length < 30 || candles1h.length < 30) {
 return null;
@@ -394,37 +370,107 @@ if (structure !== 'bearish') return null;
 } else {
 return null;
 }
-// Confluence passed
 return sig5;
 }
-// --- Update active signal with persistence ---
-function updateActiveSignal() {
+// --- Update active signal with persistence, stability and lock ---
+function updateActiveSignal(candleCloseTime) {
+// candleCloseTime is the timestamp (ms) of the closed candle (we use the time of the 5m candle that closed)
+// This function is called on every candle close (5m, 15m, 30m, 1h) but we only process 5m closes for opposite count
+// However, we also need to update the lock status based on 15m elapsed.
+// We'll use the 5m candle time as reference for counting, but we accept any close to check lock.
+// For lock, we need to know if 15 minutes have passed since entry.
+// Since we get called on each close, we can check if (candleCloseTime - activeSignalEntryTime) >= 15*60*1000
+// We'll also ensure we only process evaluation once per unique candle time (to avoid multiple calls for same candle)
+if (candleCloseTime === lastEvaluationCandleTime) return; // already processed this candle
+lastEvaluationCandleTime = candleCloseTime;
 var newSignal = evaluateConfluence();
-if (!newSignal) {
-// No valid signal, but we keep the active one (persistence)
+// If no signal and no active signal, do nothing
+if (!newSignal && !activeSignal) {
+displayActiveSignal(); // update display maybe
 return;
 }
+// If we have no active signal, we can set it directly (first signal)
 if (!activeSignal) {
-// No active signal, set it
+if (newSignal) {
 activeSignal = newSignal.signal;
 activeSignalDetails = newSignal;
+activeSignalLocked = true;
+activeSignalEntryTime = candleCloseTime; // entry time is the close of this candle
+oppositeCount = 0;
 displayActiveSignal();
 addSignalHistory(newSignal);
+}
 return;
 }
-// Active signal exists: only change if opposite signal is confirmed
-if (activeSignal === 'BUY' && newSignal.signal === 'SELL') {
-activeSignal = 'SELL';
-activeSignalDetails = newSignal;
-displayActiveSignal();
-addSignalHistory(newSignal);
-} else if (activeSignal === 'SELL' && newSignal.signal === 'BUY') {
-activeSignal = 'BUY';
-activeSignalDetails = newSignal;
-displayActiveSignal();
-addSignalHistory(newSignal);
+// Active signal exists
+// Check lock: if locked, we cannot change signal until 15 minutes have passed since entry
+if (activeSignalLocked) {
+var elapsed = candleCloseTime - activeSignalEntryTime;
+if (elapsed < 15 * 60 * 1000) {
+// Still locked, do nothing, ignore any new signal
+return;
+} else {
+// Unlock after 15 minutes
+activeSignalLocked = false;
+// Now we allow evaluation, but we must apply the 3-candle opposite rule
 }
-// If same signal, do nothing
+}
+// If not locked, or just unlocked, evaluate opposite signals
+if (newSignal) {
+var newDir = newSignal.signal;
+var currentDir = activeSignal;
+if (newDir === currentDir) {
+// Same direction, reset opposite count
+oppositeCount = 0;
+// We can keep the existing signal (maybe update details if needed)
+// But we keep the current signal details (entry etc.) - we don't change them
+// However, we might want to update the reason? We'll keep the original.
+// Do nothing else.
+return;
+} else {
+// Opposite direction
+// Increment opposite count (only if this candle is a 5m close? but we can count any close, but we should only count 5m closes.
+// Since we are called on 5m, 15m, 30m, 1h, we need to ensure we only count 5m closes for the 3-candle rule.
+// We'll check if this call is from a 5m close. We can identify by comparing candleCloseTime with the time of last 5m candle in candles5.
+// If the last candle in candles5 has time equal to candleCloseTime, then it's a 5m close.
+var last5m = candles5.length > 0 ? candles5[candles5.length-1] : null;
+if (last5m && last5m.time === candleCloseTime) {
+// This is a 5m candle close
+oppositeCount += 1;
+// Check if we have 3 consecutive opposite signals
+if (oppositeCount >= 3) {
+// Change signal
+activeSignal = newDir;
+activeSignalDetails = newSignal;
+activeSignalLocked = true;
+activeSignalEntryTime = candleCloseTime;
+oppositeCount = 0;
+displayActiveSignal();
+addSignalHistory(newSignal);
+} else {
+// Not yet 3, keep current signal, but we might want to update the reason to show pending opposite?
+// We'll just keep current.
+}
+} else {
+// Not a 5m close, we ignore this opposite signal for counting, but we could still consider it? 
+// The rule says "3 شموع متتالية على فريم الـ 5 دقائق" so we only count 5m closes.
+// So we do nothing for other timeframes.
+}
+}
+} else {
+// No new signal generated, so if we had opposite count, we reset it? 
+// Actually, if there is no signal, we consider it as no opposite, so we reset oppositeCount? 
+// The rule says "if the opposite condition continues to verify for 3 candles" - if there is no signal at all, it's not opposite, so reset.
+// But we should only reset if there is no signal for a 5m candle? 
+// We'll reset oppositeCount on any 5m close that does not produce an opposite signal.
+var last5m = candles5.length > 0 ? candles5[candles5.length-1] : null;
+if (last5m && last5m.time === candleCloseTime) {
+oppositeCount = 0;
+}
+}
+}
+// Display whatever is currently active
+displayActiveSignal();
 }
 // --- Display active signal in UI ---
 function displayActiveSignal() {
@@ -438,9 +484,10 @@ var isBuy = sig.signal === 'BUY';
 var cls = isBuy ? 'signal-buy signal-active' : 'signal-sell signal-active';
 var icon = isBuy ? '📈' : '📉';
 var color = isBuy ? 'text-green-400' : 'text-red-400';
+var lockStatus = activeSignalLocked ? '🔒 Locked' : '🔓 Unlocked';
 var html = '<div class="w-full ' + cls + ' p-3 rounded-lg text-left">';
 html += '<div class="flex items-center justify-between"><span class="text-lg font-bold ' + color + '">' + icon + ' ' + sig.signal + ' (ACTIVE)</span>';
-html += '<span class="text-xs text-gray-500">' + new Date(sig.timestamp).toLocaleTimeString() + '</span></div>';
+html += '<span class="text-xs text-gray-500">' + new Date(sig.timestamp).toLocaleTimeString() + ' ' + lockStatus + '</span></div>';
 html += '<div class="grid grid-cols-3 gap-1 mt-1 text-xs">';
 html += '<div><span class="text-gray-500">Entry</span><br><span class="font-mono">$' + sig.entry.toFixed(2) + '</span></div>';
 html += '<div><span class="text-gray-500">SL (0.5%)</span><br><span class="font-mono text-red-400">$' + sig.stopLoss.toFixed(2) + '</span></div>';
@@ -449,7 +496,7 @@ html += '</div>';
 html += '<div class="text-xs text-gray-400 mt-1 truncate">' + sig.reason + '</div>';
 html += '</div>';
 signalDisplay.innerHTML = html;
-signalReason.textContent = 'Active: ' + sig.signal + ' | ' + sig.reason;
+signalReason.textContent = 'Active: ' + sig.signal + ' | ' + sig.reason + (activeSignalLocked ? ' | 🔒 Locked' : '');
 }
 // --- History ---
 function addSignalHistory(sig) {
@@ -539,23 +586,24 @@ updateArray(candles5, candle);
 updateChart(candles5);
 updateStats(candles5);
 if (isFinal) {
-// On 5m close, re-evaluate confluence
-updateActiveSignal();
+// On 5m close, re-evaluate confluence and apply stability logic
+updateActiveSignal(candle.time);
 }
 } else if (streamName.indexOf('15m') > -1) {
 updateArray(candles15, candle);
 if (isFinal) {
-updateActiveSignal();
+// We also call updateActiveSignal to check lock and possibly unlock, but we don't count opposite on 15m
+updateActiveSignal(candle.time);
 }
 } else if (streamName.indexOf('30m') > -1) {
 updateArray(candles30, candle);
 if (isFinal) {
-updateActiveSignal();
+updateActiveSignal(candle.time);
 }
 } else if (streamName.indexOf('1h') > -1) {
 updateArray(candles1h, candle);
 if (isFinal) {
-updateActiveSignal();
+updateActiveSignal(candle.time);
 }
 }
 if (candle.close) {
@@ -626,6 +674,10 @@ candles5 = []; candles15 = []; candles30 = []; candles1h = [];
 signalHistoryList = [];
 activeSignal = null;
 activeSignalDetails = null;
+activeSignalLocked = false;
+activeSignalEntryTime = 0;
+oppositeCount = 0;
+lastEvaluationCandleTime = 0;
 signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">Loading...</div>';
 fetchHistorical(symbol, '5m', function(d5) {
 candles5 = d5;
@@ -638,8 +690,11 @@ candles1h = d1h;
 updateChart(candles5);
 updateStats(candles5);
 connectWebSocket(symbol);
-// Initial evaluation using historical closed candles
-updateActiveSignal();
+// Initial evaluation using historical closed candles (we use the last candle time)
+if (candles5.length > 0) {
+var lastTime = candles5[candles5.length-1].time;
+updateActiveSignal(lastTime);
+}
 });
 });
 });
@@ -653,6 +708,31 @@ reconnect();
 function init() {
 initChart();
 reconnect();
+}
+function initChart() {
+if (chart) { chart.remove(); chart = null; series = null; volumeSeries = null; }
+chart = LightweightCharts.createChart(chartContainer, {
+layout: { background: { color: '#0a0e17' }, textColor: '#8a9bb5' },
+grid: { vertLines: { color: '#161f2e' }, horzLines: { color: '#161f2e' } },
+crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+rightPriceScale: { borderColor: '#1e2a3a' },
+timeScale: { borderColor: '#1e2a3a', timeVisible: true, secondsVisible: false },
+width: chartContainer.clientWidth,
+height: chartContainer.clientHeight
+});
+series = chart.addCandlestickSeries({
+upColor: '#00e676', downColor: '#ff5252',
+borderUpColor: '#00e676', borderDownColor: '#ff5252',
+wickUpColor: '#00e676', wickDownColor: '#ff5252'
+});
+volumeSeries = chart.addHistogramSeries({
+color: '#2a3a5a', priceFormat: { type: 'volume' }, priceScaleId: 'volume',
+scaleMargins: { top: 0.85, bottom: 0 }
+});
+chart.applyOptions({ timeScale: { fixLeftEdge: true, fixRightEdge: true } });
+window.addEventListener('resize', function() {
+if (chart) chart.applyOptions({ width: chartContainer.clientWidth, height: chartContainer.clientHeight });
+});
 }
 init();
 })();
