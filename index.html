@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SMC/ICT Multi-Timeframe Confluence</title>
+<title>SMC/ICT Market Structure (1H) + Confluence</title>
 <script src="https://cdn.tailwindcss.com">
 </script>
 <script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js">
@@ -15,6 +15,7 @@ body { background: #0a0e17; font-family: 'Inter', system-ui, -apple-system, sans
 .signal-buy { background: rgba(0, 230, 118, 0.12); border-left: 4px solid #00e676; }
 .signal-sell { background: rgba(255, 82, 82, 0.12); border-left: 4px solid #ff5252; }
 .signal-neutral { background: rgba(255, 193, 7, 0.08); border-left: 4px solid #ffc107; }
+.signal-reject { background: rgba(255, 82, 82, 0.05); border-left: 4px solid #ff5252; }
 .price-up { color: #00e676; }
 .price-down { color: #ff5252; }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -27,14 +28,15 @@ body { background: #0a0e17; font-family: 'Inter', system-ui, -apple-system, sans
 .status-dot.offline { background: #ff5252; box-shadow: 0 0 8px #ff525266; }
 .glow-text { text-shadow: 0 0 20px rgba(0, 230, 118, 0.15); }
 .tf-badge { display: inline-block; font-size: 9px; padding: 1px 8px; border-radius: 10px; background: #1e2a3a; color: #8a9bb5; margin-right: 4px; }
+.tf-badge.active { background: #2a4a3a; color: #00e676; }
 </style>
 </head>
 <body>
 <div id="app" class="max-w-7xl mx-auto px-3 px-4 py-4 md:py-6">
 <header class="flex flex-wrap items-center justify-between gap-3 mb-4">
 <div class="flex items-center gap-2">
-<h1 class="text-xl md:text-2xl font-bold tracking-tight glow-text">📊 SMC/ICT Confluence</h1>
-<span class="text-xs bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded-full border border-blue-700/30">5m+15m+30m</span>
+<h1 class="text-xl md:text-2xl font-bold tracking-tight glow-text">📊 SMC/ICT Market Structure</h1>
+<span class="text-xs bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded-full border border-blue-700/30">1H Structure + Confluence</span>
 </div>
 <div class="flex items-center gap-4 text-sm">
 <div class="flex items-center">
@@ -62,9 +64,10 @@ body { background: #0a0e17; font-family: 'Inter', system-ui, -apple-system, sans
 </select>
 </div>
 <div class="flex items-center gap-2 text-xs text-gray-500">
-<span class="tf-badge">5m</span>
-<span class="tf-badge">15m</span>
-<span class="tf-badge">30m</span>
+<span class="tf-badge active">5m</span>
+<span class="tf-badge active">15m</span>
+<span class="tf-badge active">30m</span>
+<span class="tf-badge active" style="background:#2a3a5a;color:#ffc107;">1H</span>
 <span id="candleCount" class="ml-1">Candles: 0</span>
 </div>
 </div>
@@ -72,14 +75,14 @@ body { background: #0a0e17; font-family: 'Inter', system-ui, -apple-system, sans
 </div>
 <div class="dashboard-card lg:col-span-1 flex flex-col">
 <div class="flex items-center justify-between mb-2">
-<h3 class="text-sm font-semibold text-gray-300">📡 Confluence Signal</h3>
-<span class="text-xs bg-gray-800 px-2 py-0.5 rounded-full text-gray-400" id="biasDisplay">Bias: --</span>
+<h3 class="text-sm font-semibold text-gray-300">📡 Signal Engine</h3>
+<span class="text-xs bg-gray-800 px-2 py-0.5 rounded-full text-gray-400" id="biasDisplay">1H Structure: --</span>
 </div>
 <div id="signalDisplay" class="flex-1 flex flex-col items-center justify-center text-center p-2 min-h-[140px]">
-<div class="text-gray-500 text-sm">Awaiting confluence...</div>
+<div class="text-gray-500 text-sm">Awaiting data...</div>
 </div>
 <div class="mt-2 text-xs text-gray-600 text-center border-t border-[#1e2a3a] pt-2" id="signalReason">
-SMC logic · FVG + OB + Liquidity · Confluence required
+1H Market Structure · Confluence 5m/15m/30m · SL 0.5% / TP 1.0% (1:2)
 </div>
 </div>
 </div>
@@ -103,12 +106,12 @@ SMC logic · FVG + OB + Liquidity · Confluence required
 <div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">FVG</span><br><span id="fvgCount" class="text-blue-400 font-mono">0</span></div>
 <div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">Order Blocks</span><br><span id="obCount" class="text-yellow-400 font-mono">0</span></div>
 <div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">Liquidity</span><br><span id="liqCount" class="text-purple-400 font-mono">0</span></div>
-<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">Confluence</span><br><span id="confluenceStatus" class="text-green-400 font-mono">--</span></div>
+<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">1H Structure</span><br><span id="structureStatus" class="text-white font-mono">--</span></div>
 </div>
 </div>
 </div>
 <footer class="mt-4 text-center text-[10px] text-gray-600 border-t border-[#1e2a3a] pt-3">
-Built with SMC/ICT · Multi‑timeframe confluence (5m → 15m → 30m) · Educational only · Binance WebSocket
+SMC/ICT · 1H Market Structure (Break of Structure) · Confluence 5m+15m+30m · SL 0.5% / TP 1.0% · Educational only
 </footer>
 </div>
 <script>
@@ -132,12 +135,13 @@ var statVolume = document.getElementById('statVolume');
 var fvgCount = document.getElementById('fvgCount');
 var obCount = document.getElementById('obCount');
 var liqCount = document.getElementById('liqCount');
-var confluenceStatus = document.getElementById('confluenceStatus');
+var structureStatus = document.getElementById('structureStatus');
 // --- State ---
 var symbol = 'BTCUSDT';
 var candles5 = [];
 var candles15 = [];
 var candles30 = [];
+var candles1h = [];
 var lastPrice = null;
 var lastSignal = null;
 var signalHistoryList = [];
@@ -146,9 +150,6 @@ var ws = null;
 var chart = null;
 var series = null;
 var volumeSeries = null;
-var strategy5 = { fvg: [], orderBlocks: [], liquidity: [], bias: 'neutral', strength: 0 };
-var strategy15 = { fvg: [], orderBlocks: [], liquidity: [], bias: 'neutral', strength: 0 };
-var strategy30 = { fvg: [], orderBlocks: [], liquidity: [], bias: 'neutral', strength: 0 };
 // --- Chart ---
 function initChart() {
 if (chart) { chart.remove(); chart = null; series = null; volumeSeries = null; }
@@ -190,7 +191,7 @@ function detectOrderBlocks(candles) {
 var list = [];
 if (candles.length < 4) return list;
 for (var i = 3; i < candles.length; i++) {
-var c1 = candles[i-3], c2 = candles[i-2], c3 = candles[i-1], c4 = candles[i];
+var c2 = candles[i-2], c3 = candles[i-1], c4 = candles[i];
 if (c2.close < c2.open && c3.close > c3.open && c4.close > c4.open) list.push({ type: 'bullish', high: c2.high, low: c2.low, idx: i-2 });
 if (c2.close > c2.open && c3.close < c3.open && c4.close < c4.open) list.push({ type: 'bearish', high: c2.high, low: c2.low, idx: i-2 });
 }
@@ -212,45 +213,85 @@ if (isLow) levels.push({ type: 'support', price: candles[i].low, idx: i });
 }
 return levels;
 }
-function determineBias(candles, fvg, ob) {
-if (candles.length < 20) return { bias: 'neutral', strength: 0 };
-var recent = candles.slice(-20);
-var bullish = 0, bearish = 0;
-for (var i = 0; i < recent.length; i++) {
-if (recent[i].close > recent[i].open) bullish++;
-else if (recent[i].close < recent[i].open) bearish++;
+// --- Market Structure detection on 1H (NO MOVING AVERAGES) ---
+function detectSwingPoints(candles, lookback) {
+lookback = lookback || 8;
+var highs = [];
+var lows = [];
+if (candles.length < lookback * 2 + 1) return { highs: [], lows: [] };
+for (var i = lookback; i < candles.length - lookback; i++) {
+var isHigh = true;
+var isLow = true;
+for (var j = i - lookback; j <= i + lookback; j++) {
+if (j === i) continue;
+if (candles[j].high >= candles[i].high) isHigh = false;
+if (candles[j].low <= candles[i].low) isLow = false;
 }
+if (isHigh) highs.push({ price: candles[i].high, idx: i, time: candles[i].time });
+if (isLow) lows.push({ price: candles[i].low, idx: i, time: candles[i].time });
+}
+return { highs: highs, lows: lows };
+}
+function getMarketStructureTrend(candles) {
+if (candles.length < 30) return 'neutral';
+var swing = detectSwingPoints(candles, 8);
+var highs = swing.highs;
+var lows = swing.lows;
+if (highs.length < 2 && lows.length < 2) return 'neutral';
 var lastPrice = candles[candles.length-1].close;
-var lastFvg = fvg.length > 0 ? fvg[fvg.length-1] : null;
-var lastOb = ob.length > 0 ? ob[ob.length-1] : null;
-var bias = 'neutral', strength = 0;
-if (lastFvg && lastFvg.type === 'bullish' && lastPrice > lastFvg.top) { bias = 'bullish'; strength += 2; }
-else if (lastFvg && lastFvg.type === 'bearish' && lastPrice < lastFvg.bottom) { bias = 'bearish'; strength += 2; }
-if (lastOb && lastOb.type === 'bullish' && lastPrice > lastOb.high) {
-if (bias === 'bullish') strength += 1.5;
-else { bias = 'bullish'; strength = 1.5; }
-} else if (lastOb && lastOb.type === 'bearish' && lastPrice < lastOb.low) {
-if (bias === 'bearish') strength += 1.5;
-else { bias = 'bearish'; strength = 1.5; }
+var trend = 'neutral';
+var recentHighs = highs.slice(-4);
+var recentLows = lows.slice(-4);
+// Check for Break of Structure (BOS) - price breaking above a recent swing high
+var bosUp = false;
+var bosDown = false;
+if (recentHighs.length >= 2) {
+var lastHigh = recentHighs[recentHighs.length-1];
+var prevHigh = recentHighs[recentHighs.length-2];
+if (lastHigh.price > prevHigh.price && lastPrice > lastHigh.price) {
+bosUp = true;
 }
-if (bias === 'neutral') {
-if (bullish > bearish + 4) { bias = 'bullish'; strength = 1; }
-else if (bearish > bullish + 4) { bias = 'bearish'; strength = 1; }
 }
-if (bias === 'bullish') strength += (bullish - bearish) / 20;
-else if (bias === 'bearish') strength += (bearish - bullish) / 20;
-strength = Math.min(Math.max(strength, 0), 3);
-return { bias: bias, strength: strength };
+if (recentLows.length >= 2) {
+var lastLow = recentLows[recentLows.length-1];
+var prevLow = recentLows[recentLows.length-2];
+if (lastLow.price < prevLow.price && lastPrice < lastLow.price) {
+bosDown = true;
 }
+}
+// Also check if price is above most recent swing high (continuation)
+if (!bosUp && recentHighs.length >= 1) {
+var mostRecentHigh = recentHighs[recentHighs.length-1];
+if (lastPrice > mostRecentHigh.price) {
+bosUp = true;
+}
+}
+if (!bosDown && recentLows.length >= 1) {
+var mostRecentLow = recentLows[recentLows.length-1];
+if (lastPrice < mostRecentLow.price) {
+bosDown = true;
+}
+}
+if (bosUp && !bosDown) trend = 'bullish';
+else if (bosDown && !bosUp) trend = 'bearish';
+else if (bosUp && bosDown) {
+// check which is more recent
+var lastHighTime = recentHighs.length > 0 ? recentHighs[recentHighs.length-1].time : 0;
+var lastLowTime = recentLows.length > 0 ? recentLows[recentLows.length-1].time : 0;
+if (lastHighTime > lastLowTime) trend = 'bullish';
+else trend = 'bearish';
+}
+return trend;
+}
+// Generate SMC signal for a given timeframe (returns object or null)
 function generateSMCSignal(candles) {
 if (candles.length < 30) return null;
 var fvg = detectFVG(candles);
 var ob = detectOrderBlocks(candles);
 var liq = detectLiquidity(candles);
-var biasRes = determineBias(candles, fvg, ob);
 var lastC = candles[candles.length-1];
 var price = lastC.close;
-var signal = null, reason = '', stopLoss = null, takeProfit = null, rr = 2.0;
+var signal = null, reason = '', stopLoss = null, takeProfit = null;
 var fvgHit = null, obHit = null, liqHit = null;
 for (var i = 0; i < fvg.length; i++) {
 var f = fvg[i];
@@ -281,75 +322,113 @@ else if (liqHit && liqHit.type === 'support') { longCond = true; longReason = 'S
 if (fvgHit && fvgHit.type === 'bearish') { shortCond = true; shortReason = 'Bearish FVG ' + fvgHit.bottom.toFixed(2) + '-' + fvgHit.top.toFixed(2); }
 else if (obHit && obHit.type === 'bearish') { shortCond = true; shortReason = 'Bearish OB ' + obHit.low.toFixed(2) + '-' + obHit.high.toFixed(2); }
 else if (liqHit && liqHit.type === 'resistance') { shortCond = true; shortReason = 'Resistance sweep ' + liqHit.price.toFixed(2); }
-var finalBias = biasRes.bias, strength = biasRes.strength;
-if (longCond && (finalBias === 'bullish' || finalBias === 'neutral' || strength > 0.5)) {
-signal = 'BUY'; var entry = price; stopLoss = entry * 0.997; takeProfit = entry * (1 + (entry - stopLoss) / entry * rr);
-reason = longReason + ' | Bias:' + finalBias.toUpperCase() + '(' + strength.toFixed(1) + ')';
-} else if (shortCond && (finalBias === 'bearish' || finalBias === 'neutral' || strength > 0.5)) {
-if (signal !== 'BUY') {
-signal = 'SELL'; var entry2 = price; stopLoss = entry2 * 1.003; takeProfit = entry2 * (1 - (stopLoss - entry2) / entry2 * rr);
-reason = shortReason + ' | Bias:' + finalBias.toUpperCase() + '(' + strength.toFixed(1) + ')';
-}
+if (longCond) {
+signal = 'BUY';
+reason = longReason;
+} else if (shortCond) {
+signal = 'SELL';
+reason = shortReason;
 }
 if (signal) {
+var entry = price;
+// SL: 0.5% of entry, TP: 1.0% (risk 1:2) with buffer
+var slPercent = 0.005;
+var tpPercent = 0.010;
+var sl, tp;
+if (signal === 'BUY') {
+sl = entry * (1 - slPercent);
+tp = entry * (1 + tpPercent);
+} else {
+sl = entry * (1 + slPercent);
+tp = entry * (1 - tpPercent);
+}
+// Add small buffer to avoid same numbers (0.01% buffer)
+var buffer = 0.0001;
+if (signal === 'BUY') {
+sl = sl * (1 - buffer);
+tp = tp * (1 + buffer);
+} else {
+sl = sl * (1 + buffer);
+tp = tp * (1 - buffer);
+}
+// Ensure TP and SL are different from entry
+if (Math.abs(sl - entry) < 0.01) sl = signal === 'BUY' ? entry * 0.995 : entry * 1.005;
+if (Math.abs(tp - entry) < 0.01) tp = signal === 'BUY' ? entry * 1.01 : entry * 0.99;
 return {
-signal: signal, entry: price, stopLoss: stopLoss, takeProfit: takeProfit,
-reason: reason, timestamp: new Date().toISOString(),
-bias: finalBias, strength: strength,
-fvgCount: fvg.length, obCount: ob.length, liqCount: liq.length,
-fvgHit: fvgHit, obHit: obHit, liqHit: liqHit
+signal: signal,
+entry: entry,
+stopLoss: sl,
+takeProfit: tp,
+reason: reason,
+timestamp: new Date().toISOString(),
+fvgCount: fvg.length,
+obCount: ob.length,
+liqCount: liq.length,
+fvgHit: fvgHit,
+obHit: obHit,
+liqHit: liqHit
 };
 }
 return null;
 }
-function getSignalAndBias(candles) {
-var sig = generateSMCSignal(candles);
-if (sig) return { signal: sig.signal, bias: sig.bias, strength: sig.strength };
-var fvg = detectFVG(candles);
-var ob = detectOrderBlocks(candles);
-var biasRes = determineBias(candles, fvg, ob);
-return { signal: null, bias: biasRes.bias, strength: biasRes.strength };
-}
-// --- Confluence check ---
+// --- Confluence check with 1H Market Structure filter ---
 function checkConfluence() {
-if (candles5.length < 30 || candles15.length < 30 || candles30.length < 30) {
+if (candles5.length < 30 || candles15.length < 30 || candles30.length < 30 || candles1h.length < 30) {
 signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">Loading timeframes...</div>';
-confluenceStatus.textContent = 'WAIT';
+return;
+}
+var structure = getMarketStructureTrend(candles1h);
+biasDisplay.textContent = '1H Structure: ' + structure.toUpperCase();
+structureStatus.textContent = structure.toUpperCase();
+if (structure === 'neutral') {
+signalDisplay.innerHTML = '<div class="signal-neutral p-3 rounded-lg w-full text-left"><div class="text-yellow-400 text-sm">⏳ No Structure</div><div class="text-xs text-gray-400">No clear Break of Structure on 1H</div></div>';
+signalReason.textContent = '1H structure neutral – no signals';
+confluenceStatus('NEUTRAL');
 return;
 }
 var sig5 = generateSMCSignal(candles5);
+var sig15 = generateSMCSignal(candles15);
+var sig30 = generateSMCSignal(candles30);
 if (!sig5) {
 signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">No 5m signal</div>';
-confluenceStatus.textContent = 'NO SIG';
+confluenceStatus('NO SIG');
 return;
 }
-var info15 = getSignalAndBias(candles15);
-var info30 = getSignalAndBias(candles30);
-var rejected = false;
+var dir5 = sig5.signal;
+var dir15 = sig15 ? sig15.signal : null;
+var dir30 = sig30 ? sig30.signal : null;
+var reject = false;
 var rejectReason = '';
-if (sig5.signal === 'BUY') {
-if (info15.signal === 'SELL' || info30.signal === 'SELL') {
-rejected = true;
+if (dir5 === 'BUY') {
+if (dir15 === 'SELL' || dir30 === 'SELL') {
+reject = true;
 rejectReason = 'Higher TF SELL detected';
 }
-} else if (sig5.signal === 'SELL') {
-if (info15.signal === 'BUY' || info30.signal === 'BUY') {
-rejected = true;
+if (structure !== 'bullish') {
+reject = true;
+rejectReason = '1H structure not bullish (actual: ' + structure + ')';
+}
+} else if (dir5 === 'SELL') {
+if (dir15 === 'BUY' || dir30 === 'BUY') {
+reject = true;
 rejectReason = 'Higher TF BUY detected';
 }
+if (structure !== 'bearish') {
+reject = true;
+rejectReason = '1H structure not bearish (actual: ' + structure + ')';
 }
-if (rejected) {
-var html = '<div class="signal-neutral p-3 rounded-lg w-full text-left">';
-html += '<div class="text-yellow-400 font-bold text-sm">⛔ REJECTED</div>';
+}
+if (reject) {
+var html = '<div class="signal-reject p-3 rounded-lg w-full text-left">';
+html += '<div class="text-red-400 font-bold text-sm">⛔ REJECTED</div>';
 html += '<div class="text-xs text-gray-400 mt-1">' + rejectReason + '</div>';
-html += '<div class="text-xs text-gray-500 mt-1">5m: ' + sig5.signal + ' | 15m: ' + (info15.signal || 'neutral') + ' | 30m: ' + (info30.signal || 'neutral') + '</div>';
+html += '<div class="text-xs text-gray-500 mt-1">5m:' + dir5 + ' | 15m:' + (dir15 || '--') + ' | 30m:' + (dir30 || '--') + ' | 1H:' + structure.toUpperCase() + '</div>';
 html += '</div>';
 signalDisplay.innerHTML = html;
-confluenceStatus.textContent = 'REJECT';
 signalReason.textContent = 'Rejected: ' + rejectReason;
+confluenceStatus('REJECT');
 return;
 }
-// Confluence passed → emit signal
 lastSignal = sig5;
 var isBuy = sig5.signal === 'BUY';
 var cls = isBuy ? 'signal-buy' : 'signal-sell';
@@ -360,20 +439,34 @@ html2 += '<div class="flex items-center justify-between"><span class="text-lg fo
 html2 += '<span class="text-xs text-gray-500">' + new Date(sig5.timestamp).toLocaleTimeString() + '</span></div>';
 html2 += '<div class="grid grid-cols-3 gap-1 mt-1 text-xs">';
 html2 += '<div><span class="text-gray-500">Entry</span><br><span class="font-mono">$' + sig5.entry.toFixed(2) + '</span></div>';
-html2 += '<div><span class="text-gray-500">SL</span><br><span class="font-mono text-red-400">$' + sig5.stopLoss.toFixed(2) + '</span></div>';
-html2 += '<div><span class="text-gray-500">TP</span><br><span class="font-mono text-green-400">$' + sig5.takeProfit.toFixed(2) + '</span></div>';
+html2 += '<div><span class="text-gray-500">SL (0.5%)</span><br><span class="font-mono text-red-400">$' + sig5.stopLoss.toFixed(2) + '</span></div>';
+html2 += '<div><span class="text-gray-500">TP (1.0%)</span><br><span class="font-mono text-green-400">$' + sig5.takeProfit.toFixed(2) + '</span></div>';
 html2 += '</div>';
 html2 += '<div class="text-xs text-gray-400 mt-1 truncate">' + sig5.reason + '</div>';
-html2 += '<div class="text-[10px] text-gray-500 mt-0.5">Confluence: 5m ' + sig5.signal + ' + 15m ' + (info15.signal || 'neutral') + ' + 30m ' + (info30.signal || 'neutral') + '</div>';
+html2 += '<div class="text-[10px] text-gray-500 mt-0.5">Confluence: 5m ' + sig5.signal + ' + 15m ' + (dir15 || 'neutral') + ' + 30m ' + (dir30 || 'neutral') + ' | 1H: ' + structure.toUpperCase() + ' (BOS)</div>';
 html2 += '</div>';
 signalDisplay.innerHTML = html2;
-confluenceStatus.textContent = '✅ PASS';
-signalReason.textContent = 'Signal: ' + sig5.signal + ' | ' + sig5.reason;
-addSignalHistory(sig5, info15, info30);
+signalReason.textContent = 'Signal: ' + sig5.signal + ' | ' + sig5.reason + ' | 1H ' + structure.toUpperCase();
+confluenceStatus('✅ PASS');
+addSignalHistory(sig5, dir15, dir30, structure);
+}
+function confluenceStatus(status) {
+var el = document.getElementById('confluenceStatus');
+if (el) el.textContent = status;
 }
 // --- History ---
-function addSignalHistory(sig, i15, i30) {
-var entry = { signal: sig.signal, entry: sig.entry, stopLoss: sig.stopLoss, takeProfit: sig.takeProfit, reason: sig.reason, timestamp: sig.timestamp, tf15: i15.signal || '--', tf30: i30.signal || '--' };
+function addSignalHistory(sig, d15, d30, structure) {
+var entry = {
+signal: sig.signal,
+entry: sig.entry,
+stopLoss: sig.stopLoss,
+takeProfit: sig.takeProfit,
+reason: sig.reason,
+timestamp: sig.timestamp,
+tf15: d15 || '--',
+tf30: d30 || '--',
+structure1h: structure
+};
 signalHistoryList.unshift(entry);
 if (signalHistoryList.length > 20) signalHistoryList.pop();
 renderSignalHistory();
@@ -398,7 +491,7 @@ html += '<span>E: $' + (s.entry || 0).toFixed(2) + '</span>';
 html += '<span>SL: $' + (s.stopLoss || 0).toFixed(2) + '</span>';
 html += '<span>TP: $' + (s.takeProfit || 0).toFixed(2) + '</span>';
 html += '</div>';
-html += '<div class="text-[10px] text-gray-500 truncate">15m:' + s.tf15 + ' 30m:' + s.tf30 + '</div>';
+html += '<div class="text-[10px] text-gray-500 truncate">15m:' + s.tf15 + ' 30m:' + s.tf30 + ' 1H:' + s.structure1h.toUpperCase() + '</div>';
 html += '</div>';
 }
 signalHistory.innerHTML = html;
@@ -428,13 +521,11 @@ var l = detectLiquidity(candles);
 fvgCount.textContent = f.length;
 obCount.textContent = o.length;
 liqCount.textContent = l.length;
-var b = determineBias(candles, f, o);
-biasDisplay.textContent = 'Bias: ' + b.bias.toUpperCase();
 }
 // --- WebSocket combined ---
 function connectWebSocket(sym) {
 if (ws) { ws.close(); ws = null; }
-var streams = sym.toLowerCase() + '@kline_5m/' + sym.toLowerCase() + '@kline_15m/' + sym.toLowerCase() + '@kline_30m';
+var streams = sym.toLowerCase() + '@kline_5m/' + sym.toLowerCase() + '@kline_15m/' + sym.toLowerCase() + '@kline_30m/' + sym.toLowerCase() + '@kline_1h';
 var url = 'wss://stream.binance.com:9443/stream?streams=' + streams;
 ws = new WebSocket(url);
 ws.onopen = function() {
@@ -459,6 +550,9 @@ updateArray(candles15, candle);
 checkConfluence();
 } else if (streamName.indexOf('30m') > -1) {
 updateArray(candles30, candle);
+checkConfluence();
+} else if (streamName.indexOf('1h') > -1) {
+updateArray(candles1h, candle);
 checkConfluence();
 }
 if (candle.close) {
@@ -493,10 +587,10 @@ if (arr[i].time === newCandle.time) { idx = i; break; }
 }
 if (idx >= 0) arr[idx] = newCandle;
 else { arr.push(newCandle); if (arr.length > 300) arr = arr.slice(-300); }
-// reassign to ensure reference (for arrays passed by value, but we mutate)
 if (arr === candles5) candles5 = arr;
 else if (arr === candles15) candles15 = arr;
 else if (arr === candles30) candles30 = arr;
+else if (arr === candles1h) candles1h = arr;
 }
 function updateChart(candles) {
 if (!series || !candles || candles.length === 0) return;
@@ -525,7 +619,7 @@ callback(formatted);
 // --- Init / reconnect ---
 function reconnect() {
 if (ws) { ws.close(); ws = null; }
-candles5 = []; candles15 = []; candles30 = [];
+candles5 = []; candles15 = []; candles30 = []; candles1h = [];
 signalHistoryList = [];
 lastSignal = null;
 signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">Loading...</div>';
@@ -535,10 +629,13 @@ fetchHistorical(symbol, '15m', function(d15) {
 candles15 = d15;
 fetchHistorical(symbol, '30m', function(d30) {
 candles30 = d30;
+fetchHistorical(symbol, '1h', function(d1h) {
+candles1h = d1h;
 updateChart(candles5);
 updateStats(candles5);
 connectWebSocket(symbol);
 checkConfluence();
+});
 });
 });
 });
@@ -556,4 +653,4 @@ init();
 })();
 </script>
 </body>
-                                    </html>
+  </html>
