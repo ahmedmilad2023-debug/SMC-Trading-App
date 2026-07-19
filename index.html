@@ -1,857 +1,2481 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SMC/ICT Candle Close Confirmation</title>
-<script src="https://cdn.tailwindcss.com">
-</script>
-<script src="https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js">
-</script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #0a0e17; font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #e8edf5; }
-.dashboard-card { background: #121824; border: 1px solid #1e2a3a; border-radius: 12px; padding: 16px; }
-.signal-buy { background: rgba(0, 230, 118, 0.12); border-left: 4px solid #00e676; }
-.signal-sell { background: rgba(255, 82, 82, 0.12); border-left: 4px solid #ff5252; }
-.signal-neutral { background: rgba(255, 193, 7, 0.08); border-left: 4px solid #ffc107; }
-.signal-active { border-left-width: 6px !important; }
-.price-up { color: #00e676; }
-.price-down { color: #ff5252; }
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: #121824; }
-::-webkit-scrollbar-thumb { background: #1e2a3a; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #2a3a4a; }
-.chart-container { height: 420px; width: 100%; position: relative; }
-.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-.status-dot.online { background: #00e676; box-shadow: 0 0 8px #00e67666; }
-.status-dot.offline { background: #ff5252; box-shadow: 0 0 8px #ff525266; }
-.status-dot.warning { background: #ffc107; box-shadow: 0 0 8px #ffc10766; }
-.glow-text { text-shadow: 0 0 20px rgba(0, 230, 118, 0.15); }
-.tf-badge { display: inline-block; font-size: 9px; padding: 1px 8px; border-radius: 10px; background: #1e2a3a; color: #8a9bb5; margin-right: 4px; }
-.tf-badge.active { background: #2a4a3a; color: #00e676; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==">
+    <title>🚀 Crypto Signals Pro</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #1c2333;
+            --bg-card-hover: #252d3f;
+            --border-color: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-muted: #484f58;
+            --green: #00c853;
+            --green-bg: rgba(0, 200, 83, 0.15);
+            --red: #ff1744;
+            --red-bg: rgba(255, 23, 68, 0.15);
+            --gold: #ffd700;
+            --gold-bg: rgba(255, 215, 0, 0.12);
+            --blue: #58a6ff;
+            --blue-bg: rgba(88, 166, 255, 0.12);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --transition: 0.25s ease;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        html,
+        body {
+            height: 100%;
+            font-family: var(--font);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+        a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+        button {
+            font-family: var(--font);
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background: none;
+            color: inherit;
+        }
+        input,
+        select {
+            font-family: var(--font);
+            outline: none;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            font-size: 14px;
+        }
+        input:focus,
+        select:focus {
+            border-color: var(--blue);
+        }
+
+        /* ===== LAYOUT ===== */
+        #app {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 0 12px 80px 12px;
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 6px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 50;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .app-header .brand span {
+            background: linear-gradient(135deg, var(--gold), #f9a825);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .app-header .status-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .status-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 10px var(--green);
+        }
+        .status-dot.offline {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
+        }
+        .status-dot.connecting {
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+            animation: pulse-dot 1s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+        .last-update {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* ===== INSTALL BUTTON ===== */
+        .install-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: var(--blue-bg);
+            color: var(--blue);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+        .install-btn:hover {
+            background: var(--blue);
+            color: #fff;
+        }
+        .install-btn.show {
+            display: flex;
+        }
+
+        /* ===== SYMBOL TABS ===== */
+        .symbol-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 12px 0 8px 0;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .symbol-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .symbol-tab {
+            flex: 0 0 auto;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .symbol-tab:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        .symbol-tab.active {
+            background: var(--blue-bg);
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+        .symbol-tab .price {
+            font-weight: 400;
+            font-size: 11px;
+            margin-left: 6px;
+            color: var(--text-muted);
+        }
+        .symbol-tab.active .price {
+            color: var(--text-secondary);
+        }
+        .symbol-tab .change {
+            font-size: 11px;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        .symbol-tab .change.pos {
+            color: var(--green);
+        }
+        .symbol-tab .change.neg {
+            color: var(--red);
+        }
+
+        /* ===== SIGNAL CARDS ===== */
+        .signals-section {
+            margin-top: 8px;
+        }
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 12px 0 8px 0;
+            color: var(--text-primary);
+        }
+        .section-title .badge {
+            font-size: 12px;
+            font-weight: 400;
+            background: var(--bg-secondary);
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: var(--text-secondary);
+        }
+        .no-signals {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+        .no-signals .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        .signal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            animation: slideUp 0.4s ease;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .signal-card:hover {
+            border-color: var(--text-muted);
+        }
+        .signal-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .signal-card .symbol-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .signal-card .signal-type {
+            font-size: 14px;
+            font-weight: 700;
+            padding: 2px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.3px;
+        }
+        .signal-type.buy {
+            background: var(--green-bg);
+            color: var(--green);
+        }
+        .signal-type.sell {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+        .signal-card .signal-strength {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+        .signal-strength.weak {
+            color: #ffab00;
+            background: rgba(255, 171, 0, 0.15);
+        }
+        .signal-strength.good {
+            color: #69f0ae;
+            background: rgba(105, 240, 174, 0.12);
+        }
+        .signal-strength.strong {
+            color: var(--blue);
+            background: var(--blue-bg);
+        }
+        .signal-strength.excellent {
+            color: var(--gold);
+            background: var(--gold-bg);
+        }
+
+        .signal-card .card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .signal-card .card-body .item {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+        .signal-card .card-body .item .label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        .signal-card .card-body .item .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .signal-card .card-body .item .value.sl {
+            color: var(--red);
+        }
+        .signal-card .card-body .item .value.tp {
+            color: var(--green);
+        }
+        .signal-card .card-body .item .value.rr {
+            color: var(--gold);
+        }
+
+        .signal-card .analysis {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            border-right: 3px solid var(--blue);
+        }
+        .signal-card .analysis .label {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 2px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .signal-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .signal-card .card-footer .time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .signal-card .card-footer .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .signal-card .card-footer .actions button {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: var(--transition);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .signal-card .card-footer .actions button:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        .signal-card .card-footer .actions button.share-btn {
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+        .signal-card .card-footer .actions button.share-btn:hover {
+            background: var(--blue-bg);
+        }
+        .signal-card .card-footer .actions .close-win {
+            color: var(--green);
+            border-color: var(--green);
+        }
+        .signal-card .card-footer .actions .close-win:hover {
+            background: var(--green-bg);
+        }
+        .signal-card .card-footer .actions .close-loss {
+            color: var(--red);
+            border-color: var(--red);
+        }
+        .signal-card .card-footer .actions .close-loss:hover {
+            background: var(--red-bg);
+        }
+
+        /* ===== STATISTICS ===== */
+        .stats-section {
+            margin-top: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .stats-grid .stat-item {
+            text-align: center;
+        }
+        .stats-grid .stat-item .number {
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .stats-grid .stat-item .number.green {
+            color: var(--green);
+        }
+        .stats-grid .stat-item .number.red {
+            color: var(--red);
+        }
+        .stats-grid .stat-item .number.gold {
+            color: var(--gold);
+        }
+        .stats-grid .stat-item .number.blue {
+            color: var(--blue);
+        }
+        .stats-grid .stat-item .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .stats-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 14px 0;
+        }
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 2px 0;
+        }
+        .stats-row .val {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ===== SETTINGS / TOGGLE ===== */
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+        .settings-row .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .settings-row .label .hint {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .toggle {
+            width: 44px;
+            height: 24px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .toggle.active {
+            background: var(--blue);
+            border-color: var(--blue);
+        }
+        .toggle .knob {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: var(--transition);
+        }
+        .toggle.active .knob {
+            left: 22px;
+        }
+
+        /* ===== TELEGRAM SETTINGS ===== */
+        .telegram-settings {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .telegram-settings .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .telegram-settings .input-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .telegram-settings .input-group input {
+            width: 100%;
+        }
+        .telegram-test-btn {
+            background: var(--blue-bg);
+            color: var(--blue);
+            padding: 8px 18px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid var(--blue);
+            transition: var(--transition);
+            width: 100%;
+            margin-top: 4px;
+        }
+        .telegram-test-btn:hover {
+            background: var(--blue);
+            color: #fff;
+        }
+        .telegram-test-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== SIGNAL LOG ===== */
+        .log-section {
+            margin-top: 16px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+        }
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        .log-entry .log-symbol {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .log-entry .log-type {
+            font-weight: 600;
+            padding: 0 8px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        .log-entry .log-type.buy {
+            color: var(--green);
+        }
+        .log-entry .log-type.sell {
+            color: var(--red);
+        }
+        .log-entry .log-result {
+            font-weight: 600;
+        }
+        .log-entry .log-result.win {
+            color: var(--green);
+        }
+        .log-entry .log-result.loss {
+            color: var(--red);
+        }
+        .log-entry .log-result.pending {
+            color: var(--gold);
+        }
+        .log-entry .log-result.cancelled {
+            color: var(--text-muted);
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            width: 90%;
+            max-width: 400px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: toastIn 0.35s ease;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast .toast-icon {
+            font-size: 24px;
+        }
+        .toast .toast-msg {
+            font-size: 14px;
+            font-weight: 500;
+            flex: 1;
+        }
+        .toast .toast-msg small {
+            display: block;
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 420px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .signal-card .card-body {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 12px;
+            }
+            .app-header .brand {
+                font-size: 17px;
+            }
+            .app-header .status-group {
+                font-size: 11px;
+                gap: 8px;
+            }
+            .symbol-tab {
+                font-size: 12px;
+                padding: 4px 12px;
+            }
+        }
+        @media (min-width: 600px) {
+            #app {
+                padding: 0 24px 80px 24px;
+            }
+            .signal-card {
+                padding: 20px 24px;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .hidden {
+            display: none !important;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .w-full {
+            width: 100%;
+        }
+
+        /* ===== SPLASH SCREEN ===== */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        #splash.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #splash .logo {
+            font-size: 52px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), #f9a825);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #splash .sub {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
+        #splash .loader {
+            margin-top: 28px;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="app" class="max-w-7xl mx-auto px-3 px-4 py-4 md:py-6">
-<header class="flex flex-wrap items-center justify-between gap-3 mb-4">
-<div class="flex items-center gap-2">
-<h1 class="text-xl md:text-2xl font-bold tracking-tight glow-text">📊 SMC/ICT Candle Close</h1>
-<span class="text-xs bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded-full border border-blue-700/30">Close Confirmation</span>
-</div>
-<div class="flex items-center gap-4 text-sm">
-<div class="flex items-center">
-<span class="status-dot online" id="statusDot"></span>
-<span id="statusText" class="text-gray-400 text-xs">Connecting</span>
-</div>
-<div class="flex items-center gap-2">
-<span id="dataSourceLabel" class="text-xs px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">DataSource: --</span>
-</div>
-<div class="text-right">
-<div class="text-lg font-mono font-bold" id="priceDisplay">--</div>
-<div class="text-xs text-gray-500" id="priceChange">--</div>
-</div>
-</div>
-</header>
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-3 mb-3">
-<div class="dashboard-card lg:col-span-3">
-<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-<div class="flex items-center gap-3">
-<select id="symbolSelect" class="bg-[#0d1520] border border-[#1e2a3a] rounded-lg px-3 py-1.5 text-sm text-white outline-none focus:border-blue-500 transition-colors">
-<option value="BTCUSDT">BTC/USDT</option>
-<option value="ETHUSDT">ETH/USDT</option>
-<option value="BNBUSDT">BNB/USDT</option>
-<option value="SOLUSDT">SOL/USDT</option>
-<option value="XRPUSDT">XRP/USDT</option>
-<option value="ADAUSDT">ADA/USDT</option>
-<option value="DOGEUSDT">DOGE/USDT</option>
-</select>
-</div>
-<div class="flex items-center gap-2 text-xs text-gray-500">
-<span class="tf-badge active">5m</span>
-<span class="tf-badge active">15m</span>
-<span class="tf-badge active">30m</span>
-<span class="tf-badge active" style="background:#2a3a5a;color:#ffc107;">1H</span>
-<span id="candleCount" class="ml-1">Candles: 0</span>
-</div>
-</div>
-<div class="chart-container" id="chartContainer"></div>
-</div>
-<div class="dashboard-card lg:col-span-1 flex flex-col">
-<div class="flex items-center justify-between mb-2">
-<h3 class="text-sm font-semibold text-gray-300">📡 Active Signal</h3>
-<span class="text-xs bg-gray-800 px-2 py-0.5 rounded-full text-gray-400" id="biasDisplay">1H Structure: --</span>
-</div>
-<div id="signalDisplay" class="flex-1 flex flex-col items-center justify-center text-center p-2 min-h-[140px]">
-<div class="text-gray-500 text-sm">Awaiting close...</div>
-</div>
-<div class="mt-2 text-xs text-gray-600 text-center border-t border-[#1e2a3a] pt-2" id="signalReason">
-Candle Close Confirmation · Confluence 5m/15m/30m · SL 0.5% / TP 1.0%
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
-<div class="dashboard-card lg:col-span-1">
-<h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">📋 Signal History</h4>
-<div id="signalHistory" class="max-h-[220px] overflow-y-auto space-y-1.5 pr-1">
-<div class="text-gray-500 text-xs text-center py-6">No signals yet</div>
-</div>
-</div>
-<div class="dashboard-card lg:col-span-3">
-<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-<h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">📈 Market Stats (5m)</h4>
-<div class="flex gap-4 text-xs">
-<span class="text-gray-500">High: <span id="statHigh" class="text-white font-mono">--</span></span>
-<span class="text-gray-500">Low: <span id="statLow" class="text-white font-mono">--</span></span>
-<span class="text-gray-500">Volume: <span id="statVolume" class="text-white font-mono">--</span></span>
-</div>
-</div>
-<div id="marketStats" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">FVG</span><br><span id="fvgCount" class="text-blue-400 font-mono">0</span></div>
-<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">Order Blocks</span><br><span id="obCount" class="text-yellow-400 font-mono">0</span></div>
-<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">Liquidity</span><br><span id="liqCount" class="text-purple-400 font-mono">0</span></div>
-<div class="bg-[#0d1520] rounded-lg p-2 text-center"><span class="text-gray-500">1H Structure</span><br><span id="structureStatus" class="text-white font-mono">--</span></div>
-</div>
-</div>
-</div>
-<footer class="mt-4 text-center text-[10px] text-gray-600 border-t border-[#1e2a3a] pt-3">
-SMC/ICT · Candle Close Confirmation · Persistent signals · SL 0.5% / TP 1.0% · Educational only
-</footer>
-</div>
-<script>
-(function() {
-'use strict';
-// --- DOM references ---
-var priceDisplay = document.getElementById('priceDisplay');
-var priceChange = document.getElementById('priceChange');
-var statusDot = document.getElementById('statusDot');
-var statusText = document.getElementById('statusText');
-var dataSourceLabel = document.getElementById('dataSourceLabel');
-var symbolSelect = document.getElementById('symbolSelect');
-var chartContainer = document.getElementById('chartContainer');
-var signalDisplay = document.getElementById('signalDisplay');
-var signalReason = document.getElementById('signalReason');
-var signalHistory = document.getElementById('signalHistory');
-var biasDisplay = document.getElementById('biasDisplay');
-var candleCount = document.getElementById('candleCount');
-var statHigh = document.getElementById('statHigh');
-var statLow = document.getElementById('statLow');
-var statVolume = document.getElementById('statVolume');
-var fvgCount = document.getElementById('fvgCount');
-var obCount = document.getElementById('obCount');
-var liqCount = document.getElementById('liqCount');
-var structureStatus = document.getElementById('structureStatus');
 
-// --- State variables ---
-var symbol = 'BTCUSDT';
-var candles5 = [];
-var candles15 = [];
-var candles30 = [];
-var candles1h = [];
-var lastPrice = null;
-var activeSignal = null;
-var activeSignalDetails = null;
-var signalHistoryList = [];
-var isConnected = false;
-var ws = null;
-var chart = null;
-var series = null;
-var volumeSeries = null;
+    <!-- ===== SPLASH ===== -->
+    <div id="splash">
+        <div class="logo">🚀</div>
+        <div class="sub">Crypto Signals Pro</div>
+        <div class="loader"></div>
+    </div>
 
-// --- Signal Stability Logic state ---
-var activeSignalLocked = false;
-var activeSignalEntryTime = 0;
-var oppositeCount = 0;
-var lastEvaluationCandleTime = 0;
+    <!-- ===== APP ===== -->
+    <div id="app">
 
-// --- Hybrid Data Fetching state ---
-var dataSource = 'ws'; // 'ws' or 'rest'
-var wsDataReceived = false;
-var wsDataTimeoutId = null;
-var restIntervalId = null;
-var backoffDelay = 2000; // 2 seconds initial
-var backoffMax = 30000; // 30 seconds max
-var isRestMode = false;
-var restFetchInterval = 10000; // 10 seconds
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="brand">
+                🚀 <span>Signals Pro</span>
+            </div>
+            <div class="status-group">
+                <span class="status-dot connecting" id="statusDot"></span>
+                <span id="statusLabel">جاري الاتصال...</span>
+                <span class="last-update" id="lastUpdate">--</span>
+                <button class="install-btn" id="installBtn">📲 تثبيت</button>
+            </div>
+        </header>
 
-// --- Helper functions (pure SMC) unchanged ---
-function detectFVG(candles) {
-var list = [];
-if (candles.length < 3) return list;
-for (var i = 2; i < candles.length; i++) {
-var prev = candles[i-2], curr = candles[i];
-if (prev.high < curr.low) list.push({ type: 'bullish', top: curr.low, bottom: prev.high, startIdx: i-2, endIdx: i });
-if (prev.low > curr.high) list.push({ type: 'bearish', top: prev.low, bottom: curr.high, startIdx: i-2, endIdx: i });
-}
-return list;
-}
-function detectOrderBlocks(candles) {
-var list = [];
-if (candles.length < 4) return list;
-for (var i = 3; i < candles.length; i++) {
-var c2 = candles[i-2], c3 = candles[i-1], c4 = candles[i];
-if (c2.close < c2.open && c3.close > c3.open && c4.close > c4.open) list.push({ type: 'bullish', high: c2.high, low: c2.low, idx: i-2 });
-if (c2.close > c2.open && c3.close < c3.open && c4.close < c4.open) list.push({ type: 'bearish', high: c2.high, low: c2.low, idx: i-2 });
-}
-return list;
-}
-function detectLiquidity(candles, lookback) {
-lookback = lookback || 15;
-var levels = [];
-if (candles.length < lookback * 2) return levels;
-for (var i = lookback; i < candles.length - lookback; i++) {
-var isHigh = true, isLow = true;
-for (var j = i - lookback; j <= i + lookback; j++) {
-if (j === i) continue;
-if (candles[j].high >= candles[i].high) isHigh = false;
-if (candles[j].low <= candles[i].low) isLow = false;
-}
-if (isHigh) levels.push({ type: 'resistance', price: candles[i].high, idx: i });
-if (isLow) levels.push({ type: 'support', price: candles[i].low, idx: i });
-}
-return levels;
-}
-function detectSwingPoints(candles, lookback) {
-lookback = lookback || 8;
-var highs = [];
-var lows = [];
-if (candles.length < lookback * 2 + 1) return { highs: [], lows: [] };
-for (var i = lookback; i < candles.length - lookback; i++) {
-var isHigh = true;
-var isLow = true;
-for (var j = i - lookback; j <= i + lookback; j++) {
-if (j === i) continue;
-if (candles[j].high >= candles[i].high) isHigh = false;
-if (candles[j].low <= candles[i].low) isLow = false;
-}
-if (isHigh) highs.push({ price: candles[i].high, idx: i, time: candles[i].time });
-if (isLow) lows.push({ price: candles[i].low, idx: i, time: candles[i].time });
-}
-return { highs: highs, lows: lows };
-}
-function getMarketStructureTrend(candles) {
-if (candles.length < 30) return 'neutral';
-var swing = detectSwingPoints(candles, 8);
-var highs = swing.highs;
-var lows = swing.lows;
-if (highs.length < 2 && lows.length < 2) return 'neutral';
-var lastPrice = candles[candles.length-1].close;
-var trend = 'neutral';
-var recentHighs = highs.slice(-4);
-var recentLows = lows.slice(-4);
-var bosUp = false;
-var bosDown = false;
-if (recentHighs.length >= 2) {
-var lastHigh = recentHighs[recentHighs.length-1];
-var prevHigh = recentHighs[recentHighs.length-2];
-if (lastHigh.price > prevHigh.price && lastPrice > lastHigh.price) {
-bosUp = true;
-}
-}
-if (recentLows.length >= 2) {
-var lastLow = recentLows[recentLows.length-1];
-var prevLow = recentLows[recentLows.length-2];
-if (lastLow.price < prevLow.price && lastPrice < lastLow.price) {
-bosDown = true;
-}
-}
-if (!bosUp && recentHighs.length >= 1) {
-var mostRecentHigh = recentHighs[recentHighs.length-1];
-if (lastPrice > mostRecentHigh.price) {
-bosUp = true;
-}
-}
-if (!bosDown && recentLows.length >= 1) {
-var mostRecentLow = recentLows[recentLows.length-1];
-if (lastPrice < mostRecentLow.price) {
-bosDown = true;
-}
-}
-if (bosUp && !bosDown) trend = 'bullish';
-else if (bosDown && !bosUp) trend = 'bearish';
-else if (bosUp && bosDown) {
-var lastHighTime = recentHighs.length > 0 ? recentHighs[recentHighs.length-1].time : 0;
-var lastLowTime = recentLows.length > 0 ? recentLows[recentLows.length-1].time : 0;
-if (lastHighTime > lastLowTime) trend = 'bullish';
-else trend = 'bearish';
-}
-return trend;
-}
-function generateSMCSignal(candles) {
-if (candles.length < 30) return null;
-var fvg = detectFVG(candles);
-var ob = detectOrderBlocks(candles);
-var liq = detectLiquidity(candles);
-var lastC = candles[candles.length-1];
-var price = lastC.close;
-var signal = null, reason = '', stopLoss = null, takeProfit = null;
-var fvgHit = null, obHit = null, liqHit = null;
-for (var i = 0; i < fvg.length; i++) {
-var f = fvg[i];
-if ((f.type === 'bullish' && price >= f.bottom && price <= f.top) ||
-(f.type === 'bearish' && price >= f.bottom && price <= f.top)) {
-fvgHit = f; break;
-}
-}
-if (!fvgHit) {
-for (var j = 0; j < ob.length; j++) {
-var o = ob[j];
-if (price >= o.low && price <= o.high) { obHit = o; break; }
-}
-}
-if (!fvgHit && !obHit) {
-for (var k = 0; k < liq.length; k++) {
-var l = liq[k];
-if ((l.type === 'support' && price >= l.price * 0.998 && price <= l.price * 1.002) ||
-(l.type === 'resistance' && price >= l.price * 0.998 && price <= l.price * 1.002)) {
-liqHit = l; break;
-}
-}
-}
-var longCond = false, shortCond = false, longReason = '', shortReason = '';
-if (fvgHit && fvgHit.type === 'bullish') { longCond = true; longReason = 'Bullish FVG ' + fvgHit.bottom.toFixed(2) + '-' + fvgHit.top.toFixed(2); }
-else if (obHit && obHit.type === 'bullish') { longCond = true; longReason = 'Bullish OB ' + obHit.low.toFixed(2) + '-' + obHit.high.toFixed(2); }
-else if (liqHit && liqHit.type === 'support') { longCond = true; longReason = 'Support sweep ' + liqHit.price.toFixed(2); }
-if (fvgHit && fvgHit.type === 'bearish') { shortCond = true; shortReason = 'Bearish FVG ' + fvgHit.bottom.toFixed(2) + '-' + fvgHit.top.toFixed(2); }
-else if (obHit && obHit.type === 'bearish') { shortCond = true; shortReason = 'Bearish OB ' + obHit.low.toFixed(2) + '-' + obHit.high.toFixed(2); }
-else if (liqHit && liqHit.type === 'resistance') { shortCond = true; shortReason = 'Resistance sweep ' + liqHit.price.toFixed(2); }
-if (longCond) {
-signal = 'BUY';
-reason = longReason;
-} else if (shortCond) {
-signal = 'SELL';
-reason = shortReason;
-}
-if (signal) {
-var entry = price;
-var slPercent = 0.005;
-var tpPercent = 0.010;
-var sl, tp;
-if (signal === 'BUY') {
-sl = entry * (1 - slPercent);
-tp = entry * (1 + tpPercent);
-} else {
-sl = entry * (1 + slPercent);
-tp = entry * (1 - tpPercent);
-}
-var buffer = 0.0001;
-if (signal === 'BUY') {
-sl = sl * (1 - buffer);
-tp = tp * (1 + buffer);
-} else {
-sl = sl * (1 + buffer);
-tp = tp * (1 - buffer);
-}
-if (Math.abs(sl - entry) < 0.01) sl = signal === 'BUY' ? entry * 0.995 : entry * 1.005;
-if (Math.abs(tp - entry) < 0.01) tp = signal === 'BUY' ? entry * 1.01 : entry * 0.99;
-return {
-signal: signal,
-entry: entry,
-stopLoss: sl,
-takeProfit: tp,
-reason: reason,
-timestamp: new Date().toISOString(),
-fvgCount: fvg.length,
-obCount: ob.length,
-liqCount: liq.length,
-fvgHit: fvgHit,
-obHit: obHit,
-liqHit: liqHit
-};
-}
-return null;
-}
-function evaluateConfluence() {
-if (candles5.length < 30 || candles15.length < 30 || candles30.length < 30 || candles1h.length < 30) {
-return null;
-}
-var structure = getMarketStructureTrend(candles1h);
-biasDisplay.textContent = '1H Structure: ' + structure.toUpperCase();
-structureStatus.textContent = structure.toUpperCase();
-if (structure === 'neutral') {
-return null;
-}
-var sig5 = generateSMCSignal(candles5);
-var sig15 = generateSMCSignal(candles15);
-var sig30 = generateSMCSignal(candles30);
-if (!sig5) return null;
-var dir5 = sig5.signal;
-var dir15 = sig15 ? sig15.signal : null;
-var dir30 = sig30 ? sig30.signal : null;
-if (dir5 === 'BUY') {
-if (dir15 === 'SELL' || dir30 === 'SELL') return null;
-if (structure !== 'bullish') return null;
-} else if (dir5 === 'SELL') {
-if (dir15 === 'BUY' || dir30 === 'BUY') return null;
-if (structure !== 'bearish') return null;
-} else {
-return null;
-}
-return sig5;
-}
-// --- Update active signal with persistence, stability and lock ---
-function updateActiveSignal(candleCloseTime) {
-if (candleCloseTime === lastEvaluationCandleTime) return;
-lastEvaluationCandleTime = candleCloseTime;
-var newSignal = evaluateConfluence();
-if (!newSignal && !activeSignal) {
-displayActiveSignal();
-return;
-}
-if (!activeSignal) {
-if (newSignal) {
-activeSignal = newSignal.signal;
-activeSignalDetails = newSignal;
-activeSignalLocked = true;
-activeSignalEntryTime = candleCloseTime;
-oppositeCount = 0;
-displayActiveSignal();
-addSignalHistory(newSignal);
-}
-return;
-}
-if (activeSignalLocked) {
-var elapsed = candleCloseTime - activeSignalEntryTime;
-if (elapsed < 15 * 60 * 1000) {
-return;
-} else {
-activeSignalLocked = false;
-}
-}
-if (newSignal) {
-var newDir = newSignal.signal;
-var currentDir = activeSignal;
-if (newDir === currentDir) {
-oppositeCount = 0;
-return;
-} else {
-var last5m = candles5.length > 0 ? candles5[candles5.length-1] : null;
-if (last5m && last5m.time === candleCloseTime) {
-oppositeCount += 1;
-if (oppositeCount >= 3) {
-activeSignal = newDir;
-activeSignalDetails = newSignal;
-activeSignalLocked = true;
-activeSignalEntryTime = candleCloseTime;
-oppositeCount = 0;
-displayActiveSignal();
-addSignalHistory(newSignal);
-}
-} else {
-}
-}
-} else {
-var last5m = candles5.length > 0 ? candles5[candles5.length-1] : null;
-if (last5m && last5m.time === candleCloseTime) {
-oppositeCount = 0;
-}
-}
-displayActiveSignal();
-}
-// --- Display active signal in UI ---
-function displayActiveSignal() {
-if (!activeSignalDetails) {
-signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">No active signal</div>';
-signalReason.textContent = 'Awaiting confirmation...';
-return;
-}
-var sig = activeSignalDetails;
-var isBuy = sig.signal === 'BUY';
-var cls = isBuy ? 'signal-buy signal-active' : 'signal-sell signal-active';
-var icon = isBuy ? '📈' : '📉';
-var color = isBuy ? 'text-green-400' : 'text-red-400';
-var lockStatus = activeSignalLocked ? '🔒 Locked' : '🔓 Unlocked';
-var html = '<div class="w-full ' + cls + ' p-3 rounded-lg text-left">';
-html += '<div class="flex items-center justify-between"><span class="text-lg font-bold ' + color + '">' + icon + ' ' + sig.signal + ' (ACTIVE)</span>';
-html += '<span class="text-xs text-gray-500">' + new Date(sig.timestamp).toLocaleTimeString() + ' ' + lockStatus + '</span></div>';
-html += '<div class="grid grid-cols-3 gap-1 mt-1 text-xs">';
-html += '<div><span class="text-gray-500">Entry</span><br><span class="font-mono">$' + sig.entry.toFixed(2) + '</span></div>';
-html += '<div><span class="text-gray-500">SL (0.5%)</span><br><span class="font-mono text-red-400">$' + sig.stopLoss.toFixed(2) + '</span></div>';
-html += '<div><span class="text-gray-500">TP (1.0%)</span><br><span class="font-mono text-green-400">$' + sig.takeProfit.toFixed(2) + '</span></div>';
-html += '</div>';
-html += '<div class="text-xs text-gray-400 mt-1 truncate">' + sig.reason + '</div>';
-html += '</div>';
-signalDisplay.innerHTML = html;
-signalReason.textContent = 'Active: ' + sig.signal + ' | ' + sig.reason + (activeSignalLocked ? ' | 🔒 Locked' : '');
-}
-function addSignalHistory(sig) {
-var entry = {
-signal: sig.signal,
-entry: sig.entry,
-stopLoss: sig.stopLoss,
-takeProfit: sig.takeProfit,
-reason: sig.reason,
-timestamp: sig.timestamp
-};
-signalHistoryList.unshift(entry);
-if (signalHistoryList.length > 20) signalHistoryList.pop();
-renderSignalHistory();
-}
-function renderSignalHistory() {
-if (signalHistoryList.length === 0) {
-signalHistory.innerHTML = '<div class="text-gray-500 text-xs text-center py-6">No signals yet</div>';
-return;
-}
-var html = '';
-for (var i = 0; i < signalHistoryList.length; i++) {
-var s = signalHistoryList[i];
-var isBuy = s.signal === 'BUY';
-var cls = isBuy ? 'signal-buy' : 'signal-sell';
-var icon = isBuy ? '▲' : '▼';
-var color = isBuy ? 'text-green-400' : 'text-red-400';
-html += '<div class="' + cls + ' p-2 rounded-lg cursor-pointer hover:brightness-110 transition-all" onclick="window.selectSignal(' + i + ')">';
-html += '<div class="flex items-center justify-between"><span class="font-bold text-xs ' + color + '">' + icon + ' ' + s.signal + '</span>';
-html += '<span class="text-[10px] text-gray-500">' + new Date(s.timestamp).toLocaleTimeString() + '</span></div>';
-html += '<div class="flex gap-2 text-[10px] text-gray-400 mt-0.5">';
-html += '<span>E: $' + (s.entry || 0).toFixed(2) + '</span>';
-html += '<span>SL: $' + (s.stopLoss || 0).toFixed(2) + '</span>';
-html += '<span>TP: $' + (s.takeProfit || 0).toFixed(2) + '</span>';
-html += '</div>';
-html += '</div>';
-}
-signalHistory.innerHTML = html;
-}
-window.selectSignal = function(idx) {
-var s = signalHistoryList[idx];
-if (!s) return;
-signalDisplay.innerHTML = '<div class="signal-neutral p-3 rounded-lg w-full text-left"><div class="text-xs text-gray-400">History: ' + s.signal + ' @ ' + new Date(s.timestamp).toLocaleTimeString() + '</div><div class="text-xs text-gray-500 mt-1">' + s.reason + '</div></div>';
-signalReason.textContent = 'History: ' + s.signal;
-};
-function updateStats(candles) {
-if (!candles || candles.length === 0) return;
-var high = candles[candles.length-1].high;
-var low = candles[candles.length-1].low;
-var vol = candles[candles.length-1].volume;
-for (var i = 0; i < candles.length; i++) {
-if (candles[i].high > high) high = candles[i].high;
-if (candles[i].low < low) low = candles[i].low;
-}
-statHigh.textContent = '$' + high.toFixed(2);
-statLow.textContent = '$' + low.toFixed(2);
-statVolume.textContent = (vol / 1000).toFixed(1) + 'k';
-var f = detectFVG(candles);
-var o = detectOrderBlocks(candles);
-var l = detectLiquidity(candles);
-fvgCount.textContent = f.length;
-obCount.textContent = o.length;
-liqCount.textContent = l.length;
-}
-// --- Hybrid Data Fetching: WebSocket with fallback to REST ---
-function updateArray(arr, newCandle) {
-var idx = -1;
-for (var i = 0; i < arr.length; i++) {
-if (arr[i].time === newCandle.time) { idx = i; break; }
-}
-if (idx >= 0) arr[idx] = newCandle;
-else { arr.push(newCandle); if (arr.length > 300) arr = arr.slice(-300); }
-if (arr === candles5) candles5 = arr;
-else if (arr === candles15) candles15 = arr;
-else if (arr === candles30) candles30 = arr;
-else if (arr === candles1h) candles1h = arr;
-}
-function updateChart(candles) {
-if (!series || !candles || candles.length === 0) return;
-var chartData = [], volumeData = [];
-for (var i = 0; i < candles.length; i++) {
-var c = candles[i];
-chartData.push({ time: Math.floor(c.time / 1000), open: c.open, high: c.high, low: c.low, close: c.close });
-volumeData.push({ time: Math.floor(c.time / 1000), value: c.volume, color: c.close >= c.open ? 'rgba(0,230,118,0.3)' : 'rgba(255,82,82,0.3)' });
-}
-series.setData(chartData);
-volumeSeries.setData(volumeData);
-chart.timeScale().fitContent();
-}
-// --- REST fetching function ---
-function fetchAllIntervals(callback) {
-var intervals = ['5m', '15m', '30m', '1h'];
-var results = {};
-var completed = 0;
-intervals.forEach(function(inter) {
-var url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + '&interval=' + inter + '&limit=100';
-fetch(url)
-.then(function(r) { return r.json(); })
-.then(function(data) {
-var formatted = [];
-for (var i = 0; i < data.length; i++) {
-var d = data[i];
-formatted.push({ time: d[0], open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]), volume: parseFloat(d[5]) });
-}
-results[inter] = formatted;
-completed++;
-if (completed === intervals.length) {
-callback(results);
-}
-})
-.catch(function() {
-results[inter] = [];
-completed++;
-if (completed === intervals.length) {
-callback(results);
-}
-});
-});
-}
-function updateFromRest(results) {
-if (results['5m'] && results['5m'].length > 0) {
-candles5 = results['5m'];
-updateChart(candles5);
-updateStats(candles5);
-}
-if (results['15m'] && results['15m'].length > 0) candles15 = results['15m'];
-if (results['30m'] && results['30m'].length > 0) candles30 = results['30m'];
-if (results['1h'] && results['1h'].length > 0) candles1h = results['1h'];
-// Update price display from latest 5m close
-if (candles5.length > 0) {
-var last = candles5[candles5.length-1];
-lastPrice = last.close;
-priceDisplay.textContent = '$' + last.close.toFixed(2);
-if (candles5.length >= 2) {
-var prev = candles5[candles5.length-2];
-if (prev) {
-var change = ((last.close - prev.close) / prev.close) * 100;
-var color = change >= 0 ? 'text-green-400' : 'text-red-400';
-priceChange.className = 'text-xs ' + color;
-priceChange.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
-}
-}
-candleCount.textContent = 'Candles: ' + candles5.length;
-}
-// Evaluate signals using latest candle time (5m)
-if (candles5.length > 0) {
-var lastTime = candles5[candles5.length-1].time;
-updateActiveSignal(lastTime);
-}
-}
-function startRestPolling() {
-if (restIntervalId) clearInterval(restIntervalId);
-restIntervalId = setInterval(function() {
-fetchAllIntervals(function(results) {
-updateFromRest(results);
-});
-}, restFetchInterval);
-}
-function stopRestPolling() {
-if (restIntervalId) {
-clearInterval(restIntervalId);
-restIntervalId = null;
-}
-}
-// --- WebSocket connection with exponential backoff ---
-function connectWebSocket() {
-if (ws) { ws.close(); ws = null; }
-var streams = symbol.toLowerCase() + '@kline_5m/' + symbol.toLowerCase() + '@kline_15m/' + symbol.toLowerCase() + '@kline_30m/' + symbol.toLowerCase() + '@kline_1h';
-var url = 'wss://stream.binance.com:9443/stream?streams=' + streams;
-ws = new WebSocket(url);
-ws.onopen = function() {
-isConnected = true;
-dataSource = 'ws';
-isRestMode = false;
-stopRestPolling();
-updateStatusIndicator('ws', true);
-// Reset backoff delay on successful connection
-backoffDelay = 2000;
-// Reset data received flag and timeout
-wsDataReceived = false;
-if (wsDataTimeoutId) clearTimeout(wsDataTimeoutId);
-wsDataTimeoutId = setTimeout(function() {
-// If no data received within 5 seconds, fallback to REST
-if (!wsDataReceived && !isRestMode) {
-switchToRestMode();
-}
-}, 5000);
-};
-ws.onmessage = function(event) {
-try {
-var msg = JSON.parse(event.data);
-if (msg.data && msg.data.k) {
-wsDataReceived = true; // mark data received
-var k = msg.data.k;
-var streamName = msg.stream;
-var candle = { time: k.t, open: parseFloat(k.o), high: parseFloat(k.h), low: parseFloat(k.l), close: parseFloat(k.c), volume: parseFloat(k.v) };
-var isFinal = k.x;
-if (streamName.indexOf('5m') > -1) {
-updateArray(candles5, candle);
-updateChart(candles5);
-updateStats(candles5);
-if (isFinal) {
-updateActiveSignal(candle.time);
-}
-} else if (streamName.indexOf('15m') > -1) {
-updateArray(candles15, candle);
-if (isFinal) {
-updateActiveSignal(candle.time);
-}
-} else if (streamName.indexOf('30m') > -1) {
-updateArray(candles30, candle);
-if (isFinal) {
-updateActiveSignal(candle.time);
-}
-} else if (streamName.indexOf('1h') > -1) {
-updateArray(candles1h, candle);
-if (isFinal) {
-updateActiveSignal(candle.time);
-}
-}
-if (candle.close) {
-lastPrice = candle.close;
-priceDisplay.textContent = '$' + candle.close.toFixed(2);
-if (candles5.length >= 2) {
-var prev = candles5[candles5.length-2];
-if (prev) {
-var change = ((candle.close - prev.close) / prev.close) * 100;
-var color = change >= 0 ? 'text-green-400' : 'text-red-400';
-priceChange.className = 'text-xs ' + color;
-priceChange.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
-}
-}
-candleCount.textContent = 'Candles: ' + candles5.length;
-}
-}
-} catch (e) {}
-};
-ws.onerror = function() {
-// WebSocket error, try to fallback to REST if not already
-if (!isRestMode) {
-switchToRestMode();
-}
-};
-ws.onclose = function() {
-isConnected = false;
-if (!isRestMode) {
-// If not already in rest mode, attempt reconnect with backoff
-scheduleReconnect();
-}
-};
-}
-function switchToRestMode() {
-if (isRestMode) return;
-isRestMode = true;
-dataSource = 'rest';
-updateStatusIndicator('rest', true);
-if (ws) { ws.close(); ws = null; }
-// Start polling REST
-startRestPolling();
-// Immediately fetch data
-fetchAllIntervals(function(results) {
-updateFromRest(results);
-});
-}
-function scheduleReconnect() {
-if (isRestMode) return; // if already in rest mode, don't reconnect ws
-var delay = backoffDelay;
-backoffDelay = Math.min(backoffDelay * 2, backoffMax);
-setTimeout(function() {
-// Only try to reconnect if not in rest mode and ws is not connected
-if (!isConnected && !isRestMode) {
-connectWebSocket();
-}
-}, delay);
-}
-function updateStatusIndicator(source, connected) {
-var dot = statusDot;
-var text = statusText;
-var label = dataSourceLabel;
-if (source === 'ws' && connected) {
-dot.className = 'status-dot online';
-text.textContent = 'Live WebSocket';
-label.textContent = 'DataSource: 🔵 WS';
-} else if (source === 'rest' && connected) {
-dot.className = 'status-dot warning';
-text.textContent = 'REST API (Backup)';
-label.textContent = 'DataSource: 🟡 REST';
-} else {
-dot.className = 'status-dot offline';
-text.textContent = 'Disconnected';
-label.textContent = 'DataSource: --';
-}
-}
-// --- Fetch historical on startup (initial load) ---
-function fetchHistorical(sym, inter, callback) {
-var url = 'https://api.binance.com/api/v3/klines?symbol=' + sym + '&interval=' + inter + '&limit=100';
-fetch(url).then(function(r) { return r.json(); }).then(function(data) {
-var formatted = [];
-for (var i = 0; i < data.length; i++) {
-var d = data[i];
-formatted.push({ time: d[0], open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4]), volume: parseFloat(d[5]) });
-}
-callback(formatted);
-}).catch(function() { callback([]); });
-}
-// --- Init / reconnect ---
-function reconnect() {
-if (ws) { ws.close(); ws = null; }
-if (restIntervalId) { clearInterval(restIntervalId); restIntervalId = null; }
-isRestMode = false;
-dataSource = 'ws';
-backoffDelay = 2000;
-// Reset state
-candles5 = []; candles15 = []; candles30 = []; candles1h = [];
-signalHistoryList = [];
-activeSignal = null;
-activeSignalDetails = null;
-activeSignalLocked = false;
-activeSignalEntryTime = 0;
-oppositeCount = 0;
-lastEvaluationCandleTime = 0;
-signalDisplay.innerHTML = '<div class="text-gray-500 text-sm">Loading...</div>';
-// Load historical data first
-fetchHistorical(symbol, '5m', function(d5) {
-candles5 = d5;
-fetchHistorical(symbol, '15m', function(d15) {
-candles15 = d15;
-fetchHistorical(symbol, '30m', function(d30) {
-candles30 = d30;
-fetchHistorical(symbol, '1h', function(d1h) {
-candles1h = d1h;
-updateChart(candles5);
-updateStats(candles5);
-// Evaluate initial signal using historical data
-if (candles5.length > 0) {
-var lastTime = candles5[candles5.length-1].time;
-updateActiveSignal(lastTime);
-}
-// Now connect WebSocket
-connectWebSocket();
-});
-});
-});
-});
-}
-symbolSelect.addEventListener('change', function() {
-symbol = this.value;
-reconnect();
-});
-function initChart() {
-if (chart) { chart.remove(); chart = null; series = null; volumeSeries = null; }
-chart = LightweightCharts.createChart(chartContainer, {
-layout: { background: { color: '#0a0e17' }, textColor: '#8a9bb5' },
-grid: { vertLines: { color: '#161f2e' }, horzLines: { color: '#161f2e' } },
-crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-rightPriceScale: { borderColor: '#1e2a3a' },
-timeScale: { borderColor: '#1e2a3a', timeVisible: true, secondsVisible: false },
-width: chartContainer.clientWidth,
-height: chartContainer.clientHeight
-});
-series = chart.addCandlestickSeries({
-upColor: '#00e676', downColor: '#ff5252',
-borderUpColor: '#00e676', borderDownColor: '#ff5252',
-wickUpColor: '#00e676', wickDownColor: '#ff5252'
-});
-volumeSeries = chart.addHistogramSeries({
-color: '#2a3a5a', priceFormat: { type: 'volume' }, priceScaleId: 'volume',
-scaleMargins: { top: 0.85, bottom: 0 }
-});
-chart.applyOptions({ timeScale: { fixLeftEdge: true, fixRightEdge: true } });
-window.addEventListener('resize', function() {
-if (chart) chart.applyOptions({ width: chartContainer.clientWidth, height: chartContainer.clientHeight });
-});
-}
-function init() {
-initChart();
-reconnect();
-}
-init();
-})();
-</script>
+        <!-- SYMBOL TABS -->
+        <div class="symbol-tabs" id="symbolTabs"></div>
+
+        <!-- SIGNALS -->
+        <section class="signals-section">
+            <div class="section-title">
+                <span>📊 الإشارات النشطة</span>
+                <span class="badge" id="signalCount">0</span>
+            </div>
+            <div id="signalsContainer">
+                <div class="no-signals">
+                    <div class="icon">📡</div>
+                    <div>جاري تحليل السوق ...<br><span style="font-size:13px;color:var(--text-muted);">سيتم عرض الإشارات عند توفرها</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATISTICS -->
+        <section class="stats-section">
+            <div style="font-weight:700;font-size:15px;">📈 الإحصائيات</div>
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-item"><div class="number blue" id="statTotal">0</div><div class="stat-label">إجمالي</div></div>
+                <div class="stat-item"><div class="number green" id="statWins">0</div><div class="stat-label">رابح</div></div>
+                <div class="stat-item"><div class="number red" id="statLosses">0</div><div class="stat-label">خاسر</div></div>
+                <div class="stat-item"><div class="number gold" id="statWinRate">0%</div><div class="stat-label">نسبة الربح</div></div>
+            </div>
+            <div class="stats-divider"></div>
+            <div class="stats-row"><span>إشارات اليوم</span><span class="val" id="statToday">0</span></div>
+            <div class="stats-row"><span>آخر إشارة</span><span class="val" id="statLastSignal">--</span></div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="stats-section" style="margin-top:12px;">
+            <div style="font-weight:700;font-size:15px;">⚙️ الإعدادات</div>
+            <div class="settings-row">
+                <span class="label">🟠 فلتر التوافق مع البيتكوين <span class="hint">(تفعيل / إلغاء)</span></span>
+                <div class="toggle active" id="toggleBtcFilter" role="button" tabindex="0">
+                    <div class="knob"></div>
+                </div>
+            </div>
+            <div class="settings-row">
+                <span class="label">🔔 التنبيهات الصوتية</span>
+                <div class="toggle active" id="toggleSound" role="button" tabindex="0">
+                    <div class="knob"></div>
+                </div>
+            </div>
+            <div class="settings-row">
+                <span class="label">📳 الاهتزاز</span>
+                <div class="toggle active" id="toggleVibration" role="button" tabindex="0">
+                    <div class="knob"></div>
+                </div>
+            </div>
+            <div class="settings-row">
+                <span class="label">📨 الإشعارات</span>
+                <div class="toggle active" id="toggleNotifications" role="button" tabindex="0">
+                    <div class="knob"></div>
+                </div>
+            </div>
+
+            <!-- TELEGRAM SETTINGS -->
+            <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;border-top:1px solid var(--border-color);padding-top:12px;margin-top:4px;">
+                <div style="font-weight:700;font-size:15px;color:var(--text-primary);">🤖 إعدادات تليجرام</div>
+                <div class="telegram-settings">
+                    <div class="input-group">
+                        <label>Bot Token</label>
+                        <input type="password" id="telegramToken" placeholder="أدخل توكن البوت" />
+                    </div>
+                    <div class="input-group">
+                        <label>Chat ID</label>
+                        <input type="text" id="telegramChatId" placeholder="أدخل معرف الدردشة" />
+                    </div>
+                    <button class="telegram-test-btn" id="testTelegramBtn">📡 اختبار الاتصال</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SIGNAL LOG -->
+        <section class="log-section">
+            <div style="font-weight:700;font-size:15px;display:flex;justify-content:space-between;">
+                <span>📋 سجل الإشارات</span>
+                <span style="font-size:12px;font-weight:400;color:var(--text-muted);" id="logCount">0</span>
+            </div>
+            <div id="logContainer" style="margin-top:8px;max-height:200px;overflow-y:auto;">
+                <div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px 0;">لا توجد إشارات مسجلة</div>
+            </div>
+        </section>
+
+        <!-- FOOTER SPACER -->
+        <div style="height:12px;"></div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ============================================================
+        //  CONFIGURATION
+        // ============================================================
+        const CONFIG = {
+            symbols: [
+                'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT',
+                'DOGEUSDT', 'SUIUSDT', 'LINKUSDT', 'AVAXUSDT', 'ADAUSDT'
+            ],
+            interval: '15m',
+            adxPeriod: 14,
+            obLookback: 120,
+            minAdx: 25,
+            rrMin: 2.0,
+            maxSignalsPerDay: 5,
+            btcFilterMinutes: 30,
+            wsBase: 'wss://stream.binance.com:9443/ws',
+            restBase: 'https://api.binance.com/api/v3',
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        const state = {
+            symbols: {},
+            signals: [],
+            log: [],
+            stats: { total: 0, wins: 0, losses: 0, today: 0 },
+            activeSymbol: 'BTCUSDT',
+            isOnline: false,
+            lastUpdate: null,
+            settings: {
+                sound: true,
+                vibration: true,
+                notifications: true,
+                btcFilter: true,
+                telegramToken: '',
+                telegramChatId: '',
+            },
+            ws: null,
+            wsReady: false,
+            pendingSubs: [],
+            signalCount: 0,
+            isInitialized: false,
+            lastBtcSignal: null,
+            _renderPending: false,
+            swRegistration: null,
+        };
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
+
+        const DOM = {
+            splash: $('#splash'),
+            statusDot: $('#statusDot'),
+            statusLabel: $('#statusLabel'),
+            lastUpdate: $('#lastUpdate'),
+            symbolTabs: $('#symbolTabs'),
+            signalsContainer: $('#signalsContainer'),
+            signalCount: $('#signalCount'),
+            statTotal: $('#statTotal'),
+            statWins: $('#statWins'),
+            statLosses: $('#statLosses'),
+            statWinRate: $('#statWinRate'),
+            statToday: $('#statToday'),
+            statLastSignal: $('#statLastSignal'),
+            logContainer: $('#logContainer'),
+            logCount: $('#logCount'),
+            toastContainer: $('#toastContainer'),
+            installBtn: $('#installBtn'),
+            toggleBtcFilter: $('#toggleBtcFilter'),
+            toggleSound: $('#toggleSound'),
+            toggleVibration: $('#toggleVibration'),
+            toggleNotifications: $('#toggleNotifications'),
+            telegramToken: $('#telegramToken'),
+            telegramChatId: $('#telegramChatId'),
+            testTelegramBtn: $('#testTelegramBtn'),
+        };
+
+        // ============================================================
+        //  UTILITY
+        // ============================================================
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+
+        function round(v, d = 2) { return Number(v.toFixed(d)); }
+
+        function formatPrice(v) {
+            if (v >= 1000) return round(v, 2);
+            if (v >= 1) return round(v, 4);
+            return round(v, 6);
+        }
+
+        function formatTime(ts) {
+            const d = new Date(ts);
+            return d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function formatDate(ts) {
+            return new Date(ts).toLocaleDateString('ar-EG', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+        }
+
+        function isToday(ts) {
+            const d = new Date(ts);
+            const n = new Date();
+            return d.getFullYear() === n.getFullYear() &&
+                d.getMonth() === n.getMonth() &&
+                d.getDate() === n.getDate();
+        }
+
+        // ============================================================
+        //  PERSISTENCE
+        // ============================================================
+        function saveState() {
+            try {
+                const data = {
+                    signals: state.signals.slice(0, 100),
+                    log: state.log.slice(0, 200),
+                    stats: state.stats,
+                    lastBtcSignal: state.lastBtcSignal,
+                    settings: state.settings,
+                };
+                localStorage.setItem('crypto_signals_state', JSON.stringify(data));
+            } catch (_) { /* ignore */ }
+        }
+
+        function loadState() {
+            try {
+                const raw = localStorage.getItem('crypto_signals_state');
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                if (data.signals) state.signals = data.signals;
+                if (data.log) state.log = data.log;
+                if (data.stats) state.stats = data.stats;
+                if (data.lastBtcSignal) state.lastBtcSignal = data.lastBtcSignal;
+                if (data.settings) {
+                    state.settings = { ...state.settings, ...data.settings };
+                }
+                const btcSignals = state.signals.filter(s => s.symbol === 'BTCUSDT');
+                if (btcSignals.length > 0) {
+                    const latest = btcSignals.reduce((a, b) => a.timestamp > b.timestamp ? a : b);
+                    state.lastBtcSignal = { type: latest.type, timestamp: latest.timestamp };
+                }
+            } catch (_) { /* ignore */ }
+        }
+
+        // ============================================================
+        //  TELEGRAM INTEGRATION
+        // ============================================================
+        async function sendTelegramMessage(text) {
+            const token = state.settings.telegramToken;
+            const chatId = state.settings.telegramChatId;
+
+            if (!token || !chatId) {
+                console.warn('Telegram settings missing.');
+                return false;
+            }
+
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                    }),
+                });
+                const data = await response.json();
+                if (data.ok) {
+                    return true;
+                } else {
+                    console.warn('Telegram error:', data.description);
+                    return false;
+                }
+            } catch (e) {
+                console.error('Telegram send error:', e);
+                return false;
+            }
+        }
+
+        function formatSignalForTelegram(signal) {
+            const typeLabel = signal.type === 'BUY' ? '🟢 شراء' : '🔴 بيع';
+            const strengthLabel = signal.strength === 'excellent' ? 'ممتازة' :
+                signal.strength === 'strong' ? 'قوية' :
+                signal.strength === 'good' ? 'جيدة' : 'ضعيفة';
+            const rrStr = round(signal.rr, 1);
+
+            return `
+        🚀 <b>إشارة تداول جديدة!</b>
+
+        💎 <b>الزوج:</b> ${signal.symbol}
+        📊 <b>النوع:</b> ${typeLabel}
+        💪 <b>القوة:</b> ${strengthLabel}
+        📈 <b>ADX:</b> ${round(signal.adx, 1)}
+
+        🔹 <b>سعر الدخول:</b> ${formatPrice(signal.entryPrice)}
+        🔻 <b>وقف الخسارة:</b> ${formatPrice(signal.stopLoss)}
+        🎯 <b>الهدف 1:</b> ${formatPrice(signal.takeProfit1)}
+        🎯 <b>الهدف 2:</b> ${formatPrice(signal.takeProfit2)}
+        📊 <b>نسبة المخاطرة/العائد:</b> ${rrStr}:1
+
+        📝 <b>التحليل:</b>
+        ${signal.analysis}
+
+        🕐 <b>وقت الإشارة:</b> ${formatTime(signal.timestamp)}
+        `;
+        }
+
+        async function testTelegramConnection() {
+            const token = state.settings.telegramToken;
+            const chatId = state.settings.telegramChatId;
+
+            if (!token || !chatId) {
+                showToast('⚠️', 'يرجى إدخال التوكن ومعرف الدردشة');
+                return false;
+            }
+
+            DOM.testTelegramBtn.textContent = '⏳ جاري الاختبار...';
+            DOM.testTelegramBtn.disabled = true;
+
+            const success = await sendTelegramMessage('✅ تم الاتصال بنجاح! بوت الإشارات يعمل بشكل صحيح.');
+
+            if (success) {
+                showToast('✅', 'تم الاتصال بتليجرام بنجاح', 'تم إرسال رسالة اختبار');
+                DOM.testTelegramBtn.textContent = '✅ متصل';
+            } else {
+                showToast('❌', 'فشل الاتصال بتليجرام', 'تحقق من التوكن ومعرف الدردشة');
+                DOM.testTelegramBtn.textContent = '📡 اختبار الاتصال';
+            }
+            DOM.testTelegramBtn.disabled = false;
+            return success;
+        }
+
+        // ============================================================
+        //  TOAST SYSTEM
+        // ============================================================
+        function showToast(icon, msg, sub = '') {
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-msg">${msg}${sub ? '<small>'+sub+'</small>' : ''}</div>
+          `;
+            DOM.toastContainer.appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(16px)';
+                setTimeout(() => el.remove(), 400);
+            }, 3500);
+        }
+
+        // ============================================================
+        //  NOTIFICATIONS
+        // ============================================================
+        function playNotificationSound() {
+            if (!state.settings.sound) return;
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 880;
+                gain.gain.value = 0.2;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                setTimeout(() => { osc.frequency.value = 1100; }, 120);
+                setTimeout(() => { osc.stop();
+                    ctx.close(); }, 320);
+            } catch (_) { /* fallback */ }
+        }
+
+        function triggerVibration() {
+            if (!state.settings.vibration) return;
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 80, 200]);
+            }
+        }
+
+        async function sendPushNotification(title, body) {
+            if (!state.settings.notifications) return;
+            if (!('Notification' in window)) return;
+            if (Notification.permission === 'granted') {
+                try {
+                    const n = new Notification(title, {
+                        body: body,
+                        icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==',
+                        tag: 'crypto-signal',
+                        requireInteraction: true,
+                    });
+                    setTimeout(() => n.close(), 8000);
+                } catch (_) { /* ignore */ }
+            } else if (Notification.permission === 'default') {
+                await Notification.requestPermission();
+            }
+        }
+
+        // ============================================================
+        //  BINANCE API
+        // ============================================================
+        async function fetchKlines(symbol, interval = '15m', limit = 500) {
+            const url =
+                `${CONFIG.restBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`Binance API error: ${resp.status}`);
+            const data = await resp.json();
+            return data.map(c => ({
+                time: c[0],
+                open: parseFloat(c[1]),
+                high: parseFloat(c[2]),
+                low: parseFloat(c[3]),
+                close: parseFloat(c[4]),
+                volume: parseFloat(c[5]),
+            }));
+        }
+
+        async function fetchAllSymbols() {
+            const results = {};
+            const promises = CONFIG.symbols.map(async (sym) => {
+                try {
+                    const candles = await fetchKlines(sym, CONFIG.interval, CONFIG.obLookback + 50);
+                    results[sym] = candles;
+                } catch (e) {
+                    console.warn(`Failed to fetch ${sym}:`, e);
+                    results[sym] = [];
+                }
+            });
+            await Promise.all(promises);
+            return results;
+        }
+
+        // ============================================================
+        //  ADX CALCULATOR
+        // ============================================================
+        function calcADX(candles, period = 14) {
+            if (candles.length < period + 1) return null;
+
+            const high = candles.map(c => c.high);
+            const low = candles.map(c => c.low);
+            const close = candles.map(c => c.close);
+
+            const tr = [];
+            const dmPlus = [];
+            const dmMinus = [];
+
+            for (let i = 1; i < candles.length; i++) {
+                const h = high[i],
+                    l = low[i];
+                const hPrev = high[i - 1],
+                    lPrev = low[i - 1];
+                const cPrev = close[i - 1];
+
+                const hl = h - l;
+                const hc = Math.abs(h - cPrev);
+                const lc = Math.abs(l - cPrev);
+                tr.push(Math.max(hl, hc, lc));
+
+                const up = h - hPrev;
+                const down = lPrev - l;
+                dmPlus.push(up > down && up > 0 ? up : 0);
+                dmMinus.push(down > up && down > 0 ? down : 0);
+            }
+
+            const smooth = (arr, n) => {
+                const res = [];
+                let sum = 0;
+                for (let i = 0; i < arr.length; i++) {
+                    sum += arr[i];
+                    if (i >= n) sum -= arr[i - n];
+                    if (i >= n - 1) res.push(sum / n);
+                }
+                return res;
+            };
+
+            const trSmooth = smooth(tr, period);
+            const dmPlusSmooth = smooth(dmPlus, period);
+            const dmMinusSmooth = smooth(dmMinus, period);
+
+            const plusDI = [];
+            const minusDI = [];
+            const dx = [];
+
+            for (let i = 0; i < trSmooth.length; i++) {
+                const trVal = trSmooth[i] || 1;
+                const pDI = 100 * (dmPlusSmooth[i] / trVal);
+                const mDI = 100 * (dmMinusSmooth[i] / trVal);
+                plusDI.push(pDI);
+                minusDI.push(mDI);
+                const sum = pDI + mDI;
+                dx.push(sum === 0 ? 0 : 100 * Math.abs(pDI - mDI) / sum);
+            }
+
+            const adx = [];
+            const dxSmooth = smooth(dx, period);
+            for (let i = 0; i < dxSmooth.length; i++) {
+                adx.push(dxSmooth[i]);
+            }
+
+            return {
+                adx: adx.length > 0 ? adx[adx.length - 1] : 0,
+                plusDI: plusDI.length > 0 ? plusDI[plusDI.length - 1] : 0,
+                minusDI: minusDI.length > 0 ? minusDI[minusDI.length - 1] : 0,
+                all: adx,
+            };
+        }
+
+        // ============================================================
+        //  ORDER BLOCK DETECTOR
+        // ============================================================
+        function detectOrderBlocks(candles, lookback = 120) {
+            if (candles.length < 20) return [];
+
+            const blocks = [];
+            const avgBody = candles.reduce((s, c) => s + Math.abs(c.close - c.open), 0) / candles.length;
+            const threshold = avgBody * 1.8;
+
+            for (let i = Math.max(0, candles.length - lookback); i < candles.length - 5; i++) {
+                const c = candles[i];
+                const body = Math.abs(c.close - c.open);
+                if (body < threshold) continue;
+
+                const isBearish = c.close < c.open;
+                const isBullish = c.close > c.open;
+
+                if (isBearish) {
+                    const obHigh = c.high;
+                    const obLow = c.low;
+                    const obOpen = c.open;
+                    const obClose = c.close;
+
+                    let brokeAbove = false;
+                    let breakIdx = -1;
+                    for (let j = i + 1; j < candles.length; j++) {
+                        if (candles[j].high > obHigh && candles[j].close > obHigh) {
+                            brokeAbove = true;
+                            breakIdx = j;
+                            break;
+                        }
+                    }
+                    if (!brokeAbove) continue;
+
+                    let retestIdx = -1;
+                    for (let j = breakIdx + 1; j < candles.length; j++) {
+                        const price = candles[j];
+                        if (price.low < obHigh && price.high > obLow) {
+                            retestIdx = j;
+                            break;
+                        }
+                    }
+                    if (retestIdx === -1) continue;
+
+                    let confirmIdx = -1;
+                    for (let j = retestIdx + 1; j < candles.length; j++) {
+                        if (candles[j].close > obHigh) {
+                            confirmIdx = j;
+                            break;
+                        }
+                    }
+                    if (confirmIdx === -1) continue;
+
+                    let insideCount = 0;
+                    for (let j = retestIdx; j < confirmIdx; j++) {
+                        const p = candles[j];
+                        if (p.low < obHigh && p.high > obLow) insideCount++;
+                    }
+                    if (insideCount > 4) continue;
+
+                    const adxData = calcADX(candles.slice(0, confirmIdx + 1), CONFIG.adxPeriod);
+                    if (!adxData || adxData.adx < CONFIG.minAdx) continue;
+
+                    blocks.push({
+                        type: 'BUY',
+                        high: obHigh,
+                        low: obLow,
+                        open: obOpen,
+                        close: obClose,
+                        index: i,
+                        retestIndex: retestIdx,
+                        confirmIndex: confirmIdx,
+                        adx: adxData.adx,
+                        plusDI: adxData.plusDI,
+                        minusDI: adxData.minusDI,
+                        strength: 'good',
+                    });
+                }
+
+                if (isBullish) {
+                    const obHigh = c.high;
+                    const obLow = c.low;
+                    const obOpen = c.open;
+                    const obClose = c.close;
+
+                    let brokeBelow = false;
+                    let breakIdx = -1;
+                    for (let j = i + 1; j < candles.length; j++) {
+                        if (candles[j].low < obLow && candles[j].close < obLow) {
+                            brokeBelow = true;
+                            breakIdx = j;
+                            break;
+                        }
+                    }
+                    if (!brokeBelow) continue;
+
+                    let retestIdx = -1;
+                    for (let j = breakIdx + 1; j < candles.length; j++) {
+                        const price = candles[j];
+                        if (price.low < obHigh && price.high > obLow) {
+                            retestIdx = j;
+                            break;
+                        }
+                    }
+                    if (retestIdx === -1) continue;
+
+                    let confirmIdx = -1;
+                    for (let j = retestIdx + 1; j < candles.length; j++) {
+                        if (candles[j].close < obLow) {
+                            confirmIdx = j;
+                            break;
+                        }
+                    }
+                    if (confirmIdx === -1) continue;
+
+                    let insideCount = 0;
+                    for (let j = retestIdx; j < confirmIdx; j++) {
+                        const p = candles[j];
+                        if (p.low < obHigh && p.high > obLow) insideCount++;
+                    }
+                    if (insideCount > 4) continue;
+
+                    const adxData = calcADX(candles.slice(0, confirmIdx + 1), CONFIG.adxPeriod);
+                    if (!adxData || adxData.adx < CONFIG.minAdx) continue;
+
+                    blocks.push({
+                        type: 'SELL',
+                        high: obHigh,
+                        low: obLow,
+                        open: obOpen,
+                        close: obClose,
+                        index: i,
+                        retestIndex: retestIdx,
+                        confirmIndex: confirmIdx,
+                        adx: adxData.adx,
+                        plusDI: adxData.plusDI,
+                        minusDI: adxData.minusDI,
+                        strength: 'good',
+                    });
+                }
+            }
+
+            const unique = [];
+            const seen = new Set();
+            for (const b of blocks.reverse()) {
+                const key = `${b.type}_${b.high.toFixed(4)}_${b.low.toFixed(4)}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    unique.push(b);
+                }
+                if (unique.length >= 10) break;
+            }
+
+            return unique.reverse();
+        }
+
+        // ============================================================
+        //  SIGNAL GENERATOR
+        // ============================================================
+        function generateSignal(symbol, candles, blocks) {
+            if (!blocks || blocks.length === 0) return null;
+            if (candles.length < 20) return null;
+
+            const recentBlocks = blocks.filter(b => b.confirmIndex !== undefined);
+            if (recentBlocks.length === 0) return null;
+
+            recentBlocks.sort((a, b) => b.confirmIndex - a.confirmIndex);
+
+            // منع تكرار اضافة اهداف متشابهة جداً في وقت قصير
+            const existingRecent = state.signals.filter(s =>
+                s.symbol === symbol &&
+                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4
+            );
+            if (existingRecent.length > 0) {
+                const last = existingRecent[0];
+                const block = recentBlocks[0];
+                const priceDiff = Math.abs(block.high - last.entryPrice) / last.entryPrice;
+                if (priceDiff < 0.005) return null;
+            }
+
+            const block = recentBlocks[0];
+            const confirmCandle = candles[block.confirmIndex];
+            if (!confirmCandle) return null;
+
+            const entryPrice = block.type === 'BUY' ?
+                confirmCandle.close :
+                confirmCandle.close;
+
+            const sl = block.type === 'BUY' ?
+                block.low * 0.998 :
+                block.high * 1.002;
+
+            const risk = Math.abs(entryPrice - sl);
+            const tp1 = block.type === 'BUY' ?
+                entryPrice + risk * 2.0 :
+                entryPrice - risk * 2.0;
+            const tp2 = block.type === 'BUY' ?
+                entryPrice + risk * 3.0 :
+                entryPrice - risk * 3.0;
+
+            const rr = (Math.abs(tp1 - entryPrice) / risk);
+
+            let strength = 'good';
+            if (block.adx >= 50) strength = 'excellent';
+            else if (block.adx >= 40) strength = 'strong';
+            else if (block.adx >= 30) strength = 'good';
+            else strength = 'weak';
+
+            const typeText = block.type === 'BUY' ? 'صاعد' : 'هابط';
+            const actionText = block.type === 'BUY' ? 'شراء' : 'بيع';
+            const obText = block.type === 'BUY' ?
+                `تم اكتشاف Order Block صاعد عند مستوى ${formatPrice(block.high)}` :
+                `تم اكتشاف Order Block هابط عند مستوى ${formatPrice(block.low)}`;
+            const retestText = `تمت إعادة اختبار المنطقة لأول مرة`;
+            const confirmText = block.type === 'BUY' ?
+                `أغلق السعر فوق المنطقة عند ${formatPrice(confirmCandle.close)}` :
+                `أغلق السعر أسفل المنطقة عند ${formatPrice(confirmCandle.close)}`;
+            const adxText = `ADX = ${round(block.adx, 1)} (أكبر من ${CONFIG.minAdx})`;
+
+            const analysis = `${obText}، و${retestText}، و${confirmText} مع قوة اتجاه ${adxText}، لذلك تم إصدار إشارة ${actionText}.`;
+
+            return {
+                id: generateId(),
+                symbol: symbol,
+                type: block.type,
+                entryPrice: entryPrice,
+                stopLoss: sl,
+                takeProfit1: tp1,
+                takeProfit2: tp2,
+                rr: rr,
+                timestamp: Date.now(),
+                strength: strength,
+                analysis: analysis,
+                adx: block.adx,
+                obHigh: block.high,
+                obLow: block.low,
+                confirmCandle: confirmCandle,
+                status: 'pending',
+            };
+        }
+
+        // ============================================================
+        //  AUTO CLOSE MECHANISM (الغلق التلقائي عند ضرب الهدف او الخسارة)
+        // ============================================================
+        function checkAutoClose(symbol, candle) {
+            if (!candle) return;
+            const currentPrice = candle.close;
+            const pending = state.signals.filter(s => s.symbol === symbol && s.status === 'pending');
+            
+            for (const sig of pending) {
+                if (sig.type === 'BUY') {
+                    // شراء (الربح فوق، الخسارة تحت)
+                    if (currentPrice >= sig.takeProfit1) {
+                        updateSignalResult(sig.id, 'win');
+                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
+                    } else if (currentPrice <= sig.stopLoss) {
+                        updateSignalResult(sig.id, 'loss');
+                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
+                    }
+                } else if (sig.type === 'SELL') {
+                    // بيع (الربح تحت، الخسارة فوق)
+                    if (currentPrice <= sig.takeProfit1) {
+                        updateSignalResult(sig.id, 'win');
+                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
+                    } else if (currentPrice >= sig.stopLoss) {
+                        updateSignalResult(sig.id, 'loss');
+                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
+                    }
+                }
+            }
+        }
+
+        // ============================================================
+        //  ✅ الإضافة الجديدة: إلغاء الإشارات المعاكسة عند تغير الاتجاه
+        // ============================================================
+        function cancelOppositeSignals(newSignal) {
+            if (!newSignal) return;
+
+            // البحث عن إشارات معلقة لنفس الزوج ولكن بنوع معاكس (مثلاً: SELL إذا كانت الجديدة BUY)
+            const oppositeSignals = state.signals.filter(s => 
+                s.symbol === newSignal.symbol && 
+                s.status === 'pending' && 
+                s.type !== newSignal.type
+            );
+
+            for (const oldSig of oppositeSignals) {
+                // إلغاء الإشارة القديمة
+                oldSig.status = 'closed';
+                oldSig.result = 'cancelled';
+
+                // تحديث السجل
+                const logIdx = state.log.findIndex(l => l.id === oldSig.id);
+                if (logIdx !== -1) {
+                    state.log[logIdx].result = 'cancelled';
+                }
+
+                // إعلام المستخدم
+                showToast('🔄', `تم إلغاء إشارة ${oldSig.symbol} السابقة`, `تغير الاتجاه وصدور إشارة ${newSignal.type === 'BUY' ? 'شراء' : 'بيع'} جديدة`);
+                
+                // إرسال إشعار صوتي/اهتزاز
+                playNotificationSound();
+                triggerVibration();
+            }
+        }
+
+        // ============================================================
+        //  SIGNAL MANAGER
+        // ============================================================
+        function addSignal(signal) {
+            if (!signal) return;
+
+            const filterEnabled = state.settings.btcFilter;
+            if (filterEnabled && signal.symbol !== 'BTCUSDT') {
+                const btc = state.lastBtcSignal;
+                const withinWindow = btc &&
+                    btc.type === signal.type &&
+                    (Date.now() - btc.timestamp) <= CONFIG.btcFilterMinutes * 60 * 1000;
+                if (!withinWindow) {
+                    console.log(`⛔ رفض إشارة ${signal.symbol} (${signal.type}) لأن الفلتر مفعل والبيتكوين ليس لديه إشارة ${signal.type} حديثة (آخر ${CONFIG.btcFilterMinutes} دقيقة)`);
+                    return;
+                }
+            } else if (filterEnabled && signal.symbol === 'BTCUSDT') {
+                state.lastBtcSignal = { type: signal.type, timestamp: signal.timestamp };
+            } else {
+                if (signal.symbol === 'BTCUSDT') {
+                    state.lastBtcSignal = { type: signal.type, timestamp: signal.timestamp };
+                }
+            }
+
+            // منع التكرار
+            const isDuplicate = state.signals.some(s =>
+                s.symbol === signal.symbol &&
+                s.type === signal.type &&
+                Math.abs(s.entryPrice - signal.entryPrice) / s.entryPrice < 0.005 && // 0.5% margin
+                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4 // Last 4 hours
+            );
+            if (isDuplicate) return;
+
+            const todaySignals = state.signals.filter(s => isToday(s.timestamp) && s.status === 'pending');
+            if (todaySignals.length >= CONFIG.maxSignalsPerDay) {
+                showToast('⚠️', 'تم الوصول للحد اليومي', `حد أقصى ${CONFIG.maxSignalsPerDay} إشارات يومياً`);
+                return;
+            }
+
+            state.signals.unshift(signal);
+            state.log.unshift({
+                id: signal.id,
+                symbol: signal.symbol,
+                type: signal.type,
+                entry: signal.entryPrice,
+                timestamp: signal.timestamp,
+                result: 'pending',
+            });
+
+            state.stats.total++;
+            if (isToday(signal.timestamp)) state.stats.today++;
+
+            saveState();
+            scheduleRender(); 
+
+            // Notifications
+            const emoji = signal.type === 'BUY' ? '🟢' : '🔴';
+            const action = signal.type === 'BUY' ? 'شراء' : 'بيع';
+            const title = `${emoji} إشارة ${action} - ${signal.symbol}`;
+            const body =
+                `دخول: ${formatPrice(signal.entryPrice)} | SL: ${formatPrice(signal.stopLoss)} | TP1: ${formatPrice(signal.takeProfit1)} | قوة: ${signal.strength}`;
+
+            playNotificationSound();
+            triggerVibration();
+            sendPushNotification(title, body);
+
+            // ============================================================
+            //  إرسال الإشارة إلى تليجرام تلقائياً
+            // ============================================================
+            const telegramText = formatSignalForTelegram(signal);
+            sendTelegramMessage(telegramText).then(success => {
+                if (success) {
+                    console.log(`✅ تم إرسال إشارة ${signal.symbol} إلى تليجرام`);
+                } else {
+                    console.warn(`⚠️ فشل إرسال إشارة ${signal.symbol} إلى تليجرام (تحقق من الإعدادات)`);
+                }
+            });
+
+            // ============================================================
+            //  إرسال إشعار عبر Service Worker (خلفية)
+            // ============================================================
+            if (state.swRegistration) {
+                state.swRegistration.showNotification(title, {
+                    body: body,
+                    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==',
+                    tag: signal.id,
+                    requireInteraction: true,
+                    vibrate: state.settings.vibration ? [200, 80, 200] : [],
+                });
+            }
+
+            showToast(
+                signal.type === 'BUY' ? '🟢' : '🔴',
+                `${signal.symbol} - إشارة ${action}`,
+                `قوة: ${signal.strength} | R:R ${round(signal.rr, 1)}:1`
+            );
+
+            DOM.statLastSignal.textContent = formatTime(signal.timestamp);
+        }
+
+        // ============================================================
+        //  UPDATE SIGNAL RESULT
+        // ============================================================
+        function updateSignalResult(signalId, result) {
+            const idx = state.signals.findIndex(s => s.id === signalId);
+            if (idx === -1) return;
+
+            const signal = state.signals[idx];
+            if (signal.status !== 'pending') {
+                // إذا كانت الإشارة قد ألغيت بالفعل، لا نقوم بأي شيء
+                if (signal.result === 'cancelled') {
+                    showToast('⏳', 'هذه الصفقة ألغيت بالفعل بسبب تغير الاتجاه');
+                } else {
+                    showToast('⚠️', 'هذه الصفقة مغلقة بالفعل');
+                }
+                return;
+            }
+
+            signal.status = 'closed';
+            signal.result = result;
+
+            const logIdx = state.log.findIndex(l => l.id === signalId);
+            if (logIdx !== -1) {
+                state.log[logIdx].result = result;
+            }
+
+            if (result === 'win') {
+                state.stats.wins++;
+            } else if (result === 'loss') {
+                state.stats.losses++;
+            }
+
+            saveState();
+            scheduleRender();
+
+            showToast(
+                result === 'win' ? '✅' : '❌',
+                `تم إغلاق صفقة ${signal.symbol} - ${result === 'win' ? 'ربح' : 'خسارة'}`,
+                `دخول: ${formatPrice(signal.entryPrice)}`
+            );
+        }
+
+        // ============================================================
+        //  RENDER ENGINE (تحديث جزئي – بدون وميض)
+        // ============================================================
+        let renderScheduled = false;
+
+        function scheduleRender() {
+            if (!renderScheduled) {
+                renderScheduled = true;
+                requestAnimationFrame(() => {
+                    renderScheduled = false;
+                    performRender();
+                });
+            }
+        }
+
+        function performRender() {
+            updateSymbolTabs();
+            updateSignals();
+            updateStats();
+            updateLog();
+            const pending = state.signals.filter(s => s.status === 'pending' && s.symbol === state.activeSymbol);
+            DOM.signalCount.textContent = pending.length;
+            DOM.lastUpdate.textContent = formatTime(Date.now());
+        }
+
+        // ---- تحديث أزرار الرموز ----
+        function updateSymbolTabs() {
+            const container = DOM.symbolTabs;
+            const data = state.symbols;
+            for (const sym of CONFIG.symbols) {
+                const info = data[sym];
+                const price = info?.lastPrice || 0;
+                const change = info?.change || 0;
+                const active = sym === state.activeSymbol ? 'active' : '';
+                const changeClass = change >= 0 ? 'pos' : 'neg';
+                const changeStr = change >= 0 ? `+${round(change, 2)}%` : `${round(change, 2)}%`;
+
+                let tab = container.querySelector(`[data-symbol="${sym}"]`);
+                if (!tab) {
+                    tab = document.createElement('button');
+                    tab.className = `symbol-tab ${active}`;
+                    tab.dataset.symbol = sym;
+                    tab.innerHTML = `
+                ${sym.replace('USDT','')}
+                <span class="price">${formatPrice(price)}</span>
+                <span class="change ${changeClass}">${changeStr}</span>
+              `;
+                    tab.addEventListener('click', () => {
+                        state.activeSymbol = sym;
+                        scheduleRender();
+                    });
+                    container.appendChild(tab);
+                } else {
+                    tab.className = `symbol-tab ${active}`;
+                    const priceSpan = tab.querySelector('.price');
+                    if (priceSpan) priceSpan.textContent = formatPrice(price);
+                    const changeSpan = tab.querySelector('.change');
+                    if (changeSpan) {
+                        changeSpan.textContent = changeStr;
+                        changeSpan.className = `change ${changeClass}`;
+                    }
+                }
+            }
+        }
+
+        // ---- تحديث بطاقات الإشارات ----
+        function updateSignals() {
+            const container = DOM.signalsContainer;
+            const pendingSignals = state.signals.filter(s => s.symbol === state.activeSymbol && s.status === 'pending');
+            if (pendingSignals.length === 0) {
+                container.innerHTML = `
+              <div class="no-signals">
+                <div class="icon">📡</div>
+                <div>لا توجد إشارات نشطة لـ ${state.activeSymbol}</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">سيتم عرض الإشارات عند توفرها</div>
+              </div>
+            `;
+                DOM.signalCount.textContent = '0';
+                return;
+            }
+
+            const existingCards = new Map();
+            container.querySelectorAll('.signal-card').forEach(card => {
+                const id = card.dataset.id;
+                if (id) existingCards.set(id, card);
+            });
+
+            for (const sig of pendingSignals) {
+                let card = existingCards.get(sig.id);
+                if (!card) {
+                    card = document.createElement('div');
+                    card.className = 'signal-card';
+                    card.dataset.id = sig.id;
+                    container.appendChild(card);
+                }
+                updateSignalCard(card, sig);
+                existingCards.delete(sig.id);
+            }
+
+            for (const [id, card] of existingCards) {
+                card.remove();
+            }
+
+            DOM.signalCount.textContent = pendingSignals.length;
+        }
+
+        function updateSignalCard(card, sig) {
+            const typeClass = sig.type === 'BUY' ? 'buy' : 'sell';
+            const typeLabel = sig.type === 'BUY' ? 'شراء' : 'بيع';
+            const strengthClass = sig.strength || 'good';
+            const strengthLabel = sig.strength === 'excellent' ? 'ممتازة' :
+                sig.strength === 'strong' ? 'قوية' :
+                sig.strength === 'good' ? 'جيدة' : 'ضعيفة';
+            const rrStr = round(sig.rr, 1);
+
+            card.innerHTML = `
+            <div class="card-header">
+              <div>
+                <span class="symbol-name">${sig.symbol}</span>
+                <span class="signal-type ${typeClass}">${typeLabel}</span>
+              </div>
+              <span class="signal-strength ${strengthClass}">${strengthLabel}</span>
+            </div>
+            <div class="card-body">
+              <div class="item"><span class="label">سعر الدخول</span><span class="value">${formatPrice(sig.entryPrice)}</span></div>
+              <div class="item"><span class="label">وقف الخسارة</span><span class="value sl">${formatPrice(sig.stopLoss)}</span></div>
+              <div class="item"><span class="label">الهدف 1</span><span class="value tp">${formatPrice(sig.takeProfit1)}</span></div>
+              <div class="item"><span class="label">الهدف 2</span><span class="value tp">${formatPrice(sig.takeProfit2)}</span></div>
+              <div class="item"><span class="label">نسبة العائد</span><span class="value rr">${rrStr}:1</span></div>
+              <div class="item"><span class="label">ADX</span><span class="value">${round(sig.adx, 1)}</span></div>
+            </div>
+            <div class="analysis">
+              <span class="label">📝 تحليل الدخول</span>
+              ${sig.analysis}
+            </div>
+            <div class="card-footer">
+              <span class="time">🕐 ${formatTime(sig.timestamp)}</span>
+              <div class="actions">
+                <button class="share-btn" data-id="${sig.id}">📤 مشاركة</button>
+                <button class="close-win" data-id="${sig.id}" data-result="win">✅ ربح</button>
+                <button class="close-loss" data-id="${sig.id}" data-result="loss">❌ خسارة</button>
+              </div>
+            </div>
+          `;
+
+            card.querySelector('.share-btn').addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                const s = state.signals.find(sig => sig.id === id);
+                if (s) shareSignal(s);
+            });
+
+            card.querySelector('.close-win').addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                if (confirm('هل أنت متأكد من إغلاق هذه الصفقة كـ ربح؟')) {
+                    updateSignalResult(id, 'win');
+                }
+            });
+
+            card.querySelector('.close-loss').addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                if (confirm('هل أنت متأكد من إغلاق هذه الصفقة كـ خسارة؟')) {
+                    updateSignalResult(id, 'loss');
+                }
+            });
+        }
+
+        // ---- تحديث الإحصائيات ----
+        function updateStats() {
+            const s = state.stats;
+            const total = s.total || 0;
+            const wins = s.wins || 0;
+            const losses = s.losses || 0;
+            const rate = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+            setText(DOM.statTotal, total);
+            setText(DOM.statWins, wins);
+            setText(DOM.statLosses, losses);
+            setText(DOM.statWinRate, `${rate}%`);
+            setText(DOM.statToday, s.today || 0);
+
+            if (state.signals.length > 0) {
+                DOM.statLastSignal.textContent = formatTime(state.signals[0].timestamp);
+            }
+        }
+
+        // ---- تحديث السجل ----
+        function updateLog() {
+            const container = DOM.logContainer;
+            const logs = state.log.slice(0, 30);
+
+            if (logs.length === 0) {
+                container.innerHTML =
+                    '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px 0;">لا توجد إشارات مسجلة</div>';
+                DOM.logCount.textContent = '0';
+                return;
+            }
+
+            let html = '';
+            for (const entry of logs) {
+                const typeClass = entry.type === 'BUY' ? 'buy' : 'sell';
+                const typeLabel = entry.type === 'BUY' ? 'شراء' : 'بيع';
+                let resultClass = 'pending';
+                let resultLabel = '⏳ معلق';
+                if (entry.result === 'win') { resultClass = 'win';
+                    resultLabel = '✔️ ربح'; } 
+                else if (entry.result === 'loss') { resultClass = 'loss';
+                    resultLabel = '❌ خسارة'; } 
+                else if (entry.result === 'cancelled') { resultClass = 'cancelled';
+                    resultLabel = '🚫 ملغاة (تغير اتجاه)'; } 
+                else if (entry.result === 'closed') { resultClass = 'closed';
+                    resultLabel = '🔒 مغلق'; }
+
+                html += `
+              <div class="log-entry">
+                <span><span class="log-symbol">${entry.symbol}</span>
+                <span class="log-type ${typeClass}">${typeLabel}</span></span>
+                <span>${formatPrice(entry.entry)}</span>
+                <span>${formatTime(entry.timestamp)}</span>
+                <span class="log-result ${resultClass}">${resultLabel}</span>
+              </div>
+            `;
+            }
+
+            container.innerHTML = html;
+            DOM.logCount.textContent = state.log.length;
+        }
+
+        function setText(el, value) {
+            if (el.textContent !== String(value)) {
+                el.textContent = value;
+            }
+        }
+
+        // ---- دالة المشاركة ----
+        function shareSignal(sig) {
+            const typeLabel = sig.type === 'BUY' ? 'شراء' : 'بيع';
+            const text =
+                `🚀 إشارة تداول - ${sig.symbol}\n` +
+                `📊 نوع: ${typeLabel}\n` +
+                `💰 الدخول: ${formatPrice(sig.entryPrice)}\n` +
+                `🛑 وقف الخسارة: ${formatPrice(sig.stopLoss)}\n` +
+                `🎯 الهدف 1: ${formatPrice(sig.takeProfit1)}\n` +
+                `🎯 الهدف 2: ${formatPrice(sig.takeProfit2)}\n` +
+                `📈 نسبة العائد: ${round(sig.rr, 1)}:1\n` +
+                `💪 القوة: ${sig.strength}\n` +
+                `📝 ${sig.analysis}\n` +
+                `🕐 ${formatTime(sig.timestamp)}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `إشارة ${sig.symbol} - ${typeLabel}`,
+                    text: text,
+                }).catch(() => {});
+            } else if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📋', 'تم نسخ الإشارة للحافظة');
+                }).catch(() => {
+                    showToast('⚠️', 'تعذر نسخ الإشارة');
+                });
+            } else {
+                showToast('⚠️', 'المشاركة غير مدعومة في هذا المتصفح');
+            }
+        }
+
+        // ============================================================
+        //  WEBSOCKET
+        // ============================================================
+        function connectWebSocket() {
+            if (state.ws) {
+                try { state.ws.close(); } catch (_) {}
+            }
+
+            const streams = CONFIG.symbols.map(s => `${s.toLowerCase()}@kline_${CONFIG.interval}`).join('/');
+            const url = `${CONFIG.wsBase}/${streams}`;
+
+            state.ws = new WebSocket(url);
+            state.ws.onopen = () => {
+                state.isOnline = true;
+                state.wsReady = true;
+                updateStatus(true);
+                showToast('🔗', 'متصل بالسوق', 'تحديث مباشر نشط');
+            };
+
+            state.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.k) {
+                        const k = data.k;
+                        const symbol = data.s;
+                        if (!symbol) return;
+                        const candle = {
+                            time: k.t,
+                            open: parseFloat(k.o),
+                            high: parseFloat(k.h),
+                            low: parseFloat(k.l),
+                            close: parseFloat(k.c),
+                            volume: parseFloat(k.v),
+                            isFinal: k.x,
+                        };
+                        handleCandleUpdate(symbol, candle);
+                    }
+                } catch (e) {
+                    console.warn('WS parse error:', e);
+                }
+            };
+
+            state.ws.onerror = (err) => {
+                console.warn('WS error:', err);
+                updateStatus(false);
+            };
+
+            state.ws.onclose = () => {
+                state.isOnline = false;
+                state.wsReady = false;
+                updateStatus(false);
+                setTimeout(connectWebSocket, 5000);
+            };
+        }
+
+        function updateStatus(online) {
+            const dot = DOM.statusDot;
+            const label = DOM.statusLabel;
+            if (online) {
+                dot.className = 'status-dot online';
+                label.textContent = 'مباشر';
+                DOM.lastUpdate.textContent = formatTime(Date.now());
+            } else {
+                dot.className = 'status-dot connecting';
+                label.textContent = 'جاري إعادة الاتصال...';
+            }
+        }
+
+        // ============================================================
+        //  CANDLE UPDATE HANDLER
+        // ============================================================
+        function handleCandleUpdate(symbol, candle) {
+            if (!state.symbols[symbol]) {
+                state.symbols[symbol] = { candles: [], lastPrice: 0, change: 0 };
+            }
+
+            const symData = state.symbols[symbol];
+            if (!symData.candles) symData.candles = [];
+
+            const existing = symData.candles.findIndex(c => c.time === candle.time);
+            if (existing !== -1) {
+                symData.candles[existing] = candle;
+            } else {
+                symData.candles.push(candle);
+                if (symData.candles.length > 200) {
+                    symData.candles = symData.candles.slice(-200);
+                }
+            }
+
+            const last = symData.candles[symData.candles.length - 1];
+            if (last) {
+                symData.lastPrice = last.close;
+                const first = symData.candles[0];
+                if (first && first.close > 0) {
+                    symData.change = ((last.close - first.close) / first.close) * 100;
+                }
+            }
+
+            if (candle.isFinal) {
+                runAnalysis(symbol);
+                checkAutoClose(symbol, candle);
+            }
+
+            scheduleRender();
+        }
+
+        // ============================================================
+        //  ANALYSIS ENGINE
+        // ============================================================
+        let analysisRunning = false;
+        let analysisQueue = [];
+
+        function runAnalysis(symbol) {
+            if (analysisRunning) {
+                analysisQueue.push(symbol);
+                return;
+            }
+
+            analysisRunning = true;
+            try {
+                const symData = state.symbols[symbol];
+                if (!symData || !symData.candles || symData.candles.length < 30) {
+                    analysisRunning = false;
+                    return;
+                }
+
+                const candles = symData.candles;
+                const result = analyzeSymbol(symbol, candles);
+
+                if (result && result.signal) {
+                    // ✅ قبل إضافة الإشارة، نقوم بإلغاء أي إشارة سابقة معاكسة
+                    cancelOppositeSignals(result.signal);
+                    
+                    // إضافة الإشارة الجديدة
+                    addSignal(result.signal);
+                }
+
+                if (result) {
+                    state.symbols[symbol].adx = result.adx;
+                    state.symbols[symbol].blocks = result.blocks;
+                    state.symbols[symbol].lastAnalysis = Date.now();
+                }
+
+            } catch (e) {
+                console.warn('Analysis error for', symbol, e);
+            }
+
+            analysisRunning = false;
+            if (analysisQueue.length > 0) {
+                const next = analysisQueue.shift();
+                runAnalysis(next);
+            }
+        }
+
+        // ============================================================
+        //  INITIAL DATA LOAD
+        // ============================================================
+        async function loadInitialData() {
+            showToast('📡', 'جاري تحميل بيانات السوق...');
+
+            try {
+                const allData = await fetchAllSymbols();
+
+                for (const sym of CONFIG.symbols) {
+                    const candles = allData[sym] || [];
+                    if (candles.length > 0) {
+                        state.symbols[sym] = {
+                            candles: candles,
+                            lastPrice: candles[candles.length - 1]?.close || 0,
+                            change: 0,
+                        };
+                        const first = candles[0];
+                        const last = candles[candles.length - 1];
+                        if (first && last && first.close > 0) {
+                            state.symbols[sym].change = ((last.close - first.close) / first.close) * 100;
+                        }
+                    } else {
+                        state.symbols[sym] = { candles: [], lastPrice: 0, change: 0 };
+                    }
+                }
+
+                for (const sym of CONFIG.symbols) {
+                    runAnalysis(sym);
+                    await sleep(50);
+                }
+
+                scheduleRender();
+                saveState();
+
+                showToast('✅', 'تم تحميل البيانات', `${CONFIG.symbols.length} عملة جاهزة`);
+
+            } catch (e) {
+                console.error('Load error:', e);
+                showToast('⚠️', 'خطأ في تحميل البيانات', 'جاري استخدام البيانات المخزنة');
+                scheduleRender();
+            }
+
+            setTimeout(() => {
+                DOM.splash.classList.add('hide');
+            }, 600);
+
+            state.isInitialized = true;
+        }
+
+        // ============================================================
+        //  PWA SETUP & SERVICE WORKER
+        // ============================================================
+        function setupPWA() {
+            let deferredPrompt = null;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                DOM.installBtn.classList.add('show');
+            });
+
+            DOM.installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const result = await deferredPrompt.userChoice;
+                    if (result.outcome === 'accepted') {
+                        showToast('✅', 'تم تثبيت التطبيق');
+                    }
+                    deferredPrompt = null;
+                    DOM.installBtn.classList.remove('show');
+                }
+            });
+
+            // إنشاء Service Worker ديناميكي كـ Blob URL
+            const swCode = `
+                self.addEventListener('install', (event) => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', (event) => {
+                    event.waitUntil(clients.claim());
+                });
+                self.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'show-notification') {
+                        self.registration.showNotification(event.data.title, {
+                            body: event.data.body,
+                            icon: event.data.icon,
+                            tag: event.data.tag,
+                            requireInteraction: true,
+                            vibrate: event.data.vibrate || [200, 80, 200],
+                        });
+                    }
+                });
+            `;
+
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register(swUrl)
+                    .then((registration) => {
+                        state.swRegistration = registration;
+                        console.log('Service Worker registered dynamically.');
+                    })
+                    .catch((err) => {
+                        console.warn('SW registration failed:', err);
+                    });
+            }
+
+            if ('Notification' in window && Notification.permission === 'default') {
+                setTimeout(() => {
+                    Notification.requestPermission();
+                }, 5000);
+            }
+        }
+
+        // ============================================================
+        //  SETTINGS TOGGLES
+        // ============================================================
+        function setupToggles() {
+            const toggles = [
+                { el: DOM.toggleBtcFilter, key: 'btcFilter' },
+                { el: DOM.toggleSound, key: 'sound' },
+                { el: DOM.toggleVibration, key: 'vibration' },
+                { el: DOM.toggleNotifications, key: 'notifications' },
+            ];
+
+            for (const t of toggles) {
+                t.el.addEventListener('click', () => {
+                    const isActive = t.el.classList.toggle('active');
+                    state.settings[t.key] = isActive;
+                    localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
+                    if (t.key === 'btcFilter') {
+                        showToast('🟠', `فلتر التوافق ${isActive ? 'مفعل' : 'معطل'}`, 'سيتم تطبيقه على الإشارات الجديدة');
+                    }
+                });
+            }
+
+            try {
+                const saved = localStorage.getItem('crypto_settings');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    for (const key of ['sound', 'vibration', 'notifications', 'btcFilter']) {
+                        if (key in parsed) {
+                            state.settings[key] = parsed[key];
+                            const elMap = {
+                                btcFilter: DOM.toggleBtcFilter,
+                                sound: DOM.toggleSound,
+                                vibration: DOM.toggleVibration,
+                                notifications: DOM.toggleNotifications,
+                            };
+                            const el = elMap[key];
+                            if (el) {
+                                if (parsed[key]) el.classList.add('active');
+                                else el.classList.remove('active');
+                            }
+                        }
+                    }
+                }
+            } catch (_) {}
+        }
+
+        // ============================================================
+        //  BACKGROUND SYNC
+        // ============================================================
+        function setupOfflineSync() {
+            window.addEventListener('online', () => {
+                showToast('📶', 'تم استعادة الاتصال', 'جاري تحديث البيانات...');
+                if (!state.wsReady) {
+                    connectWebSocket();
+                }
+                for (const sym of CONFIG.symbols) {
+                    runAnalysis(sym);
+                }
+            });
+
+            window.addEventListener('offline', () => {
+                showToast('📶', 'فقدان الاتصال', 'جاري العمل في وضع عدم الاتصال');
+                updateStatus(false);
+            });
+        }
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        async function init() {
+            loadState();
+            setupToggles();
+            setupPWA();
+            setupOfflineSync();
+
+            // استعادة إعدادات تليجرام من الحالة (تم تحميلها من localStorage)
+            DOM.telegramToken.value = state.settings.telegramToken || '';
+            DOM.telegramChatId.value = state.settings.telegramChatId || '';
+
+            // حفظ إعدادات تليجرام عند التغيير
+            DOM.telegramToken.addEventListener('input', (e) => {
+                state.settings.telegramToken = e.target.value.trim();
+                localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
+            });
+            DOM.telegramChatId.addEventListener('input', (e) => {
+                state.settings.telegramChatId = e.target.value.trim();
+                localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
+            });
+
+            // زر اختبار تليجرام
+            DOM.testTelegramBtn.addEventListener('click', testTelegramConnection);
+
+            await loadInitialData();
+            connectWebSocket();
+
+            // فحص الإغلاق التلقائي كل 10 ثوانٍ للتأكد
+            setInterval(() => {
+                 for (const sym of CONFIG.symbols) {
+                     const symData = state.symbols[sym];
+                     if (symData && symData.candles.length > 0) {
+                         const lastCandle = symData.candles[symData.candles.length - 1];
+                         if(lastCandle) checkAutoClose(sym, lastCandle);
+                     }
+                 }
+            }, 10000);
+
+            setInterval(() => {
+                for (const sym of CONFIG.symbols) {
+                    runAnalysis(sym);
+                }
+                scheduleRender();
+            }, 1000 * 60 * 5);
+
+            setInterval(saveState, 1000 * 30);
+
+            setInterval(() => {
+                if (state.isOnline) {
+                    DOM.lastUpdate.textContent = formatTime(Date.now());
+                }
+            }, 1000 * 10);
+
+            console.log('🚀 Crypto Signals Pro initialized');
+            console.log(`📊 Monitoring ${CONFIG.symbols.length} symbols on ${CONFIG.interval}`);
+            console.log(`🔍 BTC filter: ${state.settings.btcFilter ? 'ON' : 'OFF'} (${CONFIG.btcFilterMinutes} min window)`);
+            console.log(`🤖 Telegram: ${state.settings.telegramToken ? 'Configured' : 'Not configured'}`);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-  </html>
+                                         </html>
