@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==">
-    <title>🚀 Crypto Signals Pro</title>
+    <title>🚀 Twin Range Filter Pro</title>
     <style>
         /* ===== RESET & BASE ===== */
         *,
@@ -836,7 +836,7 @@
     <!-- ===== SPLASH ===== -->
     <div id="splash">
         <div class="logo">🚀</div>
-        <div class="sub">Crypto Signals Pro</div>
+        <div class="sub">Twin Range Filter Pro</div>
         <div class="loader"></div>
     </div>
 
@@ -846,7 +846,7 @@
         <!-- HEADER -->
         <header class="app-header">
             <div class="brand">
-                🚀 <span>Signals Pro</span>
+                🚀 <span>Twin Filter</span>
             </div>
             <div class="status-group">
                 <span class="status-dot connecting" id="statusDot"></span>
@@ -868,7 +868,7 @@
             <div id="signalsContainer">
                 <div class="no-signals">
                     <div class="icon">📡</div>
-                    <div>جاري تحليل السوق ...<br><span style="font-size:13px;color:var(--text-muted);">سيتم عرض الإشارات عند توفرها</span></div>
+                    <div>جاري تحليل السوق (إطار 30 دقيقة)...<br><span style="font-size:13px;color:var(--text-muted);">سيتم عرض الإشارات عند توفرها</span></div>
                 </div>
             </div>
         </section>
@@ -890,12 +890,6 @@
         <!-- SETTINGS -->
         <section class="stats-section" style="margin-top:12px;">
             <div style="font-weight:700;font-size:15px;">⚙️ الإعدادات</div>
-            <div class="settings-row">
-                <span class="label">🟠 فلتر التوافق مع البيتكوين <span class="hint">(تفعيل / إلغاء)</span></span>
-                <div class="toggle active" id="toggleBtcFilter" role="button" tabindex="0">
-                    <div class="knob"></div>
-                </div>
-            </div>
             <div class="settings-row">
                 <span class="label">🔔 التنبيهات الصوتية</span>
                 <div class="toggle active" id="toggleSound" role="button" tabindex="0">
@@ -953,22 +947,26 @@
     <!-- ===== JAVASCRIPT ===== -->
     <script>
         // ============================================================
-        //  CONFIGURATION
+        //  CONFIGURATION - إطار 30 دقيقة (النص ساعة)
         // ============================================================
         const CONFIG = {
             symbols: [
                 'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT',
                 'DOGEUSDT', 'SUIUSDT', 'LINKUSDT', 'AVAXUSDT', 'ADAUSDT'
             ],
-            interval: '15m',
+            interval: '30m', // تم التغيير إلى 30 دقيقة بناءً على طلبك
             adxPeriod: 14,
             obLookback: 120,
             minAdx: 25,
             rrMin: 2.0,
             maxSignalsPerDay: 5,
-            btcFilterMinutes: 30,
             wsBase: 'wss://stream.binance.com:9443/ws',
             restBase: 'https://api.binance.com/api/v3',
+            // معلمات Twin Range Filter
+            per1: 27,
+            mult1: 1.6,
+            per2: 55,
+            mult2: 2
         };
 
         // ============================================================
@@ -986,7 +984,6 @@
                 sound: true,
                 vibration: true,
                 notifications: true,
-                btcFilter: true,
                 telegramToken: '',
                 telegramChatId: '',
             },
@@ -995,7 +992,6 @@
             pendingSubs: [],
             signalCount: 0,
             isInitialized: false,
-            lastBtcSignal: null,
             _renderPending: false,
             swRegistration: null,
         };
@@ -1024,7 +1020,6 @@
             logCount: $('#logCount'),
             toastContainer: $('#toastContainer'),
             installBtn: $('#installBtn'),
-            toggleBtcFilter: $('#toggleBtcFilter'),
             toggleSound: $('#toggleSound'),
             toggleVibration: $('#toggleVibration'),
             toggleNotifications: $('#toggleNotifications'),
@@ -1078,7 +1073,6 @@
                     signals: state.signals.slice(0, 100),
                     log: state.log.slice(0, 200),
                     stats: state.stats,
-                    lastBtcSignal: state.lastBtcSignal,
                     settings: state.settings,
                 };
                 localStorage.setItem('crypto_signals_state', JSON.stringify(data));
@@ -1093,14 +1087,8 @@
                 if (data.signals) state.signals = data.signals;
                 if (data.log) state.log = data.log;
                 if (data.stats) state.stats = data.stats;
-                if (data.lastBtcSignal) state.lastBtcSignal = data.lastBtcSignal;
                 if (data.settings) {
                     state.settings = { ...state.settings, ...data.settings };
-                }
-                const btcSignals = state.signals.filter(s => s.symbol === 'BTCUSDT');
-                if (btcSignals.length > 0) {
-                    const latest = btcSignals.reduce((a, b) => a.timestamp > b.timestamp ? a : b);
-                    state.lastBtcSignal = { type: latest.type, timestamp: latest.timestamp };
                 }
             } catch (_) { /* ignore */ }
         }
@@ -1142,19 +1130,19 @@
         }
 
         function formatSignalForTelegram(signal) {
-            const typeLabel = signal.type === 'BUY' ? '🟢 شراء' : '🔴 بيع';
+            const typeLabel = signal.type === 'BUY' ? '🟢 شراء (Long)' : '🔴 بيع (Short)';
             const strengthLabel = signal.strength === 'excellent' ? 'ممتازة' :
                 signal.strength === 'strong' ? 'قوية' :
                 signal.strength === 'good' ? 'جيدة' : 'ضعيفة';
             const rrStr = round(signal.rr, 1);
 
             return `
-        🚀 <b>إشارة تداول جديدة!</b>
+        🚀 <b>إشارة تداول جديدة (Twin Range Filter + ADX)</b>
 
         💎 <b>الزوج:</b> ${signal.symbol}
         📊 <b>النوع:</b> ${typeLabel}
         💪 <b>القوة:</b> ${strengthLabel}
-        📈 <b>ADX:</b> ${round(signal.adx, 1)}
+        📈 <b>ADX:</b> ${round(signal.adx, 1)} (فوق 25)
 
         🔹 <b>سعر الدخول:</b> ${formatPrice(signal.entryPrice)}
         🔻 <b>وقف الخسارة:</b> ${formatPrice(signal.stopLoss)}
@@ -1261,7 +1249,7 @@
         // ============================================================
         //  BINANCE API
         // ============================================================
-        async function fetchKlines(symbol, interval = '15m', limit = 500) {
+        async function fetchKlines(symbol, interval = '30m', limit = 500) {
             const url =
                 `${CONFIG.restBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
             const resp = await fetch(url);
@@ -1293,7 +1281,7 @@
         }
 
         // ============================================================
-        //  ADX CALCULATOR
+        //  ADX CALCULATOR (مؤشر القوة الاتجاهية)
         // ============================================================
         function calcADX(candles, period = 14) {
             if (candles.length < period + 1) return null;
@@ -1368,341 +1356,178 @@
         }
 
         // ============================================================
-        //  ORDER BLOCK DETECTOR
+        //  TWIN RANGE FILTER + ADX (الاستراتيجية الجديدة)
         // ============================================================
-        function detectOrderBlocks(candles, lookback = 120) {
-            if (candles.length < 20) return [];
+        function analyzeSymbol(symbol, candles) {
+            if (candles.length < CONFIG.obLookback) return null;
 
-            const blocks = [];
-            const avgBody = candles.reduce((s, c) => s + Math.abs(c.close - c.open), 0) / candles.length;
-            const threshold = avgBody * 1.8;
+            // 1. حساب ADX على إطار 30 دقيقة
+            const adxData = calcADX(candles, CONFIG.adxPeriod);
+            if (!adxData || adxData.adx < CONFIG.minAdx) {
+                // إذا كان ADX أقل من 25، لا نرسل إشارة
+                return { adx: adxData ? adxData.adx : 0, blocks: [], signal: null };
+            }
 
-            for (let i = Math.max(0, candles.length - lookback); i < candles.length - 5; i++) {
-                const c = candles[i];
-                const body = Math.abs(c.close - c.open);
-                if (body < threshold) continue;
+            // 2. حساب Twin Range Filter
+            const per1 = CONFIG.per1;
+            const mult1 = CONFIG.mult1;
+            const per2 = CONFIG.per2;
+            const mult2 = CONFIG.mult2;
 
-                const isBearish = c.close < c.open;
-                const isBullish = c.close > c.open;
+            // دالة EMA المساعدة
+            function ema(arr, period) {
+                if (arr.length < period) return 0;
+                let sum = 0;
+                for (let i = 0; i < period; i++) sum += arr[i];
+                let emaVal = sum / period;
+                const multiplier = 2 / (period + 1);
+                for (let i = period; i < arr.length; i++) {
+                    emaVal = (arr[i] - emaVal) * multiplier + emaVal;
+                }
+                return emaVal;
+            }
 
-                if (isBearish) {
-                    const obHigh = c.high;
-                    const obLow = c.low;
-                    const obOpen = c.open;
-                    const obClose = c.close;
+            // دالة smoothrng كما في Pine Script
+            function smoothrng(x, t, m) {
+                if (x.length < t * 2) return 0;
+                const wper = t * 2 - 1;
+                let avrngArr = [];
+                for (let i = 1; i < x.length; i++) {
+                    avrngArr.push(Math.abs(x[i] - x[i - 1]));
+                }
+                const avrng = ema(avrngArr, t);
+                const smoothArr = Array.from({ length: avrngArr.length - t + 1 }, (_, i) => avrngArr[i + t - 1]); // محاكاة
+                // لحساب EMA للـ avrng، نأخذ المتوسط المتحرك للـ avrngArr بأكمله
+                const smoothrngVal = ema(avrngArr, wper) * m;
+                return smoothrngVal;
+            }
 
-                    let brokeAbove = false;
-                    let breakIdx = -1;
-                    for (let j = i + 1; j < candles.length; j++) {
-                        if (candles[j].high > obHigh && candles[j].close > obHigh) {
-                            brokeAbove = true;
-                            breakIdx = j;
-                            break;
-                        }
-                    }
-                    if (!brokeAbove) continue;
+            // حساب smrng1 و smrng2
+            const prices = candles.map(c => c.close);
+            const smrng1 = smoothrng(prices, per1, mult1);
+            const smrng2 = smoothrng(prices, per2, mult2);
+            const smrng = (smrng1 + smrng2) / 2;
 
-                    let retestIdx = -1;
-                    for (let j = breakIdx + 1; j < candles.length; j++) {
-                        const price = candles[j];
-                        if (price.low < obHigh && price.high > obLow) {
-                            retestIdx = j;
-                            break;
-                        }
-                    }
-                    if (retestIdx === -1) continue;
+            // حساب Range Filter (rngfilt)
+            let filt = prices[0];
+            let upward = 0;
+            let downward = 0;
+            let CondIni = 0;
 
-                    let confirmIdx = -1;
-                    for (let j = retestIdx + 1; j < candles.length; j++) {
-                        if (candles[j].close > obHigh) {
-                            confirmIdx = j;
-                            break;
-                        }
-                    }
-                    if (confirmIdx === -1) continue;
+            for (let i = 1; i < prices.length; i++) {
+                const x = prices[i];
+                const prevFilt = filt;
 
-                    let insideCount = 0;
-                    for (let j = retestIdx; j < confirmIdx; j++) {
-                        const p = candles[j];
-                        if (p.low < obHigh && p.high > obLow) insideCount++;
-                    }
-                    if (insideCount > 4) continue;
-
-                    const adxData = calcADX(candles.slice(0, confirmIdx + 1), CONFIG.adxPeriod);
-                    if (!adxData || adxData.adx < CONFIG.minAdx) continue;
-
-                    blocks.push({
-                        type: 'BUY',
-                        high: obHigh,
-                        low: obLow,
-                        open: obOpen,
-                        close: obClose,
-                        index: i,
-                        retestIndex: retestIdx,
-                        confirmIndex: confirmIdx,
-                        adx: adxData.adx,
-                        plusDI: adxData.plusDI,
-                        minusDI: adxData.minusDI,
-                        strength: 'good',
-                    });
+                // rngfilt logic
+                if (x > prevFilt) {
+                    filt = (x - smrng < prevFilt) ? prevFilt : x - smrng;
+                } else {
+                    filt = (x + smrng > prevFilt) ? prevFilt : x + smrng;
                 }
 
-                if (isBullish) {
-                    const obHigh = c.high;
-                    const obLow = c.low;
-                    const obOpen = c.open;
-                    const obClose = c.close;
+                // upward / downward
+                if (filt > prevFilt) {
+                    upward += 1;
+                    downward = 0;
+                } else if (filt < prevFilt) {
+                    downward += 1;
+                    upward = 0;
+                } else {
+                    // unchanged
+                }
 
-                    let brokeBelow = false;
-                    let breakIdx = -1;
-                    for (let j = i + 1; j < candles.length; j++) {
-                        if (candles[j].low < obLow && candles[j].close < obLow) {
-                            brokeBelow = true;
-                            breakIdx = j;
-                            break;
-                        }
+                // longCond / shortCond
+                const source = x;
+                const prevSource = prices[i - 1];
+                let longCond = false;
+                let shortCond = false;
+
+                if (source > filt && upward > 0) {
+                    longCond = (source > prevSource) || (source < prevSource);
+                }
+                if (source < filt && downward > 0) {
+                    shortCond = (source < prevSource) || (source > prevSource);
+                }
+
+                // تحديث CondIni
+                if (longCond) CondIni = 1;
+                else if (shortCond) CondIni = -1;
+
+                // التحقق من الإشارة الفعلية بناءً على CondIni السابق
+                const prevCondIni = (i > 1) ? CondIni : 0;
+
+                // إذا كانت هذه هي نهاية الشمعة الحالية (آخر شمعة في المصفوفة)
+                if (i === prices.length - 1) {
+                    const isLong = longCond && prevCondIni === -1;
+                    const isShort = shortCond && prevCondIni === 1;
+
+                    if (isLong && adxData.adx > CONFIG.minAdx) {
+                        return {
+                            adx: adxData.adx,
+                            signal: {
+                                type: 'BUY',
+                                entryPrice: x,
+                                stopLoss: x * 0.995,
+                                takeProfit1: x * 1.02,
+                                takeProfit2: x * 1.03,
+                                rr: 2.0,
+                                strength: adxData.adx > 45 ? 'excellent' : 'strong',
+                                analysis: `إشارة Twin Range Filter صاعدة (Long) مع تأكيد ADX فوق 25 بقيمة ${round(adxData.adx, 1)}. السعر ${formatPrice(x)} فوق الفلتر مع اتجاه صاعد.`,
+                            }
+                        };
+                    } else if (isShort && adxData.adx > CONFIG.minAdx) {
+                        return {
+                            adx: adxData.adx,
+                            signal: {
+                                type: 'SELL',
+                                entryPrice: x,
+                                stopLoss: x * 1.005,
+                                takeProfit1: x * 0.98,
+                                takeProfit2: x * 0.97,
+                                rr: 2.0,
+                                strength: adxData.adx > 45 ? 'excellent' : 'strong',
+                                analysis: `إشارة Twin Range Filter هابطة (Short) مع تأكيد ADX فوق 25 بقيمة ${round(adxData.adx, 1)}. السعر ${formatPrice(x)} تحت الفلتر مع اتجاه هابط.`,
+                            }
+                        };
                     }
-                    if (!brokeBelow) continue;
-
-                    let retestIdx = -1;
-                    for (let j = breakIdx + 1; j < candles.length; j++) {
-                        const price = candles[j];
-                        if (price.low < obHigh && price.high > obLow) {
-                            retestIdx = j;
-                            break;
-                        }
-                    }
-                    if (retestIdx === -1) continue;
-
-                    let confirmIdx = -1;
-                    for (let j = retestIdx + 1; j < candles.length; j++) {
-                        if (candles[j].close < obLow) {
-                            confirmIdx = j;
-                            break;
-                        }
-                    }
-                    if (confirmIdx === -1) continue;
-
-                    let insideCount = 0;
-                    for (let j = retestIdx; j < confirmIdx; j++) {
-                        const p = candles[j];
-                        if (p.low < obHigh && p.high > obLow) insideCount++;
-                    }
-                    if (insideCount > 4) continue;
-
-                    const adxData = calcADX(candles.slice(0, confirmIdx + 1), CONFIG.adxPeriod);
-                    if (!adxData || adxData.adx < CONFIG.minAdx) continue;
-
-                    blocks.push({
-                        type: 'SELL',
-                        high: obHigh,
-                        low: obLow,
-                        open: obOpen,
-                        close: obClose,
-                        index: i,
-                        retestIndex: retestIdx,
-                        confirmIndex: confirmIdx,
-                        adx: adxData.adx,
-                        plusDI: adxData.plusDI,
-                        minusDI: adxData.minusDI,
-                        strength: 'good',
-                    });
                 }
             }
 
-            const unique = [];
-            const seen = new Set();
-            for (const b of blocks.reverse()) {
-                const key = `${b.type}_${b.high.toFixed(4)}_${b.low.toFixed(4)}`;
-                if (!seen.has(key)) {
-                    seen.add(key);
-                    unique.push(b);
-                }
-                if (unique.length >= 10) break;
-            }
-
-            return unique.reverse();
+            // إذا لم نجد إشارة
+            return { adx: adxData.adx, blocks: [], signal: null };
         }
 
         // ============================================================
-        //  SIGNAL GENERATOR
-        // ============================================================
-        function generateSignal(symbol, candles, blocks) {
-            if (!blocks || blocks.length === 0) return null;
-            if (candles.length < 20) return null;
-
-            const recentBlocks = blocks.filter(b => b.confirmIndex !== undefined);
-            if (recentBlocks.length === 0) return null;
-
-            recentBlocks.sort((a, b) => b.confirmIndex - a.confirmIndex);
-
-            // منع تكرار اضافة اهداف متشابهة جداً في وقت قصير
-            const existingRecent = state.signals.filter(s =>
-                s.symbol === symbol &&
-                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4
-            );
-            if (existingRecent.length > 0) {
-                const last = existingRecent[0];
-                const block = recentBlocks[0];
-                const priceDiff = Math.abs(block.high - last.entryPrice) / last.entryPrice;
-                if (priceDiff < 0.005) return null;
-            }
-
-            const block = recentBlocks[0];
-            const confirmCandle = candles[block.confirmIndex];
-            if (!confirmCandle) return null;
-
-            const entryPrice = block.type === 'BUY' ?
-                confirmCandle.close :
-                confirmCandle.close;
-
-            const sl = block.type === 'BUY' ?
-                block.low * 0.998 :
-                block.high * 1.002;
-
-            const risk = Math.abs(entryPrice - sl);
-            const tp1 = block.type === 'BUY' ?
-                entryPrice + risk * 2.0 :
-                entryPrice - risk * 2.0;
-            const tp2 = block.type === 'BUY' ?
-                entryPrice + risk * 3.0 :
-                entryPrice - risk * 3.0;
-
-            const rr = (Math.abs(tp1 - entryPrice) / risk);
-
-            let strength = 'good';
-            if (block.adx >= 50) strength = 'excellent';
-            else if (block.adx >= 40) strength = 'strong';
-            else if (block.adx >= 30) strength = 'good';
-            else strength = 'weak';
-
-            const typeText = block.type === 'BUY' ? 'صاعد' : 'هابط';
-            const actionText = block.type === 'BUY' ? 'شراء' : 'بيع';
-            const obText = block.type === 'BUY' ?
-                `تم اكتشاف Order Block صاعد عند مستوى ${formatPrice(block.high)}` :
-                `تم اكتشاف Order Block هابط عند مستوى ${formatPrice(block.low)}`;
-            const retestText = `تمت إعادة اختبار المنطقة لأول مرة`;
-            const confirmText = block.type === 'BUY' ?
-                `أغلق السعر فوق المنطقة عند ${formatPrice(confirmCandle.close)}` :
-                `أغلق السعر أسفل المنطقة عند ${formatPrice(confirmCandle.close)}`;
-            const adxText = `ADX = ${round(block.adx, 1)} (أكبر من ${CONFIG.minAdx})`;
-
-            const analysis = `${obText}، و${retestText}، و${confirmText} مع قوة اتجاه ${adxText}، لذلك تم إصدار إشارة ${actionText}.`;
-
-            return {
-                id: generateId(),
-                symbol: symbol,
-                type: block.type,
-                entryPrice: entryPrice,
-                stopLoss: sl,
-                takeProfit1: tp1,
-                takeProfit2: tp2,
-                rr: rr,
-                timestamp: Date.now(),
-                strength: strength,
-                analysis: analysis,
-                adx: block.adx,
-                obHigh: block.high,
-                obLow: block.low,
-                confirmCandle: confirmCandle,
-                status: 'pending',
-            };
-        }
-
-        // ============================================================
-        //  AUTO CLOSE MECHANISM (الغلق التلقائي عند ضرب الهدف او الخسارة)
-        // ============================================================
-        function checkAutoClose(symbol, candle) {
-            if (!candle) return;
-            const currentPrice = candle.close;
-            const pending = state.signals.filter(s => s.symbol === symbol && s.status === 'pending');
-            
-            for (const sig of pending) {
-                if (sig.type === 'BUY') {
-                    // شراء (الربح فوق، الخسارة تحت)
-                    if (currentPrice >= sig.takeProfit1) {
-                        updateSignalResult(sig.id, 'win');
-                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
-                    } else if (currentPrice <= sig.stopLoss) {
-                        updateSignalResult(sig.id, 'loss');
-                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
-                    }
-                } else if (sig.type === 'SELL') {
-                    // بيع (الربح تحت، الخسارة فوق)
-                    if (currentPrice <= sig.takeProfit1) {
-                        updateSignalResult(sig.id, 'win');
-                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
-                    } else if (currentPrice >= sig.stopLoss) {
-                        updateSignalResult(sig.id, 'loss');
-                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
-                    }
-                }
-            }
-        }
-
-        // ============================================================
-        //  ✅ الإضافة الجديدة: إلغاء الإشارات المعاكسة عند تغير الاتجاه
+        //  SIGNAL MANAGER (مع إلغاء الإشارات المعاكسة)
         // ============================================================
         function cancelOppositeSignals(newSignal) {
             if (!newSignal) return;
-
-            // البحث عن إشارات معلقة لنفس الزوج ولكن بنوع معاكس (مثلاً: SELL إذا كانت الجديدة BUY)
             const oppositeSignals = state.signals.filter(s => 
                 s.symbol === newSignal.symbol && 
                 s.status === 'pending' && 
                 s.type !== newSignal.type
             );
-
             for (const oldSig of oppositeSignals) {
-                // إلغاء الإشارة القديمة
                 oldSig.status = 'closed';
                 oldSig.result = 'cancelled';
-
-                // تحديث السجل
                 const logIdx = state.log.findIndex(l => l.id === oldSig.id);
                 if (logIdx !== -1) {
                     state.log[logIdx].result = 'cancelled';
                 }
-
-                // إعلام المستخدم
                 showToast('🔄', `تم إلغاء إشارة ${oldSig.symbol} السابقة`, `تغير الاتجاه وصدور إشارة ${newSignal.type === 'BUY' ? 'شراء' : 'بيع'} جديدة`);
-                
-                // إرسال إشعار صوتي/اهتزاز
                 playNotificationSound();
                 triggerVibration();
             }
         }
 
-        // ============================================================
-        //  SIGNAL MANAGER
-        // ============================================================
         function addSignal(signal) {
             if (!signal) return;
 
-            const filterEnabled = state.settings.btcFilter;
-            if (filterEnabled && signal.symbol !== 'BTCUSDT') {
-                const btc = state.lastBtcSignal;
-                const withinWindow = btc &&
-                    btc.type === signal.type &&
-                    (Date.now() - btc.timestamp) <= CONFIG.btcFilterMinutes * 60 * 1000;
-                if (!withinWindow) {
-                    console.log(`⛔ رفض إشارة ${signal.symbol} (${signal.type}) لأن الفلتر مفعل والبيتكوين ليس لديه إشارة ${signal.type} حديثة (آخر ${CONFIG.btcFilterMinutes} دقيقة)`);
-                    return;
-                }
-            } else if (filterEnabled && signal.symbol === 'BTCUSDT') {
-                state.lastBtcSignal = { type: signal.type, timestamp: signal.timestamp };
-            } else {
-                if (signal.symbol === 'BTCUSDT') {
-                    state.lastBtcSignal = { type: signal.type, timestamp: signal.timestamp };
-                }
-            }
-
-            // منع التكرار
             const isDuplicate = state.signals.some(s =>
                 s.symbol === signal.symbol &&
                 s.type === signal.type &&
-                Math.abs(s.entryPrice - signal.entryPrice) / s.entryPrice < 0.005 && // 0.5% margin
-                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4 // Last 4 hours
+                Math.abs(s.entryPrice - signal.entryPrice) / s.entryPrice < 0.005 &&
+                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4
             );
             if (isDuplicate) return;
 
@@ -1726,9 +1551,8 @@
             if (isToday(signal.timestamp)) state.stats.today++;
 
             saveState();
-            scheduleRender(); 
+            scheduleRender();
 
-            // Notifications
             const emoji = signal.type === 'BUY' ? '🟢' : '🔴';
             const action = signal.type === 'BUY' ? 'شراء' : 'بيع';
             const title = `${emoji} إشارة ${action} - ${signal.symbol}`;
@@ -1739,21 +1563,17 @@
             triggerVibration();
             sendPushNotification(title, body);
 
-            // ============================================================
-            //  إرسال الإشارة إلى تليجرام تلقائياً
-            // ============================================================
+            // إرسال إلى تليجرام
             const telegramText = formatSignalForTelegram(signal);
             sendTelegramMessage(telegramText).then(success => {
                 if (success) {
                     console.log(`✅ تم إرسال إشارة ${signal.symbol} إلى تليجرام`);
                 } else {
-                    console.warn(`⚠️ فشل إرسال إشارة ${signal.symbol} إلى تليجرام (تحقق من الإعدادات)`);
+                    console.warn(`⚠️ فشل إرسال إشارة ${signal.symbol} إلى تليجرام`);
                 }
             });
 
-            // ============================================================
-            //  إرسال إشعار عبر Service Worker (خلفية)
-            // ============================================================
+            // إشعار Service Worker
             if (state.swRegistration) {
                 state.swRegistration.showNotification(title, {
                     body: body,
@@ -1774,7 +1594,7 @@
         }
 
         // ============================================================
-        //  UPDATE SIGNAL RESULT
+        //  UPDATE SIGNAL RESULT (إغلاق الصفقة)
         // ============================================================
         function updateSignalResult(signalId, result) {
             const idx = state.signals.findIndex(s => s.id === signalId);
@@ -1782,7 +1602,6 @@
 
             const signal = state.signals[idx];
             if (signal.status !== 'pending') {
-                // إذا كانت الإشارة قد ألغيت بالفعل، لا نقوم بأي شيء
                 if (signal.result === 'cancelled') {
                     showToast('⏳', 'هذه الصفقة ألغيت بالفعل بسبب تغير الاتجاه');
                 } else {
@@ -1816,7 +1635,36 @@
         }
 
         // ============================================================
-        //  RENDER ENGINE (تحديث جزئي – بدون وميض)
+        //  AUTO CLOSE MECHANISM (الغلق التلقائي عند ضرب الهدف أو الخسارة)
+        // ============================================================
+        function checkAutoClose(symbol, candle) {
+            if (!candle) return;
+            const currentPrice = candle.close;
+            const pending = state.signals.filter(s => s.symbol === symbol && s.status === 'pending');
+            
+            for (const sig of pending) {
+                if (sig.type === 'BUY') {
+                    if (currentPrice >= sig.takeProfit1) {
+                        updateSignalResult(sig.id, 'win');
+                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
+                    } else if (currentPrice <= sig.stopLoss) {
+                        updateSignalResult(sig.id, 'loss');
+                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
+                    }
+                } else if (sig.type === 'SELL') {
+                    if (currentPrice <= sig.takeProfit1) {
+                        updateSignalResult(sig.id, 'win');
+                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
+                    } else if (currentPrice >= sig.stopLoss) {
+                        updateSignalResult(sig.id, 'loss');
+                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
+                    }
+                }
+            }
+        }
+
+        // ============================================================
+        //  RENDER ENGINE
         // ============================================================
         let renderScheduled = false;
 
@@ -1840,7 +1688,6 @@
             DOM.lastUpdate.textContent = formatTime(Date.now());
         }
 
-        // ---- تحديث أزرار الرموز ----
         function updateSymbolTabs() {
             const container = DOM.symbolTabs;
             const data = state.symbols;
@@ -1880,7 +1727,6 @@
             }
         }
 
-        // ---- تحديث بطاقات الإشارات ----
         function updateSignals() {
             const container = DOM.signalsContainer;
             const pendingSignals = state.signals.filter(s => s.symbol === state.activeSymbol && s.status === 'pending');
@@ -1889,7 +1735,7 @@
               <div class="no-signals">
                 <div class="icon">📡</div>
                 <div>لا توجد إشارات نشطة لـ ${state.activeSymbol}</div>
-                <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">سيتم عرض الإشارات عند توفرها</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">بانتظار إشارة Twin Range Filter + ADX</div>
               </div>
             `;
                 DOM.signalCount.textContent = '0';
@@ -1981,7 +1827,6 @@
             });
         }
 
-        // ---- تحديث الإحصائيات ----
         function updateStats() {
             const s = state.stats;
             const total = s.total || 0;
@@ -2000,7 +1845,6 @@
             }
         }
 
-        // ---- تحديث السجل ----
         function updateLog() {
             const container = DOM.logContainer;
             const logs = state.log.slice(0, 30);
@@ -2048,7 +1892,6 @@
             }
         }
 
-        // ---- دالة المشاركة ----
         function shareSignal(sig) {
             const typeLabel = sig.type === 'BUY' ? 'شراء' : 'بيع';
             const text =
@@ -2080,7 +1923,7 @@
         }
 
         // ============================================================
-        //  WEBSOCKET
+        //  WEBSOCKET (التحديث المباشر على 30 دقيقة)
         // ============================================================
         function connectWebSocket() {
             if (state.ws) {
@@ -2095,7 +1938,7 @@
                 state.isOnline = true;
                 state.wsReady = true;
                 updateStatus(true);
-                showToast('🔗', 'متصل بالسوق', 'تحديث مباشر نشط');
+                showToast('🔗', 'متصل بالسوق', 'تحديث مباشر على إطار 30 دقيقة');
             };
 
             state.ws.onmessage = (event) => {
@@ -2209,16 +2052,12 @@
                 const result = analyzeSymbol(symbol, candles);
 
                 if (result && result.signal) {
-                    // ✅ قبل إضافة الإشارة، نقوم بإلغاء أي إشارة سابقة معاكسة
                     cancelOppositeSignals(result.signal);
-                    
-                    // إضافة الإشارة الجديدة
                     addSignal(result.signal);
                 }
 
                 if (result) {
                     state.symbols[symbol].adx = result.adx;
-                    state.symbols[symbol].blocks = result.blocks;
                     state.symbols[symbol].lastAnalysis = Date.now();
                 }
 
@@ -2237,7 +2076,7 @@
         //  INITIAL DATA LOAD
         // ============================================================
         async function loadInitialData() {
-            showToast('📡', 'جاري تحميل بيانات السوق...');
+            showToast('📡', 'جاري تحميل بيانات السوق (إطار 30 دقيقة)...');
 
             try {
                 const allData = await fetchAllSymbols();
@@ -2306,7 +2145,6 @@
                 }
             });
 
-            // إنشاء Service Worker ديناميكي كـ Blob URL
             const swCode = `
                 self.addEventListener('install', (event) => {
                     self.skipWaiting();
@@ -2353,7 +2191,6 @@
         // ============================================================
         function setupToggles() {
             const toggles = [
-                { el: DOM.toggleBtcFilter, key: 'btcFilter' },
                 { el: DOM.toggleSound, key: 'sound' },
                 { el: DOM.toggleVibration, key: 'vibration' },
                 { el: DOM.toggleNotifications, key: 'notifications' },
@@ -2364,9 +2201,6 @@
                     const isActive = t.el.classList.toggle('active');
                     state.settings[t.key] = isActive;
                     localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
-                    if (t.key === 'btcFilter') {
-                        showToast('🟠', `فلتر التوافق ${isActive ? 'مفعل' : 'معطل'}`, 'سيتم تطبيقه على الإشارات الجديدة');
-                    }
                 });
             }
 
@@ -2374,11 +2208,10 @@
                 const saved = localStorage.getItem('crypto_settings');
                 if (saved) {
                     const parsed = JSON.parse(saved);
-                    for (const key of ['sound', 'vibration', 'notifications', 'btcFilter']) {
+                    for (const key of ['sound', 'vibration', 'notifications']) {
                         if (key in parsed) {
                             state.settings[key] = parsed[key];
                             const elMap = {
-                                btcFilter: DOM.toggleBtcFilter,
                                 sound: DOM.toggleSound,
                                 vibration: DOM.toggleVibration,
                                 notifications: DOM.toggleNotifications,
@@ -2423,11 +2256,9 @@
             setupPWA();
             setupOfflineSync();
 
-            // استعادة إعدادات تليجرام من الحالة (تم تحميلها من localStorage)
             DOM.telegramToken.value = state.settings.telegramToken || '';
             DOM.telegramChatId.value = state.settings.telegramChatId || '';
 
-            // حفظ إعدادات تليجرام عند التغيير
             DOM.telegramToken.addEventListener('input', (e) => {
                 state.settings.telegramToken = e.target.value.trim();
                 localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
@@ -2437,13 +2268,11 @@
                 localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
             });
 
-            // زر اختبار تليجرام
             DOM.testTelegramBtn.addEventListener('click', testTelegramConnection);
 
             await loadInitialData();
             connectWebSocket();
 
-            // فحص الإغلاق التلقائي كل 10 ثوانٍ للتأكد
             setInterval(() => {
                  for (const sym of CONFIG.symbols) {
                      const symData = state.symbols[sym];
@@ -2459,7 +2288,7 @@
                     runAnalysis(sym);
                 }
                 scheduleRender();
-            }, 1000 * 60 * 5);
+            }, 1000 * 60 * 30); // تحليل كامل كل 30 دقيقة
 
             setInterval(saveState, 1000 * 30);
 
@@ -2469,13 +2298,12 @@
                 }
             }, 1000 * 10);
 
-            console.log('🚀 Crypto Signals Pro initialized');
+            console.log('🚀 Twin Range Filter Pro initialized');
             console.log(`📊 Monitoring ${CONFIG.symbols.length} symbols on ${CONFIG.interval}`);
-            console.log(`🔍 BTC filter: ${state.settings.btcFilter ? 'ON' : 'OFF'} (${CONFIG.btcFilterMinutes} min window)`);
-            console.log(`🤖 Telegram: ${state.settings.telegramToken ? 'Configured' : 'Not configured'}`);
+            console.log(`🔍 ADX threshold: ${CONFIG.minAdx}`);
         }
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-                                         </html>
+    </html>
