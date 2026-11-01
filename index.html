@@ -1,2309 +1,403 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0d1117">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==">
-    <title>🚀 Twin Range Filter Pro</title>
-    <style>
-        /* ===== RESET & BASE ===== */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-card: #1c2333;
-            --bg-card-hover: #252d3f;
-            --border-color: #30363d;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --text-muted: #484f58;
-            --green: #00c853;
-            --green-bg: rgba(0, 200, 83, 0.15);
-            --red: #ff1744;
-            --red-bg: rgba(255, 23, 68, 0.15);
-            --gold: #ffd700;
-            --gold-bg: rgba(255, 215, 0, 0.12);
-            --blue: #58a6ff;
-            --blue-bg: rgba(88, 166, 255, 0.12);
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-            --radius: 14px;
-            --radius-sm: 8px;
-            --transition: 0.25s ease;
-            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        html,
-        body {
-            height: 100%;
-            font-family: var(--font);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-            scroll-behavior: smooth;
-        }
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-        a {
-            color: var(--blue);
-            text-decoration: none;
-        }
-        button {
-            font-family: var(--font);
-            cursor: pointer;
-            border: none;
-            outline: none;
-            background: none;
-            color: inherit;
-        }
-        input,
-        select {
-            font-family: var(--font);
-            outline: none;
-            border: none;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-            width: 100%;
-            font-size: 14px;
-        }
-        input:focus,
-        select:focus {
-            border-color: var(--blue);
-        }
-
-        /* ===== LAYOUT ===== */
-        #app {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            max-width: 520px;
-            margin: 0 auto;
-            padding: 0 12px 80px 12px;
-        }
-
-        /* ===== HEADER ===== */
-        .app-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 0 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 6px;
-            position: sticky;
-            top: 0;
-            background: var(--bg-primary);
-            z-index: 50;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .app-header .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-        .app-header .brand span {
-            background: linear-gradient(135deg, var(--gold), #f9a825);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .app-header .status-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .status-dot.online {
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green);
-        }
-        .status-dot.offline {
-            background: var(--red);
-            box-shadow: 0 0 10px var(--red);
-        }
-        .status-dot.connecting {
-            background: var(--gold);
-            box-shadow: 0 0 10px var(--gold);
-            animation: pulse-dot 1s infinite;
-        }
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8);
-            }
-        }
-        .last-update {
-            font-size: 11px;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-
-        /* ===== INSTALL BUTTON ===== */
-        .install-btn {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: var(--blue-bg);
-            color: var(--blue);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: var(--transition);
-            border: 1px solid transparent;
-        }
-        .install-btn:hover {
-            background: var(--blue);
-            color: #fff;
-        }
-        .install-btn.show {
-            display: flex;
-        }
-
-        /* ===== SYMBOL TABS ===== */
-        .symbol-tabs {
-            display: flex;
-            gap: 6px;
-            padding: 12px 0 8px 0;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .symbol-tabs::-webkit-scrollbar {
-            display: none;
-        }
-        .symbol-tab {
-            flex: 0 0 auto;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-        .symbol-tab:hover {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-        .symbol-tab.active {
-            background: var(--blue-bg);
-            color: var(--blue);
-            border-color: var(--blue);
-        }
-        .symbol-tab .price {
-            font-weight: 400;
-            font-size: 11px;
-            margin-left: 6px;
-            color: var(--text-muted);
-        }
-        .symbol-tab.active .price {
-            color: var(--text-secondary);
-        }
-        .symbol-tab .change {
-            font-size: 11px;
-            margin-left: 4px;
-            font-weight: 600;
-        }
-        .symbol-tab .change.pos {
-            color: var(--green);
-        }
-        .symbol-tab .change.neg {
-            color: var(--red);
-        }
-
-        /* ===== SIGNAL CARDS ===== */
-        .signals-section {
-            margin-top: 8px;
-        }
-        .section-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 700;
-            padding: 12px 0 8px 0;
-            color: var(--text-primary);
-        }
-        .section-title .badge {
-            font-size: 12px;
-            font-weight: 400;
-            background: var(--bg-secondary);
-            padding: 2px 12px;
-            border-radius: 20px;
-            color: var(--text-secondary);
-        }
-        .no-signals {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            font-size: 15px;
-        }
-        .no-signals .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-            opacity: 0.4;
-        }
-
-        .signal-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            margin-bottom: 14px;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-            animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .signal-card:hover {
-            border-color: var(--text-muted);
-        }
-        .signal-card .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .signal-card .symbol-name {
-            font-size: 18px;
-            font-weight: 700;
-        }
-        .signal-card .signal-type {
-            font-size: 14px;
-            font-weight: 700;
-            padding: 2px 14px;
-            border-radius: 20px;
-            letter-spacing: 0.3px;
-        }
-        .signal-type.buy {
-            background: var(--green-bg);
-            color: var(--green);
-        }
-        .signal-type.sell {
-            background: var(--red-bg);
-            color: var(--red);
-        }
-        .signal-card .signal-strength {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 12px;
-            border-radius: 20px;
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-        }
-        .signal-strength.weak {
-            color: #ffab00;
-            background: rgba(255, 171, 0, 0.15);
-        }
-        .signal-strength.good {
-            color: #69f0ae;
-            background: rgba(105, 240, 174, 0.12);
-        }
-        .signal-strength.strong {
-            color: var(--blue);
-            background: var(--blue-bg);
-        }
-        .signal-strength.excellent {
-            color: var(--gold);
-            background: var(--gold-bg);
-        }
-
-        .signal-card .card-body {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 16px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-        }
-        .signal-card .card-body .item {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-        .signal-card .card-body .item .label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-        .signal-card .card-body .item .value {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .signal-card .card-body .item .value.sl {
-            color: var(--red);
-        }
-        .signal-card .card-body .item .value.tp {
-            color: var(--green);
-        }
-        .signal-card .card-body .item .value.rr {
-            color: var(--gold);
-        }
-
-        .signal-card .analysis {
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            border-right: 3px solid var(--blue);
-        }
-        .signal-card .analysis .label {
-            font-weight: 600;
-            color: var(--text-primary);
-            display: block;
-            margin-bottom: 2px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-        }
-
-        .signal-card .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .signal-card .card-footer .time {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        .signal-card .card-footer .actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .signal-card .card-footer .actions button {
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            transition: var(--transition);
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .signal-card .card-footer .actions button:hover {
-            background: var(--bg-card-hover);
-            color: var(--text-primary);
-        }
-        .signal-card .card-footer .actions button.share-btn {
-            color: var(--blue);
-            border-color: var(--blue);
-        }
-        .signal-card .card-footer .actions button.share-btn:hover {
-            background: var(--blue-bg);
-        }
-        .signal-card .card-footer .actions .close-win {
-            color: var(--green);
-            border-color: var(--green);
-        }
-        .signal-card .card-footer .actions .close-win:hover {
-            background: var(--green-bg);
-        }
-        .signal-card .card-footer .actions .close-loss {
-            color: var(--red);
-            border-color: var(--red);
-        }
-        .signal-card .card-footer .actions .close-loss:hover {
-            background: var(--red-bg);
-        }
-
-        /* ===== STATISTICS ===== */
-        .stats-section {
-            margin-top: 16px;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 8px;
-        }
-        .stats-grid .stat-item {
-            text-align: center;
-        }
-        .stats-grid .stat-item .number {
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .stats-grid .stat-item .number.green {
-            color: var(--green);
-        }
-        .stats-grid .stat-item .number.red {
-            color: var(--red);
-        }
-        .stats-grid .stat-item .number.gold {
-            color: var(--gold);
-        }
-        .stats-grid .stat-item .number.blue {
-            color: var(--blue);
-        }
-        .stats-grid .stat-item .stat-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        .stats-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 14px 0;
-        }
-        .stats-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-secondary);
-            padding: 2px 0;
-        }
-        .stats-row .val {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        /* ===== SETTINGS / TOGGLE ===== */
-        .settings-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .settings-row:last-child {
-            border-bottom: none;
-        }
-        .settings-row .label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .settings-row .label .hint {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .toggle {
-            width: 44px;
-            height: 24px;
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            position: relative;
-            transition: var(--transition);
-            border: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-        .toggle.active {
-            background: var(--blue);
-            border-color: var(--blue);
-        }
-        .toggle .knob {
-            width: 18px;
-            height: 18px;
-            background: #fff;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: var(--transition);
-        }
-        .toggle.active .knob {
-            left: 22px;
-        }
-
-        /* ===== TELEGRAM SETTINGS ===== */
-        .telegram-settings {
-            margin-top: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .telegram-settings .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .telegram-settings .input-group label {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-        .telegram-settings .input-group input {
-            width: 100%;
-        }
-        .telegram-test-btn {
-            background: var(--blue-bg);
-            color: var(--blue);
-            padding: 8px 18px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 13px;
-            border: 1px solid var(--blue);
-            transition: var(--transition);
-            width: 100%;
-            margin-top: 4px;
-        }
-        .telegram-test-btn:hover {
-            background: var(--blue);
-            color: #fff;
-        }
-        .telegram-test-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* ===== SIGNAL LOG ===== */
-        .log-section {
-            margin-top: 16px;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            border: 1px solid var(--border-color);
-        }
-        .log-entry {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .log-entry:last-child {
-            border-bottom: none;
-        }
-        .log-entry .log-symbol {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .log-entry .log-type {
-            font-weight: 600;
-            padding: 0 8px;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-        .log-entry .log-type.buy {
-            color: var(--green);
-        }
-        .log-entry .log-type.sell {
-            color: var(--red);
-        }
-        .log-entry .log-result {
-            font-weight: 600;
-        }
-        .log-entry .log-result.win {
-            color: var(--green);
-        }
-        .log-entry .log-result.loss {
-            color: var(--red);
-        }
-        .log-entry .log-result.pending {
-            color: var(--gold);
-        }
-        .log-entry .log-result.cancelled {
-            color: var(--text-muted);
-        }
-
-        /* ===== TOAST ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 999;
-            width: 90%;
-            max-width: 400px;
-            pointer-events: none;
-        }
-        .toast {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            animation: toastIn 0.35s ease;
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .toast .toast-icon {
-            font-size: 24px;
-        }
-        .toast .toast-msg {
-            font-size: 14px;
-            font-weight: 500;
-            flex: 1;
-        }
-        .toast .toast-msg small {
-            display: block;
-            font-weight: 400;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 420px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            .signal-card .card-body {
-                grid-template-columns: 1fr 1fr;
-                gap: 4px 12px;
-            }
-            .app-header .brand {
-                font-size: 17px;
-            }
-            .app-header .status-group {
-                font-size: 11px;
-                gap: 8px;
-            }
-            .symbol-tab {
-                font-size: 12px;
-                padding: 4px 12px;
-            }
-        }
-        @media (min-width: 600px) {
-            #app {
-                padding: 0 24px 80px 24px;
-            }
-            .signal-card {
-                padding: 20px 24px;
-            }
-        }
-
-        /* ===== UTILITY ===== */
-        .hidden {
-            display: none !important;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .flex {
-            display: flex;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .w-full {
-            width: 100%;
-        }
-
-        /* ===== SPLASH SCREEN ===== */
-        #splash {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
-        }
-        #splash.hide {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        #splash .logo {
-            font-size: 52px;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--gold), #f9a825);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        #splash .sub {
-            color: var(--text-muted);
-            font-size: 16px;
-            margin-top: 8px;
-            letter-spacing: 2px;
-        }
-        #splash .loader {
-            margin-top: 28px;
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VolumeEdge — إشارات Volume Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+:root{--bg:#070b14;--card:#0e1626;--card2:#121d33;--line:#1c2940;--txt:#e6edf7;--mut:#7f8fa9;--g:#22c55e;--r:#ef4444;--gold:#f5b942;--acc:#6366f1}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Cairo,system-ui,sans-serif;background:radial-gradient(1200px 600px at 80% -10%,#16204a55,transparent),var(--bg);color:var(--txt);min-height:100vh}
+.mut{color:var(--mut)}.small{font-size:12px}
+.g{color:var(--g)}.r{color:var(--r)}.gold{color:var(--gold)}
+.ltr{direction:ltr;unicode-bidi:embed}
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--g));z-index:99;transition:width .3s}
+.ticker{border-bottom:1px solid var(--line);background:#0a1020;overflow:hidden;white-space:nowrap;direction:ltr}
+.ticker .track{display:inline-block;animation:mq 120s linear infinite;padding:8px 0}
+.ticker:hover .track{animation-play-state:paused}
+.ticker span{margin:0 18px;font-size:13px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;flex-wrap:wrap;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px}
+.logo i{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--acc),#22d3ee);display:grid;place-items:center;font-style:normal;font-size:18px}
+.live{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--mut)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--r)}.dot.on{background:var(--g);box-shadow:0 0 10px var(--g)}
+main{max-width:1280px;margin:0 auto;padding:0 20px 60px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:8px 0 20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.stat b{display:block;font-size:24px;margin-top:2px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap}
+.tabs button{background:none;border:0;color:var(--mut);font:600 15px Cairo;padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent}
+.tabs button.on{color:#fff;border-color:var(--acc)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:6px 14px;font:600 13px Cairo;cursor:pointer}
+.chip.on{background:var(--acc);border-color:var(--acc)}
+.chip.warn.on{background:var(--gold);color:#000;border-color:var(--gold)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden}
+.sig::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--g)}
+.sig.SHORT::before{background:var(--r)}
+.row{display:flex;justify-content:space-between;align-items:center}
+.sym{font-size:20px}
+.badge{padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px}
+.badge.LONG{background:#22c55e22;color:var(--g)}.badge.SHORT{background:#ef444422;color:var(--r)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin:14px 0;font-size:14px}
+.grid div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding-bottom:4px}
+.score{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin:6px 0 12px}
+.score i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--g))}
+.btn{width:100%;background:var(--acc);border:0;color:#fff;border-radius:12px;padding:9px;font:700 14px Cairo;cursor:pointer}
+.btn:hover{filter:brightness(1.15)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:14px}
+th,td{padding:11px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;background:#0b1424}
+tbody tr{cursor:pointer}tbody tr:hover{background:#15213a}
+.wrap{overflow-x:auto}
+.empty{padding:50px 20px;text-align:center;color:var(--mut);background:var(--card);border:1px dashed var(--line);border-radius:18px}
+.alert{background:#ef444418;border:1px solid #ef444455;color:#fecaca;padding:14px;border-radius:14px;margin-bottom:16px;display:none}
+#modal{position:fixed;inset:0;background:#000000cc;display:none;z-index:50;padding:20px;overflow:auto}
+.mbox{max-width:1100px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px}
+.x{background:none;border:0;color:#fff;font-size:28px;cursor:pointer}
+#chart{direction:ltr;margin:12px 0;border-radius:12px;overflow:hidden}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+.about{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;line-height:2}
+.about h3{margin:14px 0 4px;color:var(--gold)}
+#toast{position:fixed;bottom:20px;left:20px;background:var(--g);color:#000;padding:12px 18px;border-radius:12px;font-weight:700;display:none;z-index:99}
+footer{text-align:center;color:var(--mut);font-size:12px;padding:24px;border-top:1px solid var(--line)}
+.panel{display:none}.panel.on{display:block}
+@media(max-width:600px){header{padding:12px}main{padding:0 12px 40px}}
+</style>
 </head>
 <body>
+<div id="bar"></div>
+<div class="ticker"><div class="track" id="track"></div></div>
+<header>
+  <div class="logo"><i>◈</i><div>VolumeEdge <span class="mut small">Volume Profile Signals</span></div></div>
+  <div class="live"><span class="dot" id="dot"></span><span id="liveTxt">غير متصل</span> · <span id="next"></span></div>
+</header>
 
-    <!-- ===== SPLASH ===== -->
-    <div id="splash">
-        <div class="logo">🚀</div>
-        <div class="sub">Twin Range Filter Pro</div>
-        <div class="loader"></div>
+<main>
+  <div class="alert" id="err"></div>
+  <div class="stats">
+    <div class="stat"><span class="mut small">إشارات نشطة</span><b id="stAct">0</b></div>
+    <div class="stat"><span class="mut small">عملات تم تحليلها</span><b id="stCoins">0</b></div>
+    <div class="stat"><span class="mut small">اتجاه BTC (4س)</span><b id="stBtc">—</b></div>
+    <div class="stat"><span class="mut small">آخر مسح</span><b id="stLast" style="font-size:18px">—</b></div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="on" data-t="signals">الإشارات النشطة</button>
+    <button data-t="market">السوق (44 عملة)</button>
+    <button data-t="stats">السجل والإحصاءات</button>
+    <button data-t="about">الاستراتيجية</button>
+  </div>
+
+  <section class="panel on" id="p-signals">
+    <div class="tools">
+      <button class="chip on" data-side="ALL">الكل</button>
+      <button class="chip" data-side="LONG">شراء</button>
+      <button class="chip" data-side="SHORT">بيع</button>
+      <label class="mut small">أدنى ثقة: <b id="msv">50</b>%
+        <input type="range" id="ms" min="50" max="95" value="50"></label>
+      <button class="chip warn" id="news">⏸ إيقاف الإشارات (أخبار مهمة)</button>
+      <button class="chip" id="rescan">↻ مسح الآن</button>
     </div>
+    <div class="cards" id="cards"></div>
+  </section>
 
-    <!-- ===== APP ===== -->
-    <div id="app">
+  <section class="panel" id="p-market"><div class="wrap"><table>
+    <thead><tr><th>العملة</th><th>السعر</th><th>24س</th><th>الاتجاه</th><th>أقرب مستوى</th><th>POC (4س)</th><th>الحالة</th></tr></thead>
+    <tbody id="mk"></tbody></table></div></section>
 
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="brand">
-                🚀 <span>Twin Filter</span>
-            </div>
-            <div class="status-group">
-                <span class="status-dot connecting" id="statusDot"></span>
-                <span id="statusLabel">جاري الاتصال...</span>
-                <span class="last-update" id="lastUpdate">--</span>
-                <button class="install-btn" id="installBtn">📲 تثبيت</button>
-            </div>
-        </header>
+  <section class="panel" id="p-stats">
+    <div class="stats" id="hs"></div>
+    <div class="wrap"><table>
+      <thead><tr><th>الوقت</th><th>العملة</th><th>الاتجاه</th><th>الدخول</th><th>الوقف</th><th>الهدف 1</th><th>الهدف 2</th><th>النتيجة</th></tr></thead>
+      <tbody id="hist"></tbody></table></div>
+    <p class="mut small" style="margin-top:10px">النتائج محسوبة بالوحدة R (بعد إغلاق 50% عند الهدف الأول ونقل الوقف للدخول) دون احتساب الرسوم والانزلاق. السجل يُحفظ في متصفحك فقط.</p>
+  </section>
 
-        <!-- SYMBOL TABS -->
-        <div class="symbol-tabs" id="symbolTabs"></div>
+  <section class="panel" id="p-about"><div class="about">
+    <h3>الفكرة</h3>مسح لـ 44 عملة على 4 فريمات: اليومي والـ4 ساعات لتحديد الاتجاه (POC وVAH وVAL)، وفريم الساعة لرصد رفض مستوى حجمي، وفريم 15 دقيقة كشمعة تأكيد بحجم أكبر من 1.3 ضعف المتوسط.
+    <h3>الدخول</h3>لمس مستوى (VAL/POC/VAH من فريم الساعة أو 4 ساعات) بمسافة ≤ 0.3 ATR، وإغلاق الساعة بعيدًا عنه، ثم شمعة 15 دقيقة كاسرة بحجم قوي واتجاه عام متوافق.
+    <h3>وقف الخسارة</h3>خلف قاع/قمة اللمس بمقدار 0.5 ATR، وبحد أدنى 0.8 ATR من سعر الدخول.
+    <h3>الخروج</h3>الهدف 1 عند أقرب مستوى حجمي (إغلاق 50% ونقل الوقف للدخول)، والهدف 2 عند المستوى التالي أو 2.5R. تُرفض الصفقة إذا كان R:R للهدف الثاني أقل من 1.5.
+    <h3>الفلاتر</h3>سيولة يومية ≥ 20 مليون دولار، منع شراء العملات البديلة عندما يكون BTC هابطًا على 4 ساعات، وزر إيقاف يدوي قبل الأخبار الكبرى.
+  </div></section>
+</main>
 
-        <!-- SIGNALS -->
-        <section class="signals-section">
-            <div class="section-title">
-                <span>📊 الإشارات النشطة</span>
-                <span class="badge" id="signalCount">0</span>
-            </div>
-            <div id="signalsContainer">
-                <div class="no-signals">
-                    <div class="icon">📡</div>
-                    <div>جاري تحليل السوق (إطار 30 دقيقة)...<br><span style="font-size:13px;color:var(--text-muted);">سيتم عرض الإشارات عند توفرها</span></div>
-                </div>
-            </div>
-        </section>
+<footer>⚠ تنويه: هذه الإشارات للأغراض التعليمية فقط وليست نصيحة مالية. التداول ينطوي على مخاطر عالية وقد تخسر رأس مالك. الأداء السابق لا يضمن النتائج المستقبلية.</footer>
 
-        <!-- STATISTICS -->
-        <section class="stats-section">
-            <div style="font-weight:700;font-size:15px;">📈 الإحصائيات</div>
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-item"><div class="number blue" id="statTotal">0</div><div class="stat-label">إجمالي</div></div>
-                <div class="stat-item"><div class="number green" id="statWins">0</div><div class="stat-label">رابح</div></div>
-                <div class="stat-item"><div class="number red" id="statLosses">0</div><div class="stat-label">خاسر</div></div>
-                <div class="stat-item"><div class="number gold" id="statWinRate">0%</div><div class="stat-label">نسبة الربح</div></div>
-            </div>
-            <div class="stats-divider"></div>
-            <div class="stats-row"><span>إشارات اليوم</span><span class="val" id="statToday">0</span></div>
-            <div class="stats-row"><span>آخر إشارة</span><span class="val" id="statLastSignal">--</span></div>
-        </section>
+<div id="modal"><div class="mbox">
+  <div class="row"><h2 id="mt"></h2><button class="x" id="mx">×</button></div>
+  <div id="mi" class="mut small"></div>
+  <div id="chart"></div>
+  <div class="legend ltr" id="lg"></div>
+</div></div>
+<div id="toast"></div>
 
-        <!-- SETTINGS -->
-        <section class="stats-section" style="margin-top:12px;">
-            <div style="font-weight:700;font-size:15px;">⚙️ الإعدادات</div>
-            <div class="settings-row">
-                <span class="label">🔔 التنبيهات الصوتية</span>
-                <div class="toggle active" id="toggleSound" role="button" tabindex="0">
-                    <div class="knob"></div>
-                </div>
-            </div>
-            <div class="settings-row">
-                <span class="label">📳 الاهتزاز</span>
-                <div class="toggle active" id="toggleVibration" role="button" tabindex="0">
-                    <div class="knob"></div>
-                </div>
-            </div>
-            <div class="settings-row">
-                <span class="label">📨 الإشعارات</span>
-                <div class="toggle active" id="toggleNotifications" role="button" tabindex="0">
-                    <div class="knob"></div>
-                </div>
-            </div>
+<script>
+const API="https://data-api.binance.vision/api/v3";
+const COINS="BTC ETH BNB SOL XRP ADA DOGE AVAX TRX LINK DOT POL LTC BCH ATOM NEAR UNI ETC XLM FIL APT ARB OP INJ SUI SEI TIA AAVE RUNE ALGO SAND MANA AXS GRT EGLD THETA HBAR VET ICP PEPE SHIB TON FET RENDER".split(" ");
+const SYMS=COINS.map(c=>c+"USDT"), SET=new Set(SYMS);
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const A={}, P={};
+let HIST=JSON.parse(localStorage.getItem("ve_hist")||"[]");
+let side="ALL", minScore=50, newsPause=localStorage.getItem("ve_news")==="1", scanning=false, nextAt=0, chart=null;
 
-            <!-- TELEGRAM SETTINGS -->
-            <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;border-top:1px solid var(--border-color);padding-top:12px;margin-top:4px;">
-                <div style="font-weight:700;font-size:15px;color:var(--text-primary);">🤖 إعدادات تليجرام</div>
-                <div class="telegram-settings">
-                    <div class="input-group">
-                        <label>Bot Token</label>
-                        <input type="password" id="telegramToken" placeholder="أدخل توكن البوت" />
-                    </div>
-                    <div class="input-group">
-                        <label>Chat ID</label>
-                        <input type="text" id="telegramChatId" placeholder="أدخل معرف الدردشة" />
-                    </div>
-                    <button class="telegram-test-btn" id="testTelegramBtn">📡 اختبار الاتصال</button>
-                </div>
-            </div>
-        </section>
+const fmt=p=>p==null?"–":p>=100?p.toFixed(2):p>=1?p.toFixed(4):p>=0.1?p.toFixed(5):p>=0.001?p.toFixed(6):p.toFixed(8);
+const save=()=>localStorage.setItem("ve_hist",JSON.stringify(HIST.slice(0,300)));
+const ago=t=>{const m=Math.floor((Date.now()-t)/60000);return m<1?"الآن":m<60?`قبل ${m} د`:`قبل ${Math.floor(m/60)} س`};
 
-        <!-- SIGNAL LOG -->
-        <section class="log-section">
-            <div style="font-weight:700;font-size:15px;display:flex;justify-content:space-between;">
-                <span>📋 سجل الإشارات</span>
-                <span style="font-size:12px;font-weight:400;color:var(--text-muted);" id="logCount">0</span>
-            </div>
-            <div id="logContainer" style="margin-top:8px;max-height:200px;overflow-y:auto;">
-                <div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px 0;">لا توجد إشارات مسجلة</div>
-            </div>
-        </section>
+/* ---------- محرك الاستراتيجية ---------- */
+async function kl(sym,tf,limit){
+  const r=await fetch(`${API}/klines?symbol=${sym}&interval=${tf}&limit=${limit}`);
+  if(!r.ok) throw new Error("HTTP "+r.status);
+  const a=await r.json();
+  return a.slice(0,-1).map(k=>({t:k[0]/1000,o:+k[1],h:+k[2],l:+k[3],c:+k[4],v:+k[5],q:+k[7]}));
+}
+function atr(c,n=14){
+  const t=[];for(let i=1;i<c.length;i++){const p=c[i-1].c;t.push(Math.max(c[i].h-c[i].l,Math.abs(c[i].h-p),Math.abs(c[i].l-p)))}
+  const s=t.slice(-n);return s.reduce((a,b)=>a+b,0)/s.length;
+}
+function vp(c,bins=48,pct=.7){
+  let lo=Infinity,hi=-Infinity;c.forEach(x=>{lo=Math.min(lo,x.l);hi=Math.max(hi,x.h)});
+  const step=(hi-lo)/bins||1e-12, vol=new Array(bins).fill(0);
+  c.forEach(x=>{
+    const i0=Math.min(bins-1,Math.max(0,Math.floor((x.l-lo)/step)));
+    const i1=Math.min(bins-1,Math.max(0,Math.floor((x.h-lo)/step)));
+    const sh=x.v/(i1-i0+1);for(let i=i0;i<=i1;i++)vol[i]+=sh;
+  });
+  const ctr=i=>lo+(i+.5)*step;
+  let poc=0;vol.forEach((v,i)=>{if(v>vol[poc])poc=i});
+  const total=vol.reduce((a,b)=>a+b,0);
+  let acc=vol[poc],up=poc,dn=poc;
+  while(acc<total*pct){
+    const u=up+1<bins?vol[up+1]:-1,d=dn-1>=0?vol[dn-1]:-1;
+    if(u<0&&d<0)break;
+    if(u>=d){up++;acc+=vol[up]}else{dn--;acc+=vol[dn]}
+  }
+  const mean=total/bins,hvn=[];
+  for(let i=1;i<bins-1;i++) if(vol[i]>vol[i-1]&&vol[i]>vol[i+1]&&vol[i]>1.2*mean)hvn.push(ctr(i));
+  return{poc:ctr(poc),vah:lo+(up+1)*step,val:lo+dn*step,hvn};
+}
+async function analyze(sym,ctx){
+  const [d1,h4,h1,m15]=await Promise.all([kl(sym,"1d",60),kl(sym,"4h",150),kl(sym,"1h",120),kl(sym,"15m",60)]);
+  const avgQ=d1.slice(-7).reduce((a,x)=>a+x.q,0)/7;
+  const c=m15[m15.length-1],prev=m15[m15.length-2];
+  const out={sym,price:c.c,avgQ,liquid:avgQ>=20e6,signals:[]};
+  const pd=vp(d1.slice(-30)),p4=vp(h4.slice(-60)),p1=vp(h1.slice(-72));
+  const a1=atr(h1);
+  const d1c=d1.at(-1).c,h4c=h4.at(-1).c,h1c=h1.at(-1).c;
+  const bias=(d1c>pd.poc?1:-1)+(h4c>p4.poc?1:-1)+(d1c>pd.vah?1:0)+(d1c<pd.val?-1:0);
+  const core={"4H VAL":p4.val,"4H POC":p4.poc,"4H VAH":p4.vah,"1H VAL":p1.val,"1H POC":p1.poc,"1H VAH":p1.vah};
+  let near={name:"—",dist:99};
+  for(const [n,L] of Object.entries(core)){const d=Math.abs(h1c-L)/a1;if(d<near.dist)near={name:n,dist:d}}
+  Object.assign(out,{bias,a1,lv:{d:pd,h4:p4,h1:p1},h4Bear:h4c<p4.poc,near});
+  if(!out.liquid||newsPause)return out;
 
-        <!-- FOOTER SPACER -->
-        <div style="height:12px;"></div>
+  const vr=c.v/(m15.slice(-20).reduce((a,x)=>a+x.v,0)/20);
+  const bull=c.c>c.o&&c.c>prev.h&&vr>1.3, bear=c.c<c.o&&c.c<prev.l&&vr>1.3;
+  const coreL=Object.values(core);
+  const all=[...coreL,pd.val,pd.poc,pd.vah,...p4.hvn,...p1.hvn];
+  const entry=c.c;
+  for(const sd of ["LONG","SHORT"]){
+    const s=sd==="LONG"?1:-1;
+    if(s*bias<1||!(s===1?bull:bear))continue;
+    if(s===1&&sym!=="BTCUSDT"&&ctx.btcBear)continue;
+    const last3=h1.slice(-3);
+    const ext=s===1?Math.min(...last3.map(x=>x.l)):Math.max(...last3.map(x=>x.h));
+    const cands=coreL.filter(L=>Math.abs(ext-L)<=0.3*a1&&s*(h1c-L)>0);
+    if(!cands.length)continue;
+    let sl=ext-s*0.5*a1,risk=Math.abs(entry-sl);
+    if(risk<0.8*a1){risk=0.8*a1;sl=entry-s*risk}
+    let tg=all.filter(x=>s*(x-entry)>risk).sort((a,b)=>s*a-s*b);
+    tg=tg.filter((x,i)=>i===0||Math.abs(x-tg[i-1])>0.1*a1);
+    const tp1=tg[0]??entry+s*1.5*risk, tp2=tg[1]??entry+s*2.5*risk;
+    const rr=Math.abs(tp2-entry)/risk;
+    if(rr<1.5)continue;
+    const score=Math.min(100,Math.floor(50+10*Math.abs(bias)+Math.min(15,(vr-1.3)*10)+Math.min(10,rr*3)));
+    out.signals.push({id:`${sym}|${sd}|${c.t}`,symbol:sym,side:sd,entry,sl,tp1,tp2,rr,risk,score,level:cands[0],t:c.t});
+  }
+  return out;
+}
+
+/* ---------- المسح ---------- */
+async function scan(){
+  if(scanning)return;scanning=true;$("#err").style.display="none";
+  const ctx={btcBear:false};let done=0,errs=0;
+  const prog=()=>$("#bar").style.width=(done/SYMS.length*100)+"%";
+  try{
+    A.BTCUSDT=await analyze("BTCUSDT",ctx);ctx.btcBear=A.BTCUSDT.h4Bear;done++;prog();
+  }catch(e){
+    $("#err").style.display="block";
+    $("#err").innerHTML="تعذّر جلب بيانات Binance ("+e.message+"). قد يكون الوصول محجوبًا في بلدك أو شبكتك؛ جرّب VPN أو شبكة أخرى، أو مرّر الطلبات عبر خادم وسيط.";
+    scanning=false;nextAt=Date.now()+60000;$("#bar").style.width="0";return;
+  }
+  const q=SYMS.filter(s=>s!=="BTCUSDT");
+  const worker=async()=>{while(q.length){const s=q.shift();try{A[s]=await analyze(s,ctx)}catch(e){errs++}done++;prog()}};
+  await Promise.all(Array.from({length:5},worker));
+  let fresh=0;
+  Object.values(A).forEach(a=>a.signals.forEach(s=>{
+    if(!HIST.find(h=>h.id===s.id)){HIST.unshift({...s,status:"OPEN",tp1hit:false,created:Date.now()});fresh++}
+  }));
+  save();
+  if(fresh)toast(`🔔 ${fresh} إشارة جديدة`);
+  $("#stLast").textContent=new Date().toLocaleTimeString("ar");
+  $("#bar").style.width="0";scanning=false;nextAt=Date.now()+300000;
+  renderAll();
+  if(errs)console.warn("عملات فشل جلبها:",errs);
+}
+
+/* ---------- تتبع النتائج ---------- */
+function evalHist(){
+  let ch=false;
+  HIST.forEach(h=>{
+    if(h.status!=="OPEN")return;const p=P[h.symbol]?.p;if(!p)return;
+    const L=h.side==="LONG",sl=h.tp1hit?h.entry:h.sl;
+    if(L?p<=sl:p>=sl){h.status=h.tp1hit?"BE":"SL";ch=true;return}
+    if(L?p>=h.tp2:p<=h.tp2){h.status="TP2";ch=true;return}
+    if(!h.tp1hit&&(L?p>=h.tp1:p<=h.tp1)){h.tp1hit=true;ch=true}
+    if(Date.now()-h.created>48*3600e3){h.status="EXPIRED";ch=true}
+  });
+  if(ch){save();renderSignals();renderStats()}
+}
+function resultR(h){
+  const r1=Math.abs(h.tp1-h.entry)/h.risk;
+  return h.status==="SL"?-1:h.status==="BE"?.5*r1:h.status==="TP2"?.5*r1+.5*h.rr:0;
+}
+const STATUS={OPEN:["مفتوحة","gold"],SL:["وقف خسارة","r"],BE":["تعادل بعد الهدف 1","g"],TP2:["الهدف 2 ✔","g"],EXPIRED:["منتهية","mut"]};
+
+/* ---------- العرض ---------- */
+function renderAll(){renderSignals();renderMarket();renderStats();renderTop()}
+function renderTop(){
+  const act=HIST.filter(h=>h.status==="OPEN").length;
+  $("#stAct").textContent=act;
+  $("#stCoins").textContent=Object.values(A).filter(a=>a.liquid).length+" / "+SYMS.length;
+  const b=A.BTCUSDT;
+  $("#stBtc").innerHTML=b?(b.h4Bear?'<span class="r">هابط ▼</span>':'<span class="g">صاعد ▲</span>'):"—";
+}
+function renderSignals(){
+  const list=HIST.filter(h=>h.status==="OPEN"&&(side==="ALL"||h.side===side)&&h.score>=minScore);
+  $("#cards").innerHTML=list.length?list.map(h=>`
+  <div class="card sig ${h.side}">
+    <div class="row"><div><b class="sym">${h.symbol.replace("USDT","")}</b><span class="mut">/USDT</span></div>
+      <span class="badge ${h.side}">${h.side==="LONG"?"شراء ▲":"بيع ▼"}</span></div>
+    <div class="mut small">${ago(h.created)} · مستوى الحجم: ${fmt(h.level)} ${h.tp1hit?'· <b class="g">تحقق الهدف 1</b>':""}</div>
+    <div class="row" style="margin-top:10px"><span class="mut small">الثقة</span><b>${h.score}%</b></div>
+    <div class="score"><i style="width:${h.score}%"></i></div>
+    <div class="grid ltr">
+      <div><span class="mut">Entry</span><b>${fmt(h.entry)}</b></div>
+      <div><span class="mut">Live</span><b data-px="${h.symbol}">${fmt(P[h.symbol]?.p)}</b></div>
+      <div><span class="mut">SL</span><b class="r">${fmt(h.sl)}</b></div>
+      <div><span class="mut">R:R</span><b>${h.rr.toFixed(2)}</b></div>
+      <div><span class="mut">TP1</span><b class="g">${fmt(h.tp1)}</b></div>
+      <div><span class="mut">TP2</span><b class="g">${fmt(h.tp2)}</b></div>
     </div>
+    <button class="btn" onclick="openChart('${h.symbol}','${h.id}')">عرض الشارت والمستويات</button>
+  </div>`).join(""):
+  `<div class="empty" style="grid-column:1/-1">${newsPause?"⏸ الإشارات موقوفة يدويًا.":scanning?"جارٍ مسح السوق…":"لا توجد إشارات مطابقة للشروط حاليًا. الاستراتيجية انتقائية، وانتظار الإعداد الجيد جزء منها."}</div>`;
+}
+function renderMarket(){
+  $("#mk").innerHTML=SYMS.filter(s=>A[s]).map(s=>{
+    const a=A[s],b=a.bias;
+    const bl=b>=2?['صاعد قوي','g']:b===1?['صاعد','g']:b===0?['محايد','mut']:b===-1?['هابط','r']:['هابط قوي','r'];
+    const watch=a.liquid&&a.near.dist<=0.3;
+    return `<tr onclick="openChart('${s}')">
+      <td><b>${s.replace("USDT","")}</b></td>
+      <td class="ltr" data-px="${s}">${fmt(P[s]?.p??a.price)}</td>
+      <td class="ltr" data-ch="${s}">—</td>
+      <td class="${bl[1]}">${bl[0]} (${b>0?"+":""}${b})</td>
+      <td class="ltr">${a.liquid?`${a.near.name} · ${a.near.dist.toFixed(2)} ATR`:"—"}</td>
+      <td class="ltr">${fmt(a.lv.h4.poc)}</td>
+      <td>${!a.liquid?'<span class="mut">سيولة ضعيفة</span>':a.signals.length?'<span class="g">إشارة ✔</span>':watch?'<span class="gold">قرب مستوى ◔</span>':'<span class="mut">انتظار</span>'}</td></tr>`}).join("");
+}
+function renderStats(){
+  const closed=HIST.filter(h=>["SL","BE","TP2"].includes(h.status));
+  const tot=closed.reduce((a,h)=>a+resultR(h),0);
+  const wins=closed.filter(h=>h.status!=="SL").length;
+  const cell=(l,v,c="")=>`<div class="stat"><span class="mut small">${l}</span><b class="${c}">${v}</b></div>`;
+  $("#hs").innerHTML=cell("صفقات مغلقة",closed.length)+
+    cell("وصلت الهدف 1 على الأقل",closed.length?Math.round(wins/closed.length*100)+"%":"—")+
+    cell("مجموع R",(tot>=0?"+":"")+tot.toFixed(2),tot>=0?"g":"r")+
+    cell("مفتوحة",HIST.filter(h=>h.status==="OPEN").length);
+  $("#hist").innerHTML=HIST.slice(0,60).map(h=>{
+    const st=STATUS[h.status]||["",""];const r=["SL","BE","TP2"].includes(h.status)?resultR(h):null;
+    return `<tr onclick="openChart('${h.symbol}','${h.id}')">
+      <td>${new Date(h.created).toLocaleString("ar")}</td><td><b>${h.symbol.replace("USDT","")}</b></td>
+      <td class="${h.side==="LONG"?"g":"r"}">${h.side==="LONG"?"شراء":"بيع"}</td>
+      <td class="ltr">${fmt(h.entry)}</td><td class="ltr">${fmt(h.sl)}</td><td class="ltr">${fmt(h.tp1)}</td><td class="ltr">${fmt(h.tp2)}</td>
+      <td class="${st[1]}">${st[0]}${r!=null?` (${r>=0?"+":""}${r.toFixed(2)}R)`:""}</td></tr>`}).join("")||
+    `<tr><td colspan="8" class="mut" style="text-align:center;padding:30px">لا توجد سجلات بعد</td></tr>`;
+}
+
+/* ---------- الأسعار الحية ---------- */
+function buildTicker(){
+  const one=COINS.map(c=>`<span><b>${c}</b> <i data-px="${c}USDT">…</i> <i data-ch="${c}USDT"></i></span>`).join("");
+  $("#track").innerHTML=one+one;
+}
+function connect(){
+  const ws=new WebSocket("wss://stream.binance.com:9443/ws/!miniTicker@arr");
+  ws.onopen=()=>{$("#dot").classList.add("on");$("#liveTxt").textContent="أسعار حية من Binance"};
+  ws.onmessage=e=>{JSON.parse(e.data).forEach(t=>{if(SET.has(t.s))P[t.s]={p:+t.c,ch:(t.c-t.o)/t.o*100}})};
+  ws.onclose=()=>{$("#dot").classList.remove("on");$("#liveTxt").textContent="إعادة الاتصال…";setTimeout(connect,3000)};
+  ws.onerror=()=>ws.close();
+}
+function paint(){
+  $$("[data-px]").forEach(el=>{const p=P[el.dataset.px];if(p)el.textContent=fmt(p.p)});
+  $$("[data-ch]").forEach(el=>{const p=P[el.dataset.ch];if(p){el.textContent=(p.ch>=0?"+":"")+p.ch.toFixed(2)+"%";el.className="ltr "+(p.ch>=0?"g":"r")}});
+  evalHist();
+  if(nextAt){const s=Math.max(0,Math.round((nextAt-Date.now())/1000));
+    $("#next").textContent=scanning?"جارٍ المسح…":`المسح القادم ${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+    if(s===0&&!scanning)scan()}
+}
+
+/* ---------- الشارت ---------- */
+async function openChart(sym,sigId){
+  const a=A[sym];$("#modal").style.display="block";
+  $("#mt").textContent=sym.replace("USDT","")+" / USDT — فريم الساعة";
+  $("#mi").textContent="جارٍ تحميل الشموع…";
+  if(chart){chart.remove();chart=null}
+  const el=$("#chart");el.innerHTML="";
+  let c;try{c=await kl(sym,"1h",200)}catch(e){$("#mi").textContent="تعذر التحميل";return}
+  chart=LightweightCharts.createChart(el,{width:el.clientWidth,height:460,
+    layout:{background:{color:"#0b1220"},textColor:"#9fb0cc"},
+    grid:{vertLines:{color:"#142038"},horzLines:{color:"#142038"}},
+    rightPriceScale:{borderColor:"#1c2940"},timeScale:{borderColor:"#1c2940",timeVisible:true}});
+  const s=chart.addCandlestickSeries({upColor:"#22c55e",downColor:"#ef4444",borderVisible:false,wickUpColor:"#22c55e",wickDownColor:"#ef4444"});
+  s.setData(c.map(x=>({time:x.t,open:x.o,high:x.h,low:x.l,close:x.c})));
+  const L=(price,color,title,ls=2)=>s.createPriceLine({price,color,lineWidth:1,lineStyle:ls,axisLabelVisible:true,title});
+  const lg=[];
+  if(a&&a.lv){
+    L(a.lv.h4.poc,"#f5b942","4H POC",0);L(a.lv.h4.vah,"#60a5fa","4H VAH");L(a.lv.h4.val,"#60a5fa","4H VAL");
+    L(a.lv.h1.poc,"#fbbf24","1H POC",1);L(a.lv.h1.vah,"#a78bfa","1H VAH",1);L(a.lv.h1.val,"#a78bfa","1H VAL",1);
+    L(a.lv.d.poc,"#f472b6","1D POC",0);
+    lg.push("● 1D/4H/1H POC / VAH / VAL");
+  }
+  const h=sigId&&HIST.find(x=>x.id===sigId);
+  if(h){L(h.entry,"#ffffff","ENTRY",0);L(h.sl,"#ef4444","SL",0);L(h.tp1,"#22c55e","TP1",0);L(h.tp2,"#16a34a","TP2",0);
+    $("#mi").textContent=`${h.side==="LONG"?"شراء":"بيع"} · الدخول ${fmt(h.entry)} · الوقف ${fmt(h.sl)} · الأهداف ${fmt(h.tp1)} / ${fmt(h.tp2)} · R:R ${h.rr.toFixed(2)}`;
+  }else $("#mi").textContent=a?`الاتجاه: ${a.bias>0?"+":""}${a.bias} · ATR(1H): ${fmt(a.a1)}`:"";
+  $("#lg").innerHTML=lg.join("");
+  chart.timeScale().fitContent();
+}
+window.addEventListener("resize",()=>{if(chart)chart.applyOptions({width:$("#chart").clientWidth})});
+$("#mx").onclick=()=>{$("#modal").style.display="none"};
+$("#modal").onclick=e=>{if(e.target.id==="modal")$("#modal").style.display="none"};
+
+/* ---------- واجهة ---------- */
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",5000)}
+$("#tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  $$("#tabs button").forEach(x=>x.classList.toggle("on",x===b));
+  $$(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.t))};
+$$("[data-side]").forEach(b=>b.onclick=()=>{side=b.dataset.side;$$("[data-side]").forEach(x=>x.classList.toggle("on",x===b));renderSignals()});
+$("#ms").oninput=e=>{minScore=+e.target.value;$("#msv").textContent=minScore;renderSignals()};
+$("#news").classList.toggle("on",newsPause);
+$("#news").onclick=()=>{newsPause=!newsPause;localStorage.setItem("ve_news",newsPause?"1":"0");$("#news").classList.toggle("on",newsPause);scan()};
+$("#rescan").onclick=scan;
 
-    <!-- ===== TOAST ===== -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- ===== JAVASCRIPT ===== -->
-    <script>
-        // ============================================================
-        //  CONFIGURATION - إطار 30 دقيقة (النص ساعة)
-        // ============================================================
-        const CONFIG = {
-            symbols: [
-                'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT',
-                'DOGEUSDT', 'SUIUSDT', 'LINKUSDT', 'AVAXUSDT', 'ADAUSDT'
-            ],
-            interval: '30m', // تم التغيير إلى 30 دقيقة بناءً على طلبك
-            adxPeriod: 14,
-            obLookback: 120,
-            minAdx: 25,
-            rrMin: 2.0,
-            maxSignalsPerDay: 5,
-            wsBase: 'wss://stream.binance.com:9443/ws',
-            restBase: 'https://api.binance.com/api/v3',
-            // معلمات Twin Range Filter
-            per1: 27,
-            mult1: 1.6,
-            per2: 55,
-            mult2: 2
-        };
-
-        // ============================================================
-        //  STATE
-        // ============================================================
-        const state = {
-            symbols: {},
-            signals: [],
-            log: [],
-            stats: { total: 0, wins: 0, losses: 0, today: 0 },
-            activeSymbol: 'BTCUSDT',
-            isOnline: false,
-            lastUpdate: null,
-            settings: {
-                sound: true,
-                vibration: true,
-                notifications: true,
-                telegramToken: '',
-                telegramChatId: '',
-            },
-            ws: null,
-            wsReady: false,
-            pendingSubs: [],
-            signalCount: 0,
-            isInitialized: false,
-            _renderPending: false,
-            swRegistration: null,
-        };
-
-        // ============================================================
-        //  DOM REFS
-        // ============================================================
-        const $ = (s) => document.querySelector(s);
-        const $$ = (s) => document.querySelectorAll(s);
-
-        const DOM = {
-            splash: $('#splash'),
-            statusDot: $('#statusDot'),
-            statusLabel: $('#statusLabel'),
-            lastUpdate: $('#lastUpdate'),
-            symbolTabs: $('#symbolTabs'),
-            signalsContainer: $('#signalsContainer'),
-            signalCount: $('#signalCount'),
-            statTotal: $('#statTotal'),
-            statWins: $('#statWins'),
-            statLosses: $('#statLosses'),
-            statWinRate: $('#statWinRate'),
-            statToday: $('#statToday'),
-            statLastSignal: $('#statLastSignal'),
-            logContainer: $('#logContainer'),
-            logCount: $('#logCount'),
-            toastContainer: $('#toastContainer'),
-            installBtn: $('#installBtn'),
-            toggleSound: $('#toggleSound'),
-            toggleVibration: $('#toggleVibration'),
-            toggleNotifications: $('#toggleNotifications'),
-            telegramToken: $('#telegramToken'),
-            telegramChatId: $('#telegramChatId'),
-            testTelegramBtn: $('#testTelegramBtn'),
-        };
-
-        // ============================================================
-        //  UTILITY
-        // ============================================================
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-        function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
-
-        function round(v, d = 2) { return Number(v.toFixed(d)); }
-
-        function formatPrice(v) {
-            if (v >= 1000) return round(v, 2);
-            if (v >= 1) return round(v, 4);
-            return round(v, 6);
-        }
-
-        function formatTime(ts) {
-            const d = new Date(ts);
-            return d.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        }
-
-        function formatDate(ts) {
-            return new Date(ts).toLocaleDateString('ar-EG', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function generateId() {
-            return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
-        }
-
-        function isToday(ts) {
-            const d = new Date(ts);
-            const n = new Date();
-            return d.getFullYear() === n.getFullYear() &&
-                d.getMonth() === n.getMonth() &&
-                d.getDate() === n.getDate();
-        }
-
-        // ============================================================
-        //  PERSISTENCE
-        // ============================================================
-        function saveState() {
-            try {
-                const data = {
-                    signals: state.signals.slice(0, 100),
-                    log: state.log.slice(0, 200),
-                    stats: state.stats,
-                    settings: state.settings,
-                };
-                localStorage.setItem('crypto_signals_state', JSON.stringify(data));
-            } catch (_) { /* ignore */ }
-        }
-
-        function loadState() {
-            try {
-                const raw = localStorage.getItem('crypto_signals_state');
-                if (!raw) return;
-                const data = JSON.parse(raw);
-                if (data.signals) state.signals = data.signals;
-                if (data.log) state.log = data.log;
-                if (data.stats) state.stats = data.stats;
-                if (data.settings) {
-                    state.settings = { ...state.settings, ...data.settings };
-                }
-            } catch (_) { /* ignore */ }
-        }
-
-        // ============================================================
-        //  TELEGRAM INTEGRATION
-        // ============================================================
-        async function sendTelegramMessage(text) {
-            const token = state.settings.telegramToken;
-            const chatId = state.settings.telegramChatId;
-
-            if (!token || !chatId) {
-                console.warn('Telegram settings missing.');
-                return false;
-            }
-
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: text,
-                        parse_mode: 'HTML',
-                    }),
-                });
-                const data = await response.json();
-                if (data.ok) {
-                    return true;
-                } else {
-                    console.warn('Telegram error:', data.description);
-                    return false;
-                }
-            } catch (e) {
-                console.error('Telegram send error:', e);
-                return false;
-            }
-        }
-
-        function formatSignalForTelegram(signal) {
-            const typeLabel = signal.type === 'BUY' ? '🟢 شراء (Long)' : '🔴 بيع (Short)';
-            const strengthLabel = signal.strength === 'excellent' ? 'ممتازة' :
-                signal.strength === 'strong' ? 'قوية' :
-                signal.strength === 'good' ? 'جيدة' : 'ضعيفة';
-            const rrStr = round(signal.rr, 1);
-
-            return `
-        🚀 <b>إشارة تداول جديدة (Twin Range Filter + ADX)</b>
-
-        💎 <b>الزوج:</b> ${signal.symbol}
-        📊 <b>النوع:</b> ${typeLabel}
-        💪 <b>القوة:</b> ${strengthLabel}
-        📈 <b>ADX:</b> ${round(signal.adx, 1)} (فوق 25)
-
-        🔹 <b>سعر الدخول:</b> ${formatPrice(signal.entryPrice)}
-        🔻 <b>وقف الخسارة:</b> ${formatPrice(signal.stopLoss)}
-        🎯 <b>الهدف 1:</b> ${formatPrice(signal.takeProfit1)}
-        🎯 <b>الهدف 2:</b> ${formatPrice(signal.takeProfit2)}
-        📊 <b>نسبة المخاطرة/العائد:</b> ${rrStr}:1
-
-        📝 <b>التحليل:</b>
-        ${signal.analysis}
-
-        🕐 <b>وقت الإشارة:</b> ${formatTime(signal.timestamp)}
-        `;
-        }
-
-        async function testTelegramConnection() {
-            const token = state.settings.telegramToken;
-            const chatId = state.settings.telegramChatId;
-
-            if (!token || !chatId) {
-                showToast('⚠️', 'يرجى إدخال التوكن ومعرف الدردشة');
-                return false;
-            }
-
-            DOM.testTelegramBtn.textContent = '⏳ جاري الاختبار...';
-            DOM.testTelegramBtn.disabled = true;
-
-            const success = await sendTelegramMessage('✅ تم الاتصال بنجاح! بوت الإشارات يعمل بشكل صحيح.');
-
-            if (success) {
-                showToast('✅', 'تم الاتصال بتليجرام بنجاح', 'تم إرسال رسالة اختبار');
-                DOM.testTelegramBtn.textContent = '✅ متصل';
-            } else {
-                showToast('❌', 'فشل الاتصال بتليجرام', 'تحقق من التوكن ومعرف الدردشة');
-                DOM.testTelegramBtn.textContent = '📡 اختبار الاتصال';
-            }
-            DOM.testTelegramBtn.disabled = false;
-            return success;
-        }
-
-        // ============================================================
-        //  TOAST SYSTEM
-        // ============================================================
-        function showToast(icon, msg, sub = '') {
-            const el = document.createElement('div');
-            el.className = 'toast';
-            el.innerHTML = `
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-msg">${msg}${sub ? '<small>'+sub+'</small>' : ''}</div>
-          `;
-            DOM.toastContainer.appendChild(el);
-            setTimeout(() => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(16px)';
-                setTimeout(() => el.remove(), 400);
-            }, 3500);
-        }
-
-        // ============================================================
-        //  NOTIFICATIONS
-        // ============================================================
-        function playNotificationSound() {
-            if (!state.settings.sound) return;
-            try {
-                const ctx = new(window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = 880;
-                gain.gain.value = 0.2;
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                setTimeout(() => { osc.frequency.value = 1100; }, 120);
-                setTimeout(() => { osc.stop();
-                    ctx.close(); }, 320);
-            } catch (_) { /* fallback */ }
-        }
-
-        function triggerVibration() {
-            if (!state.settings.vibration) return;
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 80, 200]);
-            }
-        }
-
-        async function sendPushNotification(title, body) {
-            if (!state.settings.notifications) return;
-            if (!('Notification' in window)) return;
-            if (Notification.permission === 'granted') {
-                try {
-                    const n = new Notification(title, {
-                        body: body,
-                        icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==',
-                        tag: 'crypto-signal',
-                        requireInteraction: true,
-                    });
-                    setTimeout(() => n.close(), 8000);
-                } catch (_) { /* ignore */ }
-            } else if (Notification.permission === 'default') {
-                await Notification.requestPermission();
-            }
-        }
-
-        // ============================================================
-        //  BINANCE API
-        // ============================================================
-        async function fetchKlines(symbol, interval = '30m', limit = 500) {
-            const url =
-                `${CONFIG.restBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-            const resp = await fetch(url);
-            if (!resp.ok) throw new Error(`Binance API error: ${resp.status}`);
-            const data = await resp.json();
-            return data.map(c => ({
-                time: c[0],
-                open: parseFloat(c[1]),
-                high: parseFloat(c[2]),
-                low: parseFloat(c[3]),
-                close: parseFloat(c[4]),
-                volume: parseFloat(c[5]),
-            }));
-        }
-
-        async function fetchAllSymbols() {
-            const results = {};
-            const promises = CONFIG.symbols.map(async (sym) => {
-                try {
-                    const candles = await fetchKlines(sym, CONFIG.interval, CONFIG.obLookback + 50);
-                    results[sym] = candles;
-                } catch (e) {
-                    console.warn(`Failed to fetch ${sym}:`, e);
-                    results[sym] = [];
-                }
-            });
-            await Promise.all(promises);
-            return results;
-        }
-
-        // ============================================================
-        //  ADX CALCULATOR (مؤشر القوة الاتجاهية)
-        // ============================================================
-        function calcADX(candles, period = 14) {
-            if (candles.length < period + 1) return null;
-
-            const high = candles.map(c => c.high);
-            const low = candles.map(c => c.low);
-            const close = candles.map(c => c.close);
-
-            const tr = [];
-            const dmPlus = [];
-            const dmMinus = [];
-
-            for (let i = 1; i < candles.length; i++) {
-                const h = high[i],
-                    l = low[i];
-                const hPrev = high[i - 1],
-                    lPrev = low[i - 1];
-                const cPrev = close[i - 1];
-
-                const hl = h - l;
-                const hc = Math.abs(h - cPrev);
-                const lc = Math.abs(l - cPrev);
-                tr.push(Math.max(hl, hc, lc));
-
-                const up = h - hPrev;
-                const down = lPrev - l;
-                dmPlus.push(up > down && up > 0 ? up : 0);
-                dmMinus.push(down > up && down > 0 ? down : 0);
-            }
-
-            const smooth = (arr, n) => {
-                const res = [];
-                let sum = 0;
-                for (let i = 0; i < arr.length; i++) {
-                    sum += arr[i];
-                    if (i >= n) sum -= arr[i - n];
-                    if (i >= n - 1) res.push(sum / n);
-                }
-                return res;
-            };
-
-            const trSmooth = smooth(tr, period);
-            const dmPlusSmooth = smooth(dmPlus, period);
-            const dmMinusSmooth = smooth(dmMinus, period);
-
-            const plusDI = [];
-            const minusDI = [];
-            const dx = [];
-
-            for (let i = 0; i < trSmooth.length; i++) {
-                const trVal = trSmooth[i] || 1;
-                const pDI = 100 * (dmPlusSmooth[i] / trVal);
-                const mDI = 100 * (dmMinusSmooth[i] / trVal);
-                plusDI.push(pDI);
-                minusDI.push(mDI);
-                const sum = pDI + mDI;
-                dx.push(sum === 0 ? 0 : 100 * Math.abs(pDI - mDI) / sum);
-            }
-
-            const adx = [];
-            const dxSmooth = smooth(dx, period);
-            for (let i = 0; i < dxSmooth.length; i++) {
-                adx.push(dxSmooth[i]);
-            }
-
-            return {
-                adx: adx.length > 0 ? adx[adx.length - 1] : 0,
-                plusDI: plusDI.length > 0 ? plusDI[plusDI.length - 1] : 0,
-                minusDI: minusDI.length > 0 ? minusDI[minusDI.length - 1] : 0,
-                all: adx,
-            };
-        }
-
-        // ============================================================
-        //  TWIN RANGE FILTER + ADX (الاستراتيجية الجديدة)
-        // ============================================================
-        function analyzeSymbol(symbol, candles) {
-            if (candles.length < CONFIG.obLookback) return null;
-
-            // 1. حساب ADX على إطار 30 دقيقة
-            const adxData = calcADX(candles, CONFIG.adxPeriod);
-            if (!adxData || adxData.adx < CONFIG.minAdx) {
-                // إذا كان ADX أقل من 25، لا نرسل إشارة
-                return { adx: adxData ? adxData.adx : 0, blocks: [], signal: null };
-            }
-
-            // 2. حساب Twin Range Filter
-            const per1 = CONFIG.per1;
-            const mult1 = CONFIG.mult1;
-            const per2 = CONFIG.per2;
-            const mult2 = CONFIG.mult2;
-
-            // دالة EMA المساعدة
-            function ema(arr, period) {
-                if (arr.length < period) return 0;
-                let sum = 0;
-                for (let i = 0; i < period; i++) sum += arr[i];
-                let emaVal = sum / period;
-                const multiplier = 2 / (period + 1);
-                for (let i = period; i < arr.length; i++) {
-                    emaVal = (arr[i] - emaVal) * multiplier + emaVal;
-                }
-                return emaVal;
-            }
-
-            // دالة smoothrng كما في Pine Script
-            function smoothrng(x, t, m) {
-                if (x.length < t * 2) return 0;
-                const wper = t * 2 - 1;
-                let avrngArr = [];
-                for (let i = 1; i < x.length; i++) {
-                    avrngArr.push(Math.abs(x[i] - x[i - 1]));
-                }
-                const avrng = ema(avrngArr, t);
-                const smoothArr = Array.from({ length: avrngArr.length - t + 1 }, (_, i) => avrngArr[i + t - 1]); // محاكاة
-                // لحساب EMA للـ avrng، نأخذ المتوسط المتحرك للـ avrngArr بأكمله
-                const smoothrngVal = ema(avrngArr, wper) * m;
-                return smoothrngVal;
-            }
-
-            // حساب smrng1 و smrng2
-            const prices = candles.map(c => c.close);
-            const smrng1 = smoothrng(prices, per1, mult1);
-            const smrng2 = smoothrng(prices, per2, mult2);
-            const smrng = (smrng1 + smrng2) / 2;
-
-            // حساب Range Filter (rngfilt)
-            let filt = prices[0];
-            let upward = 0;
-            let downward = 0;
-            let CondIni = 0;
-
-            for (let i = 1; i < prices.length; i++) {
-                const x = prices[i];
-                const prevFilt = filt;
-
-                // rngfilt logic
-                if (x > prevFilt) {
-                    filt = (x - smrng < prevFilt) ? prevFilt : x - smrng;
-                } else {
-                    filt = (x + smrng > prevFilt) ? prevFilt : x + smrng;
-                }
-
-                // upward / downward
-                if (filt > prevFilt) {
-                    upward += 1;
-                    downward = 0;
-                } else if (filt < prevFilt) {
-                    downward += 1;
-                    upward = 0;
-                } else {
-                    // unchanged
-                }
-
-                // longCond / shortCond
-                const source = x;
-                const prevSource = prices[i - 1];
-                let longCond = false;
-                let shortCond = false;
-
-                if (source > filt && upward > 0) {
-                    longCond = (source > prevSource) || (source < prevSource);
-                }
-                if (source < filt && downward > 0) {
-                    shortCond = (source < prevSource) || (source > prevSource);
-                }
-
-                // تحديث CondIni
-                if (longCond) CondIni = 1;
-                else if (shortCond) CondIni = -1;
-
-                // التحقق من الإشارة الفعلية بناءً على CondIni السابق
-                const prevCondIni = (i > 1) ? CondIni : 0;
-
-                // إذا كانت هذه هي نهاية الشمعة الحالية (آخر شمعة في المصفوفة)
-                if (i === prices.length - 1) {
-                    const isLong = longCond && prevCondIni === -1;
-                    const isShort = shortCond && prevCondIni === 1;
-
-                    if (isLong && adxData.adx > CONFIG.minAdx) {
-                        return {
-                            adx: adxData.adx,
-                            signal: {
-                                type: 'BUY',
-                                entryPrice: x,
-                                stopLoss: x * 0.995,
-                                takeProfit1: x * 1.02,
-                                takeProfit2: x * 1.03,
-                                rr: 2.0,
-                                strength: adxData.adx > 45 ? 'excellent' : 'strong',
-                                analysis: `إشارة Twin Range Filter صاعدة (Long) مع تأكيد ADX فوق 25 بقيمة ${round(adxData.adx, 1)}. السعر ${formatPrice(x)} فوق الفلتر مع اتجاه صاعد.`,
-                            }
-                        };
-                    } else if (isShort && adxData.adx > CONFIG.minAdx) {
-                        return {
-                            adx: adxData.adx,
-                            signal: {
-                                type: 'SELL',
-                                entryPrice: x,
-                                stopLoss: x * 1.005,
-                                takeProfit1: x * 0.98,
-                                takeProfit2: x * 0.97,
-                                rr: 2.0,
-                                strength: adxData.adx > 45 ? 'excellent' : 'strong',
-                                analysis: `إشارة Twin Range Filter هابطة (Short) مع تأكيد ADX فوق 25 بقيمة ${round(adxData.adx, 1)}. السعر ${formatPrice(x)} تحت الفلتر مع اتجاه هابط.`,
-                            }
-                        };
-                    }
-                }
-            }
-
-            // إذا لم نجد إشارة
-            return { adx: adxData.adx, blocks: [], signal: null };
-        }
-
-        // ============================================================
-        //  SIGNAL MANAGER (مع إلغاء الإشارات المعاكسة)
-        // ============================================================
-        function cancelOppositeSignals(newSignal) {
-            if (!newSignal) return;
-            const oppositeSignals = state.signals.filter(s => 
-                s.symbol === newSignal.symbol && 
-                s.status === 'pending' && 
-                s.type !== newSignal.type
-            );
-            for (const oldSig of oppositeSignals) {
-                oldSig.status = 'closed';
-                oldSig.result = 'cancelled';
-                const logIdx = state.log.findIndex(l => l.id === oldSig.id);
-                if (logIdx !== -1) {
-                    state.log[logIdx].result = 'cancelled';
-                }
-                showToast('🔄', `تم إلغاء إشارة ${oldSig.symbol} السابقة`, `تغير الاتجاه وصدور إشارة ${newSignal.type === 'BUY' ? 'شراء' : 'بيع'} جديدة`);
-                playNotificationSound();
-                triggerVibration();
-            }
-        }
-
-        function addSignal(signal) {
-            if (!signal) return;
-
-            const isDuplicate = state.signals.some(s =>
-                s.symbol === signal.symbol &&
-                s.type === signal.type &&
-                Math.abs(s.entryPrice - signal.entryPrice) / s.entryPrice < 0.005 &&
-                (Date.now() - s.timestamp) < 1000 * 60 * 60 * 4
-            );
-            if (isDuplicate) return;
-
-            const todaySignals = state.signals.filter(s => isToday(s.timestamp) && s.status === 'pending');
-            if (todaySignals.length >= CONFIG.maxSignalsPerDay) {
-                showToast('⚠️', 'تم الوصول للحد اليومي', `حد أقصى ${CONFIG.maxSignalsPerDay} إشارات يومياً`);
-                return;
-            }
-
-            state.signals.unshift(signal);
-            state.log.unshift({
-                id: signal.id,
-                symbol: signal.symbol,
-                type: signal.type,
-                entry: signal.entryPrice,
-                timestamp: signal.timestamp,
-                result: 'pending',
-            });
-
-            state.stats.total++;
-            if (isToday(signal.timestamp)) state.stats.today++;
-
-            saveState();
-            scheduleRender();
-
-            const emoji = signal.type === 'BUY' ? '🟢' : '🔴';
-            const action = signal.type === 'BUY' ? 'شراء' : 'بيع';
-            const title = `${emoji} إشارة ${action} - ${signal.symbol}`;
-            const body =
-                `دخول: ${formatPrice(signal.entryPrice)} | SL: ${formatPrice(signal.stopLoss)} | TP1: ${formatPrice(signal.takeProfit1)} | قوة: ${signal.strength}`;
-
-            playNotificationSound();
-            triggerVibration();
-            sendPushNotification(title, body);
-
-            // إرسال إلى تليجرام
-            const telegramText = formatSignalForTelegram(signal);
-            sendTelegramMessage(telegramText).then(success => {
-                if (success) {
-                    console.log(`✅ تم إرسال إشارة ${signal.symbol} إلى تليجرام`);
-                } else {
-                    console.warn(`⚠️ فشل إرسال إشارة ${signal.symbol} إلى تليجرام`);
-                }
-            });
-
-            // إشعار Service Worker
-            if (state.swRegistration) {
-                state.swRegistration.showNotification(title, {
-                    body: body,
-                    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAkJJREFUWMPFl7FqFEEYx3+7u5dLcok3SIIgFjZWMVjYCDYWFhZCIBhi5AsIBIxsLVIoWFiIiGDjM9joTQiCKB5oIQiCQi5eLpfc7u7YzN5mcnMI3L23y835fr/5Zr79Z3YQKZgMpgJc9Cqz/T/LgBmAp0yDwG1gFfgOLAErwFfgGXANGAGDWgEzwFfMjJ1j39g/6J+3+wnQE9gH1Bmz87RhpoK/2dizGvv2eM/gp/cjsAY03Sd6vK4B5yxbyb6wufcGYDvwuHZg5od1Tq0DBvN7pQO3VplOWgU83N9kKe5R/HJ7f6GBO6tM0hLg1Kx/Lh2o42z6hA/kqhsgxtNcVfWAJtaR5w5k+79pwK9EwCXPnQeEdPm7jjhQO8+YB2z4R9DmhVUIdLmG0+T7u3ziT3ZtUoGGvx/RgL4i8xanLYdTZJYpgmYDE7kMCBOliLtq0cgXeI5Cz4lwocQdOau8B84VrCuj7Ck0eIfa1ICzpcjqXo8HXofCQ+owx1Hk13LZi9QfegF4U8Rs7u6KL9EHNwF3i3Dn4h9jWIOAl6n/LRU0KqFqEMiWvBE2boSAiu1AveXkAtHDXe1Aqusl3S/Ed/g8k5wbtxJgOq8dCJVTLyAJ4Ew+02ypGgXJXwDOeNoPvAG+M/OXGpdAwvtFzEWtMhF3svlc3KiL5eHT+1uYyL7PeFwTY/ujewafthuELqV3mSnmtbmYFybfOsz/nT0v2x1uN6kBnMreop9a9p7Z0QoLu3xHIvd4/wAAAABJRU5ErkJggg==',
-                    tag: signal.id,
-                    requireInteraction: true,
-                    vibrate: state.settings.vibration ? [200, 80, 200] : [],
-                });
-            }
-
-            showToast(
-                signal.type === 'BUY' ? '🟢' : '🔴',
-                `${signal.symbol} - إشارة ${action}`,
-                `قوة: ${signal.strength} | R:R ${round(signal.rr, 1)}:1`
-            );
-
-            DOM.statLastSignal.textContent = formatTime(signal.timestamp);
-        }
-
-        // ============================================================
-        //  UPDATE SIGNAL RESULT (إغلاق الصفقة)
-        // ============================================================
-        function updateSignalResult(signalId, result) {
-            const idx = state.signals.findIndex(s => s.id === signalId);
-            if (idx === -1) return;
-
-            const signal = state.signals[idx];
-            if (signal.status !== 'pending') {
-                if (signal.result === 'cancelled') {
-                    showToast('⏳', 'هذه الصفقة ألغيت بالفعل بسبب تغير الاتجاه');
-                } else {
-                    showToast('⚠️', 'هذه الصفقة مغلقة بالفعل');
-                }
-                return;
-            }
-
-            signal.status = 'closed';
-            signal.result = result;
-
-            const logIdx = state.log.findIndex(l => l.id === signalId);
-            if (logIdx !== -1) {
-                state.log[logIdx].result = result;
-            }
-
-            if (result === 'win') {
-                state.stats.wins++;
-            } else if (result === 'loss') {
-                state.stats.losses++;
-            }
-
-            saveState();
-            scheduleRender();
-
-            showToast(
-                result === 'win' ? '✅' : '❌',
-                `تم إغلاق صفقة ${signal.symbol} - ${result === 'win' ? 'ربح' : 'خسارة'}`,
-                `دخول: ${formatPrice(signal.entryPrice)}`
-            );
-        }
-
-        // ============================================================
-        //  AUTO CLOSE MECHANISM (الغلق التلقائي عند ضرب الهدف أو الخسارة)
-        // ============================================================
-        function checkAutoClose(symbol, candle) {
-            if (!candle) return;
-            const currentPrice = candle.close;
-            const pending = state.signals.filter(s => s.symbol === symbol && s.status === 'pending');
-            
-            for (const sig of pending) {
-                if (sig.type === 'BUY') {
-                    if (currentPrice >= sig.takeProfit1) {
-                        updateSignalResult(sig.id, 'win');
-                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
-                    } else if (currentPrice <= sig.stopLoss) {
-                        updateSignalResult(sig.id, 'loss');
-                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
-                    }
-                } else if (sig.type === 'SELL') {
-                    if (currentPrice <= sig.takeProfit1) {
-                        updateSignalResult(sig.id, 'win');
-                        showToast('✅', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `تحقيق الهدف 1 عند ${formatPrice(currentPrice)} (ربح)`);
-                    } else if (currentPrice >= sig.stopLoss) {
-                        updateSignalResult(sig.id, 'loss');
-                        showToast('🔴', `تم إغلاق الصفقة ${sig.symbol} تلقائياً`, `ضرب وقف الخسارة عند ${formatPrice(currentPrice)}`);
-                    }
-                }
-            }
-        }
-
-        // ============================================================
-        //  RENDER ENGINE
-        // ============================================================
-        let renderScheduled = false;
-
-        function scheduleRender() {
-            if (!renderScheduled) {
-                renderScheduled = true;
-                requestAnimationFrame(() => {
-                    renderScheduled = false;
-                    performRender();
-                });
-            }
-        }
-
-        function performRender() {
-            updateSymbolTabs();
-            updateSignals();
-            updateStats();
-            updateLog();
-            const pending = state.signals.filter(s => s.status === 'pending' && s.symbol === state.activeSymbol);
-            DOM.signalCount.textContent = pending.length;
-            DOM.lastUpdate.textContent = formatTime(Date.now());
-        }
-
-        function updateSymbolTabs() {
-            const container = DOM.symbolTabs;
-            const data = state.symbols;
-            for (const sym of CONFIG.symbols) {
-                const info = data[sym];
-                const price = info?.lastPrice || 0;
-                const change = info?.change || 0;
-                const active = sym === state.activeSymbol ? 'active' : '';
-                const changeClass = change >= 0 ? 'pos' : 'neg';
-                const changeStr = change >= 0 ? `+${round(change, 2)}%` : `${round(change, 2)}%`;
-
-                let tab = container.querySelector(`[data-symbol="${sym}"]`);
-                if (!tab) {
-                    tab = document.createElement('button');
-                    tab.className = `symbol-tab ${active}`;
-                    tab.dataset.symbol = sym;
-                    tab.innerHTML = `
-                ${sym.replace('USDT','')}
-                <span class="price">${formatPrice(price)}</span>
-                <span class="change ${changeClass}">${changeStr}</span>
-              `;
-                    tab.addEventListener('click', () => {
-                        state.activeSymbol = sym;
-                        scheduleRender();
-                    });
-                    container.appendChild(tab);
-                } else {
-                    tab.className = `symbol-tab ${active}`;
-                    const priceSpan = tab.querySelector('.price');
-                    if (priceSpan) priceSpan.textContent = formatPrice(price);
-                    const changeSpan = tab.querySelector('.change');
-                    if (changeSpan) {
-                        changeSpan.textContent = changeStr;
-                        changeSpan.className = `change ${changeClass}`;
-                    }
-                }
-            }
-        }
-
-        function updateSignals() {
-            const container = DOM.signalsContainer;
-            const pendingSignals = state.signals.filter(s => s.symbol === state.activeSymbol && s.status === 'pending');
-            if (pendingSignals.length === 0) {
-                container.innerHTML = `
-              <div class="no-signals">
-                <div class="icon">📡</div>
-                <div>لا توجد إشارات نشطة لـ ${state.activeSymbol}</div>
-                <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">بانتظار إشارة Twin Range Filter + ADX</div>
-              </div>
-            `;
-                DOM.signalCount.textContent = '0';
-                return;
-            }
-
-            const existingCards = new Map();
-            container.querySelectorAll('.signal-card').forEach(card => {
-                const id = card.dataset.id;
-                if (id) existingCards.set(id, card);
-            });
-
-            for (const sig of pendingSignals) {
-                let card = existingCards.get(sig.id);
-                if (!card) {
-                    card = document.createElement('div');
-                    card.className = 'signal-card';
-                    card.dataset.id = sig.id;
-                    container.appendChild(card);
-                }
-                updateSignalCard(card, sig);
-                existingCards.delete(sig.id);
-            }
-
-            for (const [id, card] of existingCards) {
-                card.remove();
-            }
-
-            DOM.signalCount.textContent = pendingSignals.length;
-        }
-
-        function updateSignalCard(card, sig) {
-            const typeClass = sig.type === 'BUY' ? 'buy' : 'sell';
-            const typeLabel = sig.type === 'BUY' ? 'شراء' : 'بيع';
-            const strengthClass = sig.strength || 'good';
-            const strengthLabel = sig.strength === 'excellent' ? 'ممتازة' :
-                sig.strength === 'strong' ? 'قوية' :
-                sig.strength === 'good' ? 'جيدة' : 'ضعيفة';
-            const rrStr = round(sig.rr, 1);
-
-            card.innerHTML = `
-            <div class="card-header">
-              <div>
-                <span class="symbol-name">${sig.symbol}</span>
-                <span class="signal-type ${typeClass}">${typeLabel}</span>
-              </div>
-              <span class="signal-strength ${strengthClass}">${strengthLabel}</span>
-            </div>
-            <div class="card-body">
-              <div class="item"><span class="label">سعر الدخول</span><span class="value">${formatPrice(sig.entryPrice)}</span></div>
-              <div class="item"><span class="label">وقف الخسارة</span><span class="value sl">${formatPrice(sig.stopLoss)}</span></div>
-              <div class="item"><span class="label">الهدف 1</span><span class="value tp">${formatPrice(sig.takeProfit1)}</span></div>
-              <div class="item"><span class="label">الهدف 2</span><span class="value tp">${formatPrice(sig.takeProfit2)}</span></div>
-              <div class="item"><span class="label">نسبة العائد</span><span class="value rr">${rrStr}:1</span></div>
-              <div class="item"><span class="label">ADX</span><span class="value">${round(sig.adx, 1)}</span></div>
-            </div>
-            <div class="analysis">
-              <span class="label">📝 تحليل الدخول</span>
-              ${sig.analysis}
-            </div>
-            <div class="card-footer">
-              <span class="time">🕐 ${formatTime(sig.timestamp)}</span>
-              <div class="actions">
-                <button class="share-btn" data-id="${sig.id}">📤 مشاركة</button>
-                <button class="close-win" data-id="${sig.id}" data-result="win">✅ ربح</button>
-                <button class="close-loss" data-id="${sig.id}" data-result="loss">❌ خسارة</button>
-              </div>
-            </div>
-          `;
-
-            card.querySelector('.share-btn').addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                const s = state.signals.find(sig => sig.id === id);
-                if (s) shareSignal(s);
-            });
-
-            card.querySelector('.close-win').addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                if (confirm('هل أنت متأكد من إغلاق هذه الصفقة كـ ربح؟')) {
-                    updateSignalResult(id, 'win');
-                }
-            });
-
-            card.querySelector('.close-loss').addEventListener('click', (e) => {
-                const id = e.currentTarget.dataset.id;
-                if (confirm('هل أنت متأكد من إغلاق هذه الصفقة كـ خسارة؟')) {
-                    updateSignalResult(id, 'loss');
-                }
-            });
-        }
-
-        function updateStats() {
-            const s = state.stats;
-            const total = s.total || 0;
-            const wins = s.wins || 0;
-            const losses = s.losses || 0;
-            const rate = total > 0 ? Math.round((wins / total) * 100) : 0;
-
-            setText(DOM.statTotal, total);
-            setText(DOM.statWins, wins);
-            setText(DOM.statLosses, losses);
-            setText(DOM.statWinRate, `${rate}%`);
-            setText(DOM.statToday, s.today || 0);
-
-            if (state.signals.length > 0) {
-                DOM.statLastSignal.textContent = formatTime(state.signals[0].timestamp);
-            }
-        }
-
-        function updateLog() {
-            const container = DOM.logContainer;
-            const logs = state.log.slice(0, 30);
-
-            if (logs.length === 0) {
-                container.innerHTML =
-                    '<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:12px 0;">لا توجد إشارات مسجلة</div>';
-                DOM.logCount.textContent = '0';
-                return;
-            }
-
-            let html = '';
-            for (const entry of logs) {
-                const typeClass = entry.type === 'BUY' ? 'buy' : 'sell';
-                const typeLabel = entry.type === 'BUY' ? 'شراء' : 'بيع';
-                let resultClass = 'pending';
-                let resultLabel = '⏳ معلق';
-                if (entry.result === 'win') { resultClass = 'win';
-                    resultLabel = '✔️ ربح'; } 
-                else if (entry.result === 'loss') { resultClass = 'loss';
-                    resultLabel = '❌ خسارة'; } 
-                else if (entry.result === 'cancelled') { resultClass = 'cancelled';
-                    resultLabel = '🚫 ملغاة (تغير اتجاه)'; } 
-                else if (entry.result === 'closed') { resultClass = 'closed';
-                    resultLabel = '🔒 مغلق'; }
-
-                html += `
-              <div class="log-entry">
-                <span><span class="log-symbol">${entry.symbol}</span>
-                <span class="log-type ${typeClass}">${typeLabel}</span></span>
-                <span>${formatPrice(entry.entry)}</span>
-                <span>${formatTime(entry.timestamp)}</span>
-                <span class="log-result ${resultClass}">${resultLabel}</span>
-              </div>
-            `;
-            }
-
-            container.innerHTML = html;
-            DOM.logCount.textContent = state.log.length;
-        }
-
-        function setText(el, value) {
-            if (el.textContent !== String(value)) {
-                el.textContent = value;
-            }
-        }
-
-        function shareSignal(sig) {
-            const typeLabel = sig.type === 'BUY' ? 'شراء' : 'بيع';
-            const text =
-                `🚀 إشارة تداول - ${sig.symbol}\n` +
-                `📊 نوع: ${typeLabel}\n` +
-                `💰 الدخول: ${formatPrice(sig.entryPrice)}\n` +
-                `🛑 وقف الخسارة: ${formatPrice(sig.stopLoss)}\n` +
-                `🎯 الهدف 1: ${formatPrice(sig.takeProfit1)}\n` +
-                `🎯 الهدف 2: ${formatPrice(sig.takeProfit2)}\n` +
-                `📈 نسبة العائد: ${round(sig.rr, 1)}:1\n` +
-                `💪 القوة: ${sig.strength}\n` +
-                `📝 ${sig.analysis}\n` +
-                `🕐 ${formatTime(sig.timestamp)}`;
-
-            if (navigator.share) {
-                navigator.share({
-                    title: `إشارة ${sig.symbol} - ${typeLabel}`,
-                    text: text,
-                }).catch(() => {});
-            } else if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('📋', 'تم نسخ الإشارة للحافظة');
-                }).catch(() => {
-                    showToast('⚠️', 'تعذر نسخ الإشارة');
-                });
-            } else {
-                showToast('⚠️', 'المشاركة غير مدعومة في هذا المتصفح');
-            }
-        }
-
-        // ============================================================
-        //  WEBSOCKET (التحديث المباشر على 30 دقيقة)
-        // ============================================================
-        function connectWebSocket() {
-            if (state.ws) {
-                try { state.ws.close(); } catch (_) {}
-            }
-
-            const streams = CONFIG.symbols.map(s => `${s.toLowerCase()}@kline_${CONFIG.interval}`).join('/');
-            const url = `${CONFIG.wsBase}/${streams}`;
-
-            state.ws = new WebSocket(url);
-            state.ws.onopen = () => {
-                state.isOnline = true;
-                state.wsReady = true;
-                updateStatus(true);
-                showToast('🔗', 'متصل بالسوق', 'تحديث مباشر على إطار 30 دقيقة');
-            };
-
-            state.ws.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.k) {
-                        const k = data.k;
-                        const symbol = data.s;
-                        if (!symbol) return;
-                        const candle = {
-                            time: k.t,
-                            open: parseFloat(k.o),
-                            high: parseFloat(k.h),
-                            low: parseFloat(k.l),
-                            close: parseFloat(k.c),
-                            volume: parseFloat(k.v),
-                            isFinal: k.x,
-                        };
-                        handleCandleUpdate(symbol, candle);
-                    }
-                } catch (e) {
-                    console.warn('WS parse error:', e);
-                }
-            };
-
-            state.ws.onerror = (err) => {
-                console.warn('WS error:', err);
-                updateStatus(false);
-            };
-
-            state.ws.onclose = () => {
-                state.isOnline = false;
-                state.wsReady = false;
-                updateStatus(false);
-                setTimeout(connectWebSocket, 5000);
-            };
-        }
-
-        function updateStatus(online) {
-            const dot = DOM.statusDot;
-            const label = DOM.statusLabel;
-            if (online) {
-                dot.className = 'status-dot online';
-                label.textContent = 'مباشر';
-                DOM.lastUpdate.textContent = formatTime(Date.now());
-            } else {
-                dot.className = 'status-dot connecting';
-                label.textContent = 'جاري إعادة الاتصال...';
-            }
-        }
-
-        // ============================================================
-        //  CANDLE UPDATE HANDLER
-        // ============================================================
-        function handleCandleUpdate(symbol, candle) {
-            if (!state.symbols[symbol]) {
-                state.symbols[symbol] = { candles: [], lastPrice: 0, change: 0 };
-            }
-
-            const symData = state.symbols[symbol];
-            if (!symData.candles) symData.candles = [];
-
-            const existing = symData.candles.findIndex(c => c.time === candle.time);
-            if (existing !== -1) {
-                symData.candles[existing] = candle;
-            } else {
-                symData.candles.push(candle);
-                if (symData.candles.length > 200) {
-                    symData.candles = symData.candles.slice(-200);
-                }
-            }
-
-            const last = symData.candles[symData.candles.length - 1];
-            if (last) {
-                symData.lastPrice = last.close;
-                const first = symData.candles[0];
-                if (first && first.close > 0) {
-                    symData.change = ((last.close - first.close) / first.close) * 100;
-                }
-            }
-
-            if (candle.isFinal) {
-                runAnalysis(symbol);
-                checkAutoClose(symbol, candle);
-            }
-
-            scheduleRender();
-        }
-
-        // ============================================================
-        //  ANALYSIS ENGINE
-        // ============================================================
-        let analysisRunning = false;
-        let analysisQueue = [];
-
-        function runAnalysis(symbol) {
-            if (analysisRunning) {
-                analysisQueue.push(symbol);
-                return;
-            }
-
-            analysisRunning = true;
-            try {
-                const symData = state.symbols[symbol];
-                if (!symData || !symData.candles || symData.candles.length < 30) {
-                    analysisRunning = false;
-                    return;
-                }
-
-                const candles = symData.candles;
-                const result = analyzeSymbol(symbol, candles);
-
-                if (result && result.signal) {
-                    cancelOppositeSignals(result.signal);
-                    addSignal(result.signal);
-                }
-
-                if (result) {
-                    state.symbols[symbol].adx = result.adx;
-                    state.symbols[symbol].lastAnalysis = Date.now();
-                }
-
-            } catch (e) {
-                console.warn('Analysis error for', symbol, e);
-            }
-
-            analysisRunning = false;
-            if (analysisQueue.length > 0) {
-                const next = analysisQueue.shift();
-                runAnalysis(next);
-            }
-        }
-
-        // ============================================================
-        //  INITIAL DATA LOAD
-        // ============================================================
-        async function loadInitialData() {
-            showToast('📡', 'جاري تحميل بيانات السوق (إطار 30 دقيقة)...');
-
-            try {
-                const allData = await fetchAllSymbols();
-
-                for (const sym of CONFIG.symbols) {
-                    const candles = allData[sym] || [];
-                    if (candles.length > 0) {
-                        state.symbols[sym] = {
-                            candles: candles,
-                            lastPrice: candles[candles.length - 1]?.close || 0,
-                            change: 0,
-                        };
-                        const first = candles[0];
-                        const last = candles[candles.length - 1];
-                        if (first && last && first.close > 0) {
-                            state.symbols[sym].change = ((last.close - first.close) / first.close) * 100;
-                        }
-                    } else {
-                        state.symbols[sym] = { candles: [], lastPrice: 0, change: 0 };
-                    }
-                }
-
-                for (const sym of CONFIG.symbols) {
-                    runAnalysis(sym);
-                    await sleep(50);
-                }
-
-                scheduleRender();
-                saveState();
-
-                showToast('✅', 'تم تحميل البيانات', `${CONFIG.symbols.length} عملة جاهزة`);
-
-            } catch (e) {
-                console.error('Load error:', e);
-                showToast('⚠️', 'خطأ في تحميل البيانات', 'جاري استخدام البيانات المخزنة');
-                scheduleRender();
-            }
-
-            setTimeout(() => {
-                DOM.splash.classList.add('hide');
-            }, 600);
-
-            state.isInitialized = true;
-        }
-
-        // ============================================================
-        //  PWA SETUP & SERVICE WORKER
-        // ============================================================
-        function setupPWA() {
-            let deferredPrompt = null;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                DOM.installBtn.classList.add('show');
-            });
-
-            DOM.installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const result = await deferredPrompt.userChoice;
-                    if (result.outcome === 'accepted') {
-                        showToast('✅', 'تم تثبيت التطبيق');
-                    }
-                    deferredPrompt = null;
-                    DOM.installBtn.classList.remove('show');
-                }
-            });
-
-            const swCode = `
-                self.addEventListener('install', (event) => {
-                    self.skipWaiting();
-                });
-                self.addEventListener('activate', (event) => {
-                    event.waitUntil(clients.claim());
-                });
-                self.addEventListener('message', (event) => {
-                    if (event.data && event.data.type === 'show-notification') {
-                        self.registration.showNotification(event.data.title, {
-                            body: event.data.body,
-                            icon: event.data.icon,
-                            tag: event.data.tag,
-                            requireInteraction: true,
-                            vibrate: event.data.vibrate || [200, 80, 200],
-                        });
-                    }
-                });
-            `;
-
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(swUrl)
-                    .then((registration) => {
-                        state.swRegistration = registration;
-                        console.log('Service Worker registered dynamically.');
-                    })
-                    .catch((err) => {
-                        console.warn('SW registration failed:', err);
-                    });
-            }
-
-            if ('Notification' in window && Notification.permission === 'default') {
-                setTimeout(() => {
-                    Notification.requestPermission();
-                }, 5000);
-            }
-        }
-
-        // ============================================================
-        //  SETTINGS TOGGLES
-        // ============================================================
-        function setupToggles() {
-            const toggles = [
-                { el: DOM.toggleSound, key: 'sound' },
-                { el: DOM.toggleVibration, key: 'vibration' },
-                { el: DOM.toggleNotifications, key: 'notifications' },
-            ];
-
-            for (const t of toggles) {
-                t.el.addEventListener('click', () => {
-                    const isActive = t.el.classList.toggle('active');
-                    state.settings[t.key] = isActive;
-                    localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
-                });
-            }
-
-            try {
-                const saved = localStorage.getItem('crypto_settings');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    for (const key of ['sound', 'vibration', 'notifications']) {
-                        if (key in parsed) {
-                            state.settings[key] = parsed[key];
-                            const elMap = {
-                                sound: DOM.toggleSound,
-                                vibration: DOM.toggleVibration,
-                                notifications: DOM.toggleNotifications,
-                            };
-                            const el = elMap[key];
-                            if (el) {
-                                if (parsed[key]) el.classList.add('active');
-                                else el.classList.remove('active');
-                            }
-                        }
-                    }
-                }
-            } catch (_) {}
-        }
-
-        // ============================================================
-        //  BACKGROUND SYNC
-        // ============================================================
-        function setupOfflineSync() {
-            window.addEventListener('online', () => {
-                showToast('📶', 'تم استعادة الاتصال', 'جاري تحديث البيانات...');
-                if (!state.wsReady) {
-                    connectWebSocket();
-                }
-                for (const sym of CONFIG.symbols) {
-                    runAnalysis(sym);
-                }
-            });
-
-            window.addEventListener('offline', () => {
-                showToast('📶', 'فقدان الاتصال', 'جاري العمل في وضع عدم الاتصال');
-                updateStatus(false);
-            });
-        }
-
-        // ============================================================
-        //  INIT
-        // ============================================================
-        async function init() {
-            loadState();
-            setupToggles();
-            setupPWA();
-            setupOfflineSync();
-
-            DOM.telegramToken.value = state.settings.telegramToken || '';
-            DOM.telegramChatId.value = state.settings.telegramChatId || '';
-
-            DOM.telegramToken.addEventListener('input', (e) => {
-                state.settings.telegramToken = e.target.value.trim();
-                localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
-            });
-            DOM.telegramChatId.addEventListener('input', (e) => {
-                state.settings.telegramChatId = e.target.value.trim();
-                localStorage.setItem('crypto_settings', JSON.stringify(state.settings));
-            });
-
-            DOM.testTelegramBtn.addEventListener('click', testTelegramConnection);
-
-            await loadInitialData();
-            connectWebSocket();
-
-            setInterval(() => {
-                 for (const sym of CONFIG.symbols) {
-                     const symData = state.symbols[sym];
-                     if (symData && symData.candles.length > 0) {
-                         const lastCandle = symData.candles[symData.candles.length - 1];
-                         if(lastCandle) checkAutoClose(sym, lastCandle);
-                     }
-                 }
-            }, 10000);
-
-            setInterval(() => {
-                for (const sym of CONFIG.symbols) {
-                    runAnalysis(sym);
-                }
-                scheduleRender();
-            }, 1000 * 60 * 30); // تحليل كامل كل 30 دقيقة
-
-            setInterval(saveState, 1000 * 30);
-
-            setInterval(() => {
-                if (state.isOnline) {
-                    DOM.lastUpdate.textContent = formatTime(Date.now());
-                }
-            }, 1000 * 10);
-
-            console.log('🚀 Twin Range Filter Pro initialized');
-            console.log(`📊 Monitoring ${CONFIG.symbols.length} symbols on ${CONFIG.interval}`);
-            console.log(`🔍 ADX threshold: ${CONFIG.minAdx}`);
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+buildTicker();connect();renderAll();setInterval(paint,1000);scan();
+</script>
 </body>
-    </html>
+</html>
